@@ -46,9 +46,9 @@ class ZView extends Zedek{
 			'zoo'=>"rar",
 			'some'=>"cool",
 			'school'=>array(
-				array('name'=>"Bunmi", 'sex'=>"male"), 
-				array('name'=>"Obogo", 'sex'=>"male"), 
-				array('name'=>"Ruby", 'sex'=>"female")
+				array('name'=>"John", 'sex'=>"male"), 
+				array('name'=>"Jeff", 'sex'=>"male"), 
+				array('name'=>"Rosemary", 'sex'=>"female")
 			),
 		);
 		return $a;
