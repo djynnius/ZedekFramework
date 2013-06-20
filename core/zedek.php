@@ -18,7 +18,9 @@ abstract class Zedek{
 		return isset($_SESSION['zedek']['user']['role']) && !empty($_SESSION['zedek']['user']['role']) ? true : false;
 	}
 
-	function is_admin(){}
+	function is_admin(){
+		return self::is_user() && empty($_SESSION['zedek']['user']['role']) == "1" ? true : false;
+	}
 }
 
 class Z extends Zedek{

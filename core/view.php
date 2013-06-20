@@ -29,7 +29,6 @@ class ZView extends Zedek{
 		foreach($args as $item){
 			if(gettype($item) == "array"){
 				$out['template'] = array_merge($template, $item); //merge order allows for overwriting
-				//print_r($out);
 			} elseif(gettype($item) == "string") {
 				$out['view'] = (string)$item;
 			} else {
@@ -58,12 +57,13 @@ class ZView extends Zedek{
 	function render(){
 		Z::import("uri.maper");
 		$uri = new URIMaper();
-		$controler = $uri->controler;
+		$controler = $uri->controler == "" ? "default" : $uri->controler;
 		$method = $uri->method;
 
 		$header = $this->header;
 		$footer = $this->footer;
 		
+
 		#check for view file, index in engine, default none
 		$viewFile = zroot."engines/{$controler}/view/{$this->view}.html";
 		if(file_exists($viewFile)){

@@ -51,25 +51,38 @@ a:hover {
 	text-decoration: none;
 }
 
-h1 {
-	font-size: 4em;
-}
+h1 {font-size: 4.1em;}
+
+h2 {font-size: 2.04em;}
 
 .main {
-	padding: 16px;
+	padding: 4px;
 }
 
 header.main {
-	height: 16px;
+	min-height: 16px;
+	border-bottom: solid 1px #333;
+}
+
+header p {
+	font-size: 0.95em;
+	color: #111;
+	text-shadow: 1px 1px 1px #aaa;
 }
 
 nav.main {}
 
-section.main {}
+section.main {
+	padding: 4px;
+	min-height: 360px;
+}
 
 footer.main {
+	font-size: 0.8em;
+	border-top: solid 1px #333;
 	background: #777;
-	color: white;
+	color: #111;
+	text-shadow: 1px 1px 1px #aaa;
 }
 
 @media (min-width: 500px) and (max-width: 700px) {

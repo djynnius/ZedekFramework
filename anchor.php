@@ -24,15 +24,19 @@ try{
 } catch(Exception $e){//echo $e->getMessage();
 }
 #instantiating controler
-$controler = new CControler();
+
+$controler = @new CControler();
 
 #seting method
 $method = $uri->method;
 
 #running method
+$controler_method = $uri->controler; //using contolrer as method for default in cases where there is no method url mapping
 try{
 	if(method_exists($controler, $method)){
 		$controler->$method();
+	} elseif(method_exists($controler, $controler_method)){
+		$controler->$controler_method();
 	} else {	
 		$controler->_default();
 		throw new Exception("The method does not exist for the class {$uri->controler}");
