@@ -2,6 +2,7 @@
 #the zedek super parent
 abstract class Zedek{
 	static function import($module = "default"){
+
 		try{
 			if(file_exists(zroot."engines/{$module}/controler.php")){
 				require_once zroot."engines/{$module}/controler.php";
@@ -12,6 +13,12 @@ abstract class Zedek{
 			return false;
 		}
 	}
+
+	function is_user(){
+		return isset($_SESSION['zedek']['user']['role']) && !empty($_SESSION['zedek']['user']['role']) ? true : false;
+	}
+
+	function is_admin(){}
 }
 
 class Z extends Zedek{

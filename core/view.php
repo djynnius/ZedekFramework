@@ -41,10 +41,11 @@ class ZView extends Zedek{
 
 	#returns default template
 	private function template(){
+		Z::import("config");
+		$config = new ZConfig();
+		//$config->set("version", "2.0");
 		$a = array(
-			'foo'=>"bar", 
-			'zoo'=>"rar",
-			'some'=>"cool",
+			'footer'=>"Zedek Framework. Version".$config->get("version"), 
 			'school'=>array(
 				array('name'=>"John", 'sex'=>"male"), 
 				array('name'=>"Jeff", 'sex'=>"male"), 
@@ -71,8 +72,10 @@ class ZView extends Zedek{
 			$view = file_get_contents(zroot."engines/{$controler}/view/{$method}.html");
 		} elseif(file_exists(zroot."engines/{$controler}/view/index.html")){
 			$view = file_get_contents(zroot."engines/{$controler}/view/none.html");
-		} else {
+		} elseif(file_exists(zroot."engines/default/view/none.html")){
 			$view = file_get_contents(zroot."engines/default/view/none.html");
+		} else {
+			$view = "";
 		}
 		
 		$this->template['style'] = $this->style; //pass in style
@@ -99,13 +102,13 @@ class ZView extends Zedek{
 	function getTheme(){
 		Z::import("config");
 		$conf = new ZConfig();
-		return $conf->getValue("theme");
+		return $conf->get("theme");
 	}
 
 	function setTheme($theme){
 		Z::import("config");
 		$conf = new ZConfig();
-		$conf->setValue("theme", $theme);
+		$conf->set("theme", $theme);
 	}
 
 	function replace($html, $k, $v){
@@ -116,7 +119,7 @@ class ZView extends Zedek{
 	}
 
 	function loop($view, $k, $v){
-		preg_match_all("#{%for[\s]*(.*) in (.*) :[\s]*(.*)[\s]*%}#", $view, $match);
+		preg_match_all("#{%for[\s]*(.*) in (.*) :[\s]*(.*)[\s]*endfor%}#", $view, $match);
 		//print_r($match);
 		$i = 0;
 		foreach($match[2] as $loop){
