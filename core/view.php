@@ -14,17 +14,25 @@ class ZView extends Zedek{
 		$this->template = $fix['template'];
 		$this->view = $fix['view'];
 
-		$this->theme = self::getTheme() != false ? self::getTheme() : "default";
-		$this->header = file_get_contents(zroot."themes/{$this->theme}/header.html");
-		$this->footer = file_get_contents(zroot."themes/{$this->theme}/footer.html");
-		$this->style = file_get_contents(zroot."themes/{$this->theme}/style.css");
-		$this->script = file_get_contents(zroot."themes/{$this->theme}/script.js");
+		$this->theme = $this->getTheme() != false ? $this->getTheme() : "default";
+		$this->header = file_exists(zroot."themes/{$this->theme}/header.html") ? 
+						file_get_contents(zroot."themes/{$this->theme}/header.html") : 
+						file_get_contents(zroot."themes/default/header.html");
+		$this->footer = file_exists(zroot."themes/{$this->theme}/footer.html") ? 
+						file_get_contents(zroot."themes/{$this->theme}/footer.html") : 
+						file_get_contents(zroot."themes/default/footer.html");
+		$this->style = file_exists(zroot."themes/{$this->theme}/style.css") ? 
+						file_get_contents(zroot."themes/{$this->theme}/style.css") : 
+						file_get_contents(zroot."themes/default/style.css");
+		$this->script = file_exists(zroot."themes/{$this->theme}/script.js") ? 
+						file_get_contents(zroot."themes/{$this->theme}/script.js") : 
+						file_get_contents(zroot."themes/default/script.js");
 	}
 
 	#cleans up arguments
 	private function fixArgs($arg1, $arg2){
 		$args = func_get_args();
-		$template = self::template();
+		$template = $this->template();
 		$out = array('template'=>$template, 'view'=>false);
 		foreach($args as $item){
 			if(gettype($item) == "array"){
@@ -40,7 +48,6 @@ class ZView extends Zedek{
 
 	#returns default template
 	private function template(){
-		Z::import("config");
 		$config = new ZConfig();
 		//$config->set("version", "2.0");
 		$a = array(
@@ -55,16 +62,47 @@ class ZView extends Zedek{
 	}
 
 	function render(){
-		Z::import("uri.maper");
+		$header = $this->header;
+		$footer = $this->footer;		
+		$view = $this->getValidView();
+
+		$this->styleAndScripts(); //set styles and scripts
+		
+		foreach($this->template as $k=>$v){
+			$header = $this->simpleReplace($header, $k, $v);
+			$footer = $this->simpleReplace($footer, $k, $v);
+			if(is_string($v)){
+				$view = str_replace("{{".$k."}}", "$v", $view);
+			} elseif(is_array($v)){
+				$view = $this->makeLoop($view, $k, $v);
+			}
+		}
+
+		$render = $header;
+		$render .= $view;
+		$render .= $footer;
+		
+		return $render;
+	}
+
+	function styleAndScripts(){
+		$this->template['style'] = $this->style;
+		$this->template['script'] = $this->script;
+
+		#external scripts
+		$this->template['jQuery'] = $this->getExternalScript("jQuery");
+	}
+
+	function getExternalScript($file){
+		$file = zroot."libs/external_packages/".$file.".js";
+		return file_exists($file) ? file_get_contents($file) : false;
+	}
+
+	function getValidView(){
 		$uri = new URIMaper();
 		$controler = $uri->controler == "" ? "default" : $uri->controler;
 		$method = $uri->method;
 
-		$header = $this->header;
-		$footer = $this->footer;
-		
-
-		#check for view file, index in engine, default none
 		$viewFile = zroot."engines/{$controler}/view/{$this->view}.html";
 		if(file_exists($viewFile)){
 			$view = file_get_contents($viewFile);	
@@ -77,50 +115,28 @@ class ZView extends Zedek{
 		} else {
 			$view = "";
 		}
-		
-		$this->template['style'] = $this->style; //pass in style
-		$this->template['script'] = $this->script; //pass in script
-
-		foreach($this->template as $k=>$v){$header = self::replace($header, $k, $v);}
-		foreach($this->template as $k=>$v){$footer = self::replace($footer, $k, $v);}
-		foreach($this->template as $k=>$v){
-			if(is_string($v)){
-				$view = str_replace("{{".$k."}}", "$v", $view);
-			} elseif(is_array($v)){
-				$view = self::loop($view, $k, $v);
-
-			}
-		}
-
-		$render = $header;
-		$render .= $view;
-		$render .= $footer;
-
-		echo $render;
+		return $view;		
 	}
 
 	function getTheme(){
-		Z::import("config");
 		$conf = new ZConfig();
 		return $conf->get("theme");
 	}
 
 	function setTheme($theme){
-		Z::import("config");
 		$conf = new ZConfig();
 		$conf->set("theme", $theme);
 	}
 
-	function replace($html, $k, $v){
+	function simpleReplace($html, $k, $v){
 		if(is_string($v)){
 			$html = str_replace("{{".$k."}}", $v, $html);
 		}
 		return $html;
 	}
 
-	function loop($view, $k, $v){
+	function makeLoop($view, $k, $v){
 		preg_match_all("#{%for[\s]*(.*) in (.*) :[\s]*(.*)[\s]*endfor%}#", $view, $match);
-		//print_r($match);
 		$i = 0;
 		foreach($match[2] as $loop){
 			if($k == $loop){

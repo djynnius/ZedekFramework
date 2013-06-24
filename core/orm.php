@@ -105,6 +105,7 @@ class ZORMTable extends ZORM{
 	function fetch(){
 		$table = $this->table;
 		$q = "SELECT COUNT(*) AS count FROM {$table}";
+		$q = "SELECT * FROM {$table}";
 		$q = $this->dbo->query($q);
 		$a = array();
 		while($r = $q->fetch(PDO::FETCH_ASSOC)){
@@ -113,7 +114,20 @@ class ZORMTable extends ZORM{
 		return $a;
 	}
 
+	function removeEmptyArrayInput($a){
+		foreach($a as $k=>$v){
+			if(empty($v)){
+				unset($a[$k]);
+			} else {
+				$a[$k] = trim($v);
+				continue;
+			}
+		}		
+		return $a;
+	}
+
 	function add($a){
+		$a = self::removeEmptyArrayInput($a);
 		$count = count($a);
 		if($count == 0){
 			return false;
@@ -141,6 +155,7 @@ class ZORMTable extends ZORM{
 	}
 
 	function update($a=array(), $val='*', $col="id"){
+		$a = self::removeEmptyArrayInput($a);
 		$count = count($a);
 		$q = "UPDATE {$this->table} SET ";
 		$i = 1;
@@ -211,7 +226,7 @@ class ZORMRow extends ZORM{
 
 	function __get($attr){
 		if(!property_exists($this, $attr)){
-			return $this->row->$attr;
+			return @$this->row->$attr;
 		}
 	}
 
@@ -238,6 +253,18 @@ class ZORMRow extends ZORM{
 		$this->dbo->query($q);
 	}
 
+}
+
+abstract class ZApp extends ZORM implements ZIApp{
+	function __construct(){
+		$this->_init();
+	}
+
+	function _init(){}
+}
+
+interface ZIApp{
+	function _init();
 }
 
 ?>

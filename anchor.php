@@ -1,15 +1,20 @@
 <?php
 
 session_start();
-
 # application root constant which must be set to the app non web path
 const zroot = "/media/ubuntu/zedek/";
 
+#set include path
+ini_set('include_path', ':.:'.zroot.'core');
+
 #main zedek controler
-require_once zroot."core/zedek.php";
-Z::import("uri.maper");
-Z::import("controler"); //ensures that the included controler class extends the core controler
-Z::import("orm"); //ensures the orm class is included
+require_once "zedek.php";
+require_once "uri.maper.php";
+require_once "controler.php";
+require_once "orm.php";
+require_once "config.php";
+
+Z::importLibs();
 
 #instantiate uri maper 
 $uri = new URIMaper();

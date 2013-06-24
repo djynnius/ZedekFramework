@@ -14,25 +14,23 @@ abstract class Zedek{
 		}
 	}
 
-	function is_user(){
-		return isset($_SESSION['zedek']['user']['role']) && !empty($_SESSION['zedek']['user']['role']) ? true : false;
+	function isUser(){
+		return isset($_SESSION['__zedek__']['user']['role']) && !empty($_SESSION['__zedek__']['user']['role']) ? true : false;
 	}
 
-	function is_admin(){
-		return self::is_user() && empty($_SESSION['zedek']['user']['role']) == "1" ? true : false;
+	function isAdmin(){
+		return self::is_user() && empty($_SESSION['__zedek__']['user']['role']) == "1" ? true : false;
 	}
 }
 
 class Z extends Zedek{
-	static function import($module = false){
-		try{
-			if(file_exists(zroot."core/{$module}.php")){
-				require_once zroot."core/{$module}.php";
-			} else {
-				throw new Exception();
+	static function importLibs($type = false){
+		$libs = scandir(zroot."libs/");
+		foreach($libs as $lib){
+			$file = zroot."libs/".$lib;
+			if(!is_dir($file)){
+				require_once $file;
 			}
-		} catch(Exception $e){
-			return false;
 		}
 	}	
 }

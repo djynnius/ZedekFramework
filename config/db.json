@@ -1,1 +1,7 @@
-{"engine":"sqlite","host":"localhost","user":"secure","pass":"secure","db":"\/media\/ubuntu\/zedek\/database\/zedek.db"}
+{
+  "engine": "sqlite",
+  "host": "localhost",
+  "user": "secure",
+  "pass": "secure",
+  "db": "/media/ubuntu/zedek/database/zedek.db"
+}
