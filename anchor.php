@@ -1,6 +1,7 @@
 <?php
 
 session_start();
+
 # application root constant which must be set to the app non web path
 const zroot = "/media/ubuntu/zedek/";
 
