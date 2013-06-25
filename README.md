@@ -45,10 +45,16 @@ Creating your first application follow these steps:
 ## router.php contents ##
 
     <?php
-      require once "/path/to/zedek/anchor.php";
+      require_once "/path/to/zedek/anchor.php";
     ?>
     
 and you are about done with the web parts.
+
+on a windows machine it would look more like:
+
+    <?php
+        require_once "drive:\\path\\to\\anchor.php";
+    ?>
 
 ## anchor.php ##
 Within the anchor file online 6 set the root constant to the path leading to the zedek app ending with a trailing slash
