@@ -6,7 +6,9 @@ session_start();
 const zroot = "/media/ubuntu/zedek/";
 
 #set include path
-ini_set('include_path', ':.:'.zroot.'core');
+$windows = strtolower($_SERVER['HTTP_USER_AGENT']);
+$zedekCorePath = strpos($windows, "windows") ? ".;".zroot."core" : ":.:".zroot."core";
+ini_set('include_path', $zedekCorePath);
 
 #main zedek controler
 require_once "zedek.php";
