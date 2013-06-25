@@ -2,7 +2,7 @@
 
 session_start();
 
-# application root constant which must be set to the app non web path
+#application root /path/to/zedek/ 
 const zroot = "/media/ubuntu/zedek/";
 
 #set include path
@@ -29,17 +29,15 @@ try{
 		$uri->import();
 		throw new Exception("Engine does not exist");
 	}
-} catch(Exception $e){//echo $e->getMessage();
-}
+} catch(Exception $e){}
+
 #instantiating controler
-
 $controler = @new CControler();
-
-#seting method
 $method = $uri->method;
 
-#running method
-$controler_method = $uri->controler; //using contolrer as method for default in cases where there is no method url mapping
+#using controler as method for default in cases where there is no method url mapping
+$controler_method = $uri->controler; 
+
 try{
 	if(method_exists($controler, $method)){
 		$controler->$method();
@@ -49,8 +47,6 @@ try{
 		$controler->_default();
 		throw new Exception("The method does not exist for the class {$uri->controler}");
 	}
-} catch(Exception $e){//echo $e->getMessage();
-}
-
+} catch(Exception $e){}
 
 ?>
