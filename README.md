@@ -20,9 +20,10 @@ Its designed by Ikakke Ikpe (djynnius). I hope its useful to someone out there
 Requirements
 =============
 
-1. PHP5.3+
-2. Knowledge of PHP
-3. Knowledge of Object Oriented Programming (OOP)
+1. Apache
+2. PHP5.3+
+3. Knowledge of PHP
+4. Knowledge of Object Oriented Programming (OOP)
 
 
 Creating your first application follow these steps:
