@@ -28,8 +28,8 @@ Requirements
 Creating your first application follow these steps:
 ===================================================
 
-1. Download this repo so you have a folder named "zedek" or what ever else you want to call it in a non web accessible folder. This is one of the security features of Zedek2.0.
-2. in your web accessible folder u will require 3 files and a folder being a ".htaccess" file, a router file named as you desire such as "router.php", a "favicon.ico" file and a folder for your public files.
+1. Download this repo and extract so you have a folder named "zedek" or what ever else you want to call it in a non web accessible folder. This is one of the security features of Zedek2.0.
+2. in your web accessible folder (web root) u will require 3 files and a folder being a ".htaccess" file, a router file named as you desire such as "router.php", a "favicon.ico" file and a folder for your public files.
 3. The contents of the .htaccess file should redirect all traffic to the router file while excluding the public folder contents:
 
 ## .htaccess contents ##
