@@ -30,7 +30,7 @@ try{
 		throw new Exception("Engine does not exist");
 	}
 } catch(Exception $e){
-	echo $e->getMessage();
+	//echo $e->getMessage();
 }
 
 #instantiating controler
@@ -50,7 +50,7 @@ try{
 		throw new Exception("The method does not exist for the class {$uri->controler}");
 	}
 } catch(Exception $e){
-	echo $e->getMessage();
+	//echo $e->getMessage();
 }
 
 ?>
