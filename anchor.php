@@ -29,7 +29,9 @@ try{
 		$uri->import();
 		throw new Exception("Engine does not exist");
 	}
-} catch(Exception $e){}
+} catch(Exception $e){
+	echo $e->getMessage();
+}
 
 #instantiating controler
 $controler = @new CControler();
@@ -47,6 +49,8 @@ try{
 		$controler->_default();
 		throw new Exception("The method does not exist for the class {$uri->controler}");
 	}
-} catch(Exception $e){}
+} catch(Exception $e){
+	echo $e->getMessage();
+}
 
 ?>
