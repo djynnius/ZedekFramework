@@ -9,6 +9,7 @@ class ZORM extends Zedek{
 	protected $name;
 	protected $engine;
 	protected $db;
+	protected $prefix;
 
 	function __construct(){
 		$db_config_file = file_get_contents(zroot."config/db.json");
@@ -19,6 +20,7 @@ class ZORM extends Zedek{
 		$this->host = $db_config->{'host'};
 		$this->user = $db_config->{'user'};
 		$this->pass = $db_config->{'pass'};
+		$this->prefix = $db_config->{'prefix'};
 
 		switch($this->engine){
 			case "mysql":
@@ -34,12 +36,7 @@ class ZORM extends Zedek{
 				break;
 			default:
 				$this->dbo = new PDO(
-					"sqlite:{$this->db}", 
-					array(
-						PDO::ATTR_ERRMODE, 
-						PDO::ERRMODE_EXCEPTION
-					)
-				);
+					"sqlite:{$this->db}", PDO::ERRMODE_EXCEPTION);
 		}		
 	}
 
@@ -216,9 +213,9 @@ class ZORMRow extends ZORM{
 	function commit(){		
 		foreach($this->row as $k=>$v){
 			if($v == $this->$k){
-				continue;
+				//continue;
 			} else {
-				$q = "UPDATE {$this->table} SET {$k}='{$this->$k}' WHERE id='{$this->row->id}'";		
+				$q = "UPDATE {$this->table} SET {$k}='{$this->$k}' WHERE id='{$this->row->id}'";
 				$this->dbo->query($q);
 			}
 		}
@@ -257,6 +254,7 @@ class ZORMRow extends ZORM{
 
 abstract class ZApp extends ZORM implements ZIApp{
 	function __construct(){
+		$this->orm = new ZORM();
 		$this->_init();
 	}
 

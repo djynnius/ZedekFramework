@@ -1,0 +1,7 @@
+==ZORM: The Zedek Object Relational Mapper==
+
+Zedek Framework implements a basic ORM (Object Relational Mapper). This can be called from any point by instantiating the ZORM class and this returns a PDO object.
+
+    $orm = new ZORM();
+
+This object can map to existing tables via the ZORMTable class.

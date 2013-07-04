@@ -25,6 +25,7 @@ abstract class Zedek{
 
 class Z extends Zedek{
 	static function importLibs($type = false){
+		require_once "lib.php";
 		$libs = scandir(zroot."libs/");
 		foreach($libs as $lib){
 			$file = zroot."libs/".$lib;
