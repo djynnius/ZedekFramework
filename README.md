@@ -77,17 +77,15 @@ the MVC is made literal within the engine folder.
 
 1. To create a new app called foo create a folder with the name foo within the engines folder.
 2. within this create a controler file "controler.php" note the single "l" in the spelling.
-3. within the controller file enter the following code
+3. within the controller file enter the following code inside your php tags
 
 ## ##
 
-    <?php
-      class CControler extends ZControler{
-        function bar(){
-          echo "Hello World";
-        }
+    class CControler extends ZControler{
+      function bar(){
+        echo "Hello World";
       }
-    ?>
+    }
 
 4. Browse to http://mysite.com/foo/bar
 
