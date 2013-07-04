@@ -66,7 +66,7 @@ class ZView extends Zedek{
 		$footer = $this->footer;		
 		$view = $this->getValidView();
 
-		$this->styleAndScripts(); //set styles and scripts
+		$this->stylesAndScripts(); //set styles and scripts
 		
 		foreach($this->template as $k=>$v){
 			$header = $this->simpleReplace($header, $k, $v);
@@ -85,12 +85,16 @@ class ZView extends Zedek{
 		return $render;
 	}
 
-	function styleAndScripts(){
+	function stylesAndScripts(){
 		$this->template['style'] = $this->style;
 		$this->template['script'] = $this->script;
 
 		#external scripts
-		$this->template['jQuery'] = $this->getExternalScript("jQuery");
+		$this->template['jQuery2'] = $this->getExternalScript("jQuery1.10.2");
+		$this->template['jQuery1'] = $this->getExternalScript("jQuery2.0.3");
+		$this->template['jQueryMigrate'] = $this->getExternalScript("jQueryMigrate1.2.1");
+		$this->template['jQueryUI'] = $this->getExternalScript("jQueryUI");
+		$this->template['jQueryMobile'] = $this->getExternalScript("jQueryMobile1.3.1");
 	}
 
 	function getExternalScript($file){
