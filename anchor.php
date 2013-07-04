@@ -22,15 +22,10 @@ Z::importLibs();
 #instantiate uri maper 
 $uri = new URIMaper();
 
-try{
-	if(file_exists(zroot."engines/{$uri->controler}/controler.php")){
-		$uri->import($uri->controler);
-	} else {
-		$uri->import();
-		throw new Exception("Engine does not exist");
-	}
-} catch(Exception $e){
-	//echo $e->getMessage();
+if(file_exists(zroot."engines/{$uri->controler}/controler.php")){
+	$uri->import($uri->controler);
+} else {
+	$uri->import();
 }
 
 #instantiating controler
@@ -40,17 +35,12 @@ $method = $uri->method;
 #using controler as method for default in cases where there is no method url mapping
 $controler_method = $uri->controler; 
 
-try{
-	if(method_exists($controler, $method)){
-		$controler->$method();
-	} elseif(method_exists($controler, $controler_method)){
-		$controler->$controler_method();
-	} else {	
-		$controler->_default();
-		throw new Exception("The method does not exist for the class {$uri->controler}");
-	}
-} catch(Exception $e){
-	//echo $e->getMessage();
+if(method_exists($controler, $method)){
+	$controler->$method();
+} elseif(method_exists($controler, $controler_method)){
+	$controler->$controler_method();
+} else {	
+	$controler->_default();
 }
 
 ?>
