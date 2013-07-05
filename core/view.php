@@ -13,20 +13,8 @@ class ZView extends Zedek{
 		$fix = self::fixArgs($arg1, $arg2);
 		$this->template = $fix['template'];
 		$this->view = $fix['view'];
-
 		$this->theme = $this->getTheme() != false ? $this->getTheme() : "default";
-		$this->header = file_exists(zroot."themes/{$this->theme}/header.html") ? 
-						file_get_contents(zroot."themes/{$this->theme}/header.html") : 
-						file_get_contents(zroot."themes/default/header.html");
-		$this->footer = file_exists(zroot."themes/{$this->theme}/footer.html") ? 
-						file_get_contents(zroot."themes/{$this->theme}/footer.html") : 
-						file_get_contents(zroot."themes/default/footer.html");
-		$this->style = file_exists(zroot."themes/{$this->theme}/style.css") ? 
-						file_get_contents(zroot."themes/{$this->theme}/style.css") : 
-						file_get_contents(zroot."themes/default/style.css");
-		$this->script = file_exists(zroot."themes/{$this->theme}/script.js") ? 
-						file_get_contents(zroot."themes/{$this->theme}/script.js") : 
-						file_get_contents(zroot."themes/default/script.js");
+		$this->getAllThemeFiles();
 	}
 
 	#cleans up arguments
@@ -36,7 +24,8 @@ class ZView extends Zedek{
 		$out = array('template'=>$template, 'view'=>false);
 		foreach($args as $item){
 			if(gettype($item) == "array"){
-				$out['template'] = array_merge($template, $item); //merge order allows for overwriting
+				//merge order allows for overwriting
+				$out['template'] = array_merge($template, $item); 
 			} elseif(gettype($item) == "string") {
 				$out['view'] = (string)$item;
 			} else {
@@ -46,17 +35,34 @@ class ZView extends Zedek{
 		return $out;
 	}
 
+	#pulls theme files
+	function getThemeFile($file, $type="html"){
+		$puts = file_exists(zroot."themes/{$this->theme}/{$file}.{$type}") ? 
+					file_get_contents(zroot."themes/{$this->theme}/{$file}.{$type}") : 
+					(file_exists(zroot."themes/default/{$file}.{$type}") ? 
+						file_get_contents(zroot."themes/default/{$file}.{$type}") : 
+						""
+					);		
+		return $puts;
+	}
+
+	#pulls in all theme files and assigns them to class attibutes
+	function getAllThemeFiles(){
+		$themeFolder = zroot."themes/";
+		$files = scandir($themeFolder.$this->theme);
+
+		foreach($files as $file){
+			if(!is_dir($themeFolder.$file)){
+				$info = pathinfo($themeFolder.$file);
+				$this->$info['filename'] = $this->getThemeFile($info['filename'], $info['extension']);
+			}
+		}		
+	}	
+
 	#returns default template
 	private function template(){
-		$config = new ZConfig();
-		//$config->set("version", "2.0");
 		$a = array(
 			'footer'=>"Zedek Framework. Version".$config->get("version"), 
-			'school'=>array(
-				array('name'=>"John", 'sex'=>"male"), 
-				array('name'=>"Jeff", 'sex'=>"male"), 
-				array('name'=>"Rosemary", 'sex'=>"female")
-			),
 		);
 		return $a;
 	}
@@ -65,9 +71,8 @@ class ZView extends Zedek{
 		$header = $this->header;
 		$footer = $this->footer;		
 		$view = $this->getValidView();
-
 		$this->stylesAndScripts(); //set styles and scripts
-		
+
 		foreach($this->template as $k=>$v){
 			$header = $this->simpleReplace($header, $k, $v);
 			$footer = $this->simpleReplace($footer, $k, $v);
@@ -78,10 +83,7 @@ class ZView extends Zedek{
 			}
 		}
 
-		$render = $header;
-		$render .= $view;
-		$render .= $footer;
-		
+		$render = $header.$view.$footer;		
 		return $render;
 	}
 
@@ -94,7 +96,6 @@ class ZView extends Zedek{
 		$this->template['jQuery1'] = $this->getExternalScript("jQuery2.0.3");
 		$this->template['jQueryMigrate'] = $this->getExternalScript("jQueryMigrate1.2.1");
 		$this->template['jQueryUI'] = $this->getExternalScript("jQueryUI");
-		$this->template['jQueryMobile'] = $this->getExternalScript("jQueryMobile1.3.1");
 		$this->template['jQueryNivo'] = $this->getExternalScript("jQueryNivo");
 	}
 
@@ -146,7 +147,6 @@ class ZView extends Zedek{
 		foreach($match[2] as $loop){
 			if($k == $loop){
 				$html = $match[0][$i];
-				//var_dump($match);
 				$j = 0;
 				$replace = "";
 				foreach($v as $match[1]){
@@ -171,7 +171,6 @@ class ZView extends Zedek{
 		}
 		return $view;
 	}
-
 }
 
 ?>
