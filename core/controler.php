@@ -40,6 +40,10 @@ abstract class ZControler extends Zedek implements ZIControler{
 		echo $this::template("index")->render();
 	} 
 
+	function _placeholders(){
+		return array();
+	}
+
 	function denyGuest(){
 		if(isset($_SERVER['HTTP_REFERER'])){
 			header("Location: ".$_SERVER['HTTP_REFERER']);
@@ -57,6 +61,7 @@ abstract class ZControler extends Zedek implements ZIControler{
 interface ZIControler{
 	function _init();
 	function _default();
+	function _placeholders();
 }
 
 ?>

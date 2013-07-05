@@ -9,7 +9,7 @@ class ZORM extends Zedek{
 	protected $name;
 	protected $engine;
 	protected $db;
-	protected $prefix;
+	public $prefix;
 
 	function __construct(){
 		$db_config_file = file_get_contents(zroot."config/db.json");
@@ -20,7 +20,7 @@ class ZORM extends Zedek{
 		$this->host = $db_config->{'host'};
 		$this->user = $db_config->{'user'};
 		$this->pass = $db_config->{'pass'};
-		$this->prefix = $db_config->{'prefix'};
+		$this->prefix = $db_config->{'prefix'}."_";
 
 		switch($this->engine){
 			case "mysql":
@@ -168,7 +168,12 @@ class ZORMTable extends ZORM{
 	}
 
 	function row($val, $col='id'){
-		return new ZORMRow($val, $col, $this->table, $this->dbo);
+		try{
+			$row = new ZORMRow($val, $col, $this->table, $this->dbo);
+		} catch(Exception $e){
+			$row = false;
+		}
+		return $row;
 	}
 
 	function scafold(){}
@@ -185,6 +190,17 @@ class ZORMTable extends ZORM{
 				->query($q)
 				->fetchObject()
 				->count;
+	}
+
+	#many to many relatipnship check ensuring no duplicates are entered
+	function m2mExists($col1, $arg1, $col2, $arg2){
+		$q = "SELECT COUNT({$col1}) AS `count` FROM {$this->table} WHERE {$col1}='{$arg1}' AND {$col2}='{$arg2}'";
+		return $this->dbo->query($q)->fetchObject()->count > 0 ? true : false;
+	}
+
+	function exists($col, $val){
+		$q = "SELECT COUNT({$col}) AS `count` FROM {$this->table} WHERE {$col}='{$val}'";
+		return $this->dbo->query($q)->fetchObject()->count > 0 ? true : false;
 	}
 }
 

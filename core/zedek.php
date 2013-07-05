@@ -15,11 +15,11 @@ abstract class Zedek{
 	}
 
 	function isUser(){
-		return isset($_SESSION['__zedek__']['user']['role']) && !empty($_SESSION['__zedek__']['user']['role']) ? true : false;
+		return isset($_SESSION['__z__']['user']['role']) && !empty($_SESSION['__z__']['user']['role']) ? true : false;
 	}
 
 	function isAdmin(){
-		return self::is_user() && empty($_SESSION['__zedek__']['user']['role']) == "1" ? true : false;
+		return self::is_user() && empty($_SESSION['__z__']['user']['role']) == "1" ? true : false;
 	}
 }
 

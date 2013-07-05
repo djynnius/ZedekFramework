@@ -1,5 +1,6 @@
 <?php
 
-class CControler extends ZControler{}
+class CControler extends ZControler{
+}
 	
 ?>

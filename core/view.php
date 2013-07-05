@@ -61,6 +61,7 @@ class ZView extends Zedek{
 
 	#returns default template
 	private function template(){
+		$config = new ZConfig();
 		$a = array(
 			'footer'=>"Zedek Framework. Version".$config->get("version"), 
 		);
@@ -116,6 +117,8 @@ class ZView extends Zedek{
 			$view = file_get_contents(zroot."engines/{$controler}/view/{$method}.html");
 		} elseif(file_exists(zroot."engines/{$controler}/view/index.html")){
 			$view = file_get_contents(zroot."engines/{$controler}/view/none.html");
+		} elseif(file_exists(zroot."engines/default/view/{$this->view}.html")){
+			$view = file_get_contents(zroot."engines/default/view/{$this->view}.html");
 		} elseif(file_exists(zroot."engines/default/view/none.html")){
 			$view = file_get_contents(zroot."engines/default/view/none.html");
 		} else {
