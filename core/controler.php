@@ -1,22 +1,31 @@
 <?php
 #controler abstract class/super class
+
+namespace __zf__;
+
 abstract class ZControler extends Zedek implements ZIControler{
 
 	function __construct(){
 		$this->_init();	
-		$this->importApp();
+		$this->_importApp();
+	}
+
+	function __call($method, $args){
+		if(!method_exists($this, $method)) $this->_default();
 	}
 	
-	function _init(){} //replaces construct for all controlers
+	/**
+		replaces construct for all controlers
+	*/
+	public function _init(){}
 
-	function template($arg1=null, $arg2=null){
+	protected function template($arg1=null, $arg2=null){
 		require_once "view.php";
 		return new ZView($arg1, $arg2);
 	}
 
-	function importApp($controler = false){
-		$uri = new URIMaper();
-		
+	public function _importApp($controler = false){
+		$uri = new URIMaper;		
 		if($controler == false && strlen($uri->controler) > 0){
 			$controler = $uri->controler;
 		} elseif(strlen($uri->controler) > 0){
@@ -24,8 +33,6 @@ abstract class ZControler extends Zedek implements ZIControler{
 		} else {
 			$controler = "default";
 		}
-
-
 		if(file_exists(zroot."engines/{$controler}/model.php")){
 			require_once zroot."engines/{$controler}/model.php";
 		} elseif(file_exists(zroot."/engines/default/model.php")){
@@ -36,26 +43,21 @@ abstract class ZControler extends Zedek implements ZIControler{
 	}
 
 	#sets default to render index
-	function _default(){
+	public function _default(){
 		echo $this::template("index")->render();
 	} 
 
-	function _placeholders(){
+	public function _placeholders(){
 		return array();
 	}
 
-	function denyGuest(){
+	public function _bounce(){
 		if(isset($_SERVER['HTTP_REFERER'])){
 			header("Location: ".$_SERVER['HTTP_REFERER']);
 		} else {
 			header("Location: /");
 		}
 	}
-
-	function logicToView(){
-		header("Location: ".$_SERVER['HTTP_REFERER']);
-	}
-
 }
 
 interface ZIControler{

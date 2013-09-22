@@ -1,6 +1,6 @@
 <?php
 
-namespace djynnius\zedekframework;
+namespace __zf__;
 
 #form input pre procesor
 class Password extends Zlibs{

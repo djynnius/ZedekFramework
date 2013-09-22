@@ -1,14 +1,17 @@
 <?php
 #configuration superclass
+
+namespace __zf__;
+use \Exception as Exception;
+
 class ZConfig extends Zedek{
 	
-	public $file;
 	public $config;
+	public $configFile;
 
 	function __construct(){
-		$file = zroot."config/config.json";
-		$this->file = $file;
-		$config = file_get_contents($file);
+		$this->configFile = zroot."config/config.json";;
+		$config = file_get_contents($this->configFile);
 		$this->config = json_decode($config);
 	}
 
@@ -27,14 +30,14 @@ class ZConfig extends Zedek{
 
 	public function set($key, $value){
 		$this->config->{$key} = $value;
-		self::cast();
+		$this->cast();
 	}
 
 	public function remove($key){
 		try{
 			if(isset($this->config->{$key})){
 				unset($this->config->{$key});
-				self::cast();
+				$this->cast();
 			} else {
 				throw new Exception("The configuratiion does not exist.");
 			}
@@ -48,4 +51,5 @@ class ZConfig extends Zedek{
 		file_put_contents($this->file, $config);		
 	}
 }
+
 ?>

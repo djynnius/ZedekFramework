@@ -1,18 +1,17 @@
 <?php
 
-namespace djynnius\zedekframework;
+namespace __zf__;
 
-use ZORM;
-use djynnius\zedekframework\FormInput as fi;
+use __zf__\FormInput as fi;
 
-class User extends Zlibs{
+class User extends ZControler{
 
-	function login($username, $password){
+	function _login($username, $password){
 		$orm = new ZORM();
 		$fi = new fi();
 		
-		$table = $orm->table($orm->prefix."users");
-		$userRoles = $orm->table($orm->prefix."user_roles");
+		$table = $orm->table("users");
+		$userRoles = $orm->table("user_roles");
 
 		$username = $fi->username($username);
 		$password = $fi->noSpace($password);
@@ -21,24 +20,25 @@ class User extends Zlibs{
 		if($user && ($user->password == $password)){
 			$_SESSION['__z__']['user']['id'] = $user->id;	
 			$_SESSION['__z__']['user']['role'] = $userRoles->row($user->id, "user_id")->role_id;
-			return true;
+			header("Location: " . $_SERVER['HTTP_REFERER']);
+			//return true;
 		} else {
-			return false;
+			header("Location: " . $_SERVER['HTTP_REFERER']);
+			//return false;
 		}
 	}
 
-	function logout(){
+	function _logout(){
 		session_destroy();
+		header("Location: " . $_SERVER['HTTP_REFERER']);
 	}
 
 	#accepts registration array
-	function register($array){
+	function _register($array){
 		$orm = new ZORM();
-		$users = $orm->table($orm->prefix."users");
-
+		$users = $orm->table("users");
 		#form preprocessor object
 		$fi = new fi(); 
-
 		#prepare form inputs
 		$array['username'] = $fi->username($array['username']);
 		$array['password'] = $fi->compare($array['password'], $array['cpassword']) ? 
@@ -46,36 +46,32 @@ class User extends Zlibs{
 								false;
 		$array['mobile'] = $fi->tel($array['mobile']);
 		$array['email'] = $fi->email($array['email']);
-
 		$array['created_on'] = time(); 
-		$array['created_by'] = "1"; 
-
+		$array['created_by'] = $_SESSION['__z__']['user']['id']; 
 		unset($array['cpassword']);
 		unset($array['submit']);
-
 		#if any problem exists
 		if(in_array(false, $array)){
 			return false;
 		}
-
 		#set user
-		$table = $orm->table($orm->prefix."users");
-		if($table->exists("username", $array['username'])){
+		$user = $orm->table("users");
+		if($user->exists("username", $array['username'])){
 			return false;
 		} else {
 			$users->add($array);
 		}
-
 		#set user role
-		$userRole = $orm->table($orm->prefix."user_roles");
-		if(!$userRoles->m2mExists('user_id', $user->id, $role_id, 2)){
-			$userRoles->add(array('user_id'=>$user->id, 'role_id'=>2));
+		$user = $orm->table('users')->row($array['username'], 'username');
+		$userRole = $orm->table("user_roles");
+		if(!$userRole->m2mExists('user_id', $user->id, 'role_id', 2)){
+			$userRole->add(array('user_id'=>$user->id, 'role_id'=>2));
 		}
 	}
 
-	function recoverPassword($username, $answer, $password, $cpassword){
+	function _recoverPassword($username, $answer, $password, $cpassword){
 		$orm = new ZORM();
-		$table = $orm->table($orm->prefix."users");
+		$table = $orm->table("users");
 		$row = $table->row($username, "username");
 
 		$fi = new fi(); //form preprocessor object
@@ -95,8 +91,7 @@ class User extends Zlibs{
 			}			
 		} catch(Exception $e){
 			return false;
-		}
-		
+		}		
 	}
 
 	function _dbInit(){
@@ -134,12 +129,12 @@ class User extends Zlibs{
 		);
 
 		#create the tables
-		$orm->table($orm->prefix."users", $usersDesc);
-		$orm->table($orm->prefix."roles", $rolesDesc);
-		$orm->table($orm->prefix."user_roles", $userRolesDesc);
+		$orm->table("users", $usersDesc);
+		$orm->table("roles", $rolesDesc);
+		$orm->table("user_roles", $userRolesDesc);
 
 		#create basic roles
-		$roles = $orm->table($orm->prefix."roles");
+		$roles = $orm->table("roles");
 		if(!$roles->exists("role", "Administrator")){
 			$roles->add(array('role'=>"Administrator", 'description'=>"Application administrator"));
 		}
@@ -149,107 +144,17 @@ class User extends Zlibs{
 		}
 		
 		#set admin (first user) role to admin (first role)
-		$userRoles = $orm->table($orm->prefix."user_roles");
+		$userRoles = $orm->table("user_roles");
 		if(!$userRoles->m2mExists('user_id', '1', 'role_id', '1')){
 			$userRoles->add(array('user_id'=>"1", 'role_id'=>"1"));	
 		}
 	}
 
-}
-
-/*
-SNIPPETS
-
-CONTROLER
-use djynnius\zedekframework\User as libUser;
-
-class CControler extends ZControler{
-	function register(){
-		if(!$this->isUser() && !isset($_POST['submit'])){
-			echo $this->template("register")->render();
-		} elseif($_POST['submit']){
-			$libUser = new libUser();
-			$libUser->register($_POST);
-		} else {
-			header("Location: /");
-		}
+	function _changePassword(){
 	}
 
-	function reset(){
-		if(!$this->isUser() && !isset($_POST['submit'])){
-			echo $this->template("recover")->render();
-		} elseif($_POST['submit']){
-			$libUser = new libUser();
-			$libUser->recoverPassword($_POST['username'], $_POST['answer'], $_POST['password'], $_POST['cpassword']);
-			header("Location: /");
-		} else {
-			header("Location: /");
-		}
-	}
-
-	function login(){
-		if(!$this->isUser() && !isset($_POST['submit'])){
-			echo $this->template("login")->render();
-		} elseif(isset($_POST['submit'])){
-			$libUser = new libUser();
-			$libUser->login($_POST['username'], $_POST['password']);
-			header("Location: /");
-		} else {
-			echo $this->template("member", $this->_placeholders())->render();
-		}
-	}
-
-	function logout(){
-		$libUser = new libUser();
-		$libUser->logout();
-		header("Location: /");
-	}
+	function _profile(){}
 
 }
-
-VIEW-RECOVER PASSWORD
-<form method=post action=/reset>
-	<p>Username</p>
-	<input type=text name=username>
-	<p>Answer to Secret Question</p>
-	<input type=password name=answer>
-	<p>New Password</p>
-	<input type=password name=password>
-	<p>Confirm New Password</p>
-	<input type=password name=cpassword>
-	<p></p>
-	<input type=submit name=submit value='Reset Password'>
-</form>
-
-VIEW-REGISTER
-<form method=post action=/register>
-	<p>Username</p>
-	<input type=text name=username >
-	<p>email</p>
-	<input type=email name=email >
-	<p>Mobile</p>
-	<input type=tel name=mobile >
-	<p>Password</p>
-	<input type=password name=password >
-	<p>Confirm Password</p>
-	<input type=password name=cpassword >
-	<p></p>
-	<input type=submit name=submit value=Register >
-</form>
-
-VIEW-LOGIN
-<form action=/ method=post>
-	<p>Username</p>
-	<input name=username type=text>
-	<p>Password</p>
-	<input name=password type=password>
-	<p></p>
-	<input name=submit type=submit value=Login>
-</form>
-
-VIEW-USER
-Welcome {{username}} <a href=/logout>Logout</a>
-
-*/
 
 ?>

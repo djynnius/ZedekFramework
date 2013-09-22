@@ -1,13 +1,10 @@
 <?php
 
-namespace djynnius\zedekframework;
+namespace __zf__;
 
-use ZORM as ORM;
-
-abstract class Zlibs implements ZIlib{
-	
+abstract class Zlibs implements ZIlib{	
 	function __construct(){
-		$this->orm = new ORM();
+		$this->orm = new ZORM;
 		$this->_init();
 	}
 

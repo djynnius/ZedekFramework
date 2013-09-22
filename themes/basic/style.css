@@ -1,0 +1,79 @@
+/*main stylesheet*/
+* {
+	padding: 0px;
+	margin: 0px;
+	font-family: Segoe;
+}
+
+table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+th, td {
+	vertical-align: top;
+	text-align: left;
+	padding: 4px;
+}
+
+.data thead th, 
+.data thead td {
+	/*data grid*/
+} 
+
+.data tr.odd td {}
+
+.data tr.even td {}
+
+a {
+	font-size: inherit;
+	color: inherit;
+}
+
+a:hover {
+	text-decoration: none;
+}
+
+h1 {}
+
+h2 {}
+
+h3, h4, h5, h6 {}
+
+form p {
+	font-size: 1.3em;
+	margin: 4px;
+	font-weight: bold;
+}
+
+input {
+	font-size: 1.3em;
+	margin: 4px;
+	padding: 4px;
+	border: solid 1px #aaa;
+	background: #555;
+}
+
+input[type=text], 
+input[type=email], 
+input[type=number], 
+input[type=tel], 
+input[type=password] {
+	width: 200px;
+} 
+
+input[type=submit], 
+input[type=button] {
+}
+
+/*start of ie themeing*/
+* html {}
+
+/*special style for tablet*/
+@media screen (min-width: 500px) and (max-width: 700px) {} 
+
+/*special style for phones*/
+@media screen (min-width: 500px) and (max-width: 700px) {} 
+
+/*special style for printers*/
+@media print{}

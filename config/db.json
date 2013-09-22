@@ -3,6 +3,5 @@
   "host": "localhost",
   "user": "secure",
   "pass": "secure",
-  "db": "/media/ubuntu/zedek/database/zedek.db", 
-  "prefix": "ztest"
+  "db": "/var/djynnius/projects/zedek2.0.1/databases/zedek.db" 
 }

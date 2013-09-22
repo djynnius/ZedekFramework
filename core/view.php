@@ -1,5 +1,7 @@
 <?php
 #templating engine
+namespace __zf__;
+
 class ZView extends Zedek{
 	public $template;
 	public $view;
@@ -8,13 +10,15 @@ class ZView extends Zedek{
 	public $footer;
 	public $style;
 	public $script;
+	public $configFile;
 
 	function __construct($arg1=null, $arg2=null){
 		$fix = self::fixArgs($arg1, $arg2);
 		$this->template = $fix['template'];
 		$this->view = $fix['view'];
-		$this->theme = $this->getTheme() != false ? $this->getTheme() : "default";
+		$this->theme = $this->getTheme() != false && $this->getTheme() != null ? $this->getTheme() : "default";
 		$this->getAllThemeFiles();
+		$this->configFile = zroot."config/template.json";
 	}
 
 	#cleans up arguments
@@ -36,7 +40,7 @@ class ZView extends Zedek{
 	}
 
 	#pulls theme files
-	function getThemeFile($file, $type="html"){
+	private function getThemeFile($file, $type="html"){
 		$puts = file_exists(zroot."themes/{$this->theme}/{$file}.{$type}") ? 
 					file_get_contents(zroot."themes/{$this->theme}/{$file}.{$type}") : 
 					(file_exists(zroot."themes/default/{$file}.{$type}") ? 
@@ -47,7 +51,7 @@ class ZView extends Zedek{
 	}
 
 	#pulls in all theme files and assigns them to class attibutes
-	function getAllThemeFiles(){
+	private function getAllThemeFiles(){
 		$themeFolder = zroot."themes/";
 		$files = scandir($themeFolder.$this->theme);
 
@@ -61,19 +65,31 @@ class ZView extends Zedek{
 
 	#returns default template
 	private function template(){
-		$config = new ZConfig();
+		$uri = new URIMaper;
+		$config = new ZConfig;
+
 		$a = array(
 			'footer'=>"Zedek Framework. Version".$config->get("version"), 
 		);
+
+		$b = $this->configTemplate();
+		$a = array_merge($a, $b);
 		return $a;
 	}
 
-	function render(){
+	public function configTemplate(){
+		$file = zroot."config/template.json";
+		$json = file_get_contents($file);
+		$pseudoArray = json_decode($json);
+		$array = (array)$pseudoArray;
+		return $array;
+	}
+
+	public function render(){
 		$header = $this->header;
 		$footer = $this->footer;		
 		$view = $this->getValidView();
 		$this->stylesAndScripts(); //set styles and scripts
-
 		foreach($this->template as $k=>$v){
 			$header = $this->simpleReplace($header, $k, $v);
 			$footer = $this->simpleReplace($footer, $k, $v);
@@ -83,39 +99,37 @@ class ZView extends Zedek{
 				$view = $this->makeLoop($view, $k, $v);
 			}
 		}
-
 		$render = $header.$view.$footer;		
 		return $render;
 	}
 
-	function stylesAndScripts(){
+	private function stylesAndScripts(){
 		$this->template['style'] = $this->style;
 		$this->template['script'] = $this->script;
-
 		#external scripts
 		$this->template['jQuery2'] = $this->getExternalScript("jQuery1.10.2");
 		$this->template['jQuery1'] = $this->getExternalScript("jQuery2.0.3");
 		$this->template['jQueryMigrate'] = $this->getExternalScript("jQueryMigrate1.2.1");
 		$this->template['jQueryUI'] = $this->getExternalScript("jQueryUI");
 		$this->template['jQueryNivo'] = $this->getExternalScript("jQueryNivo");
+		$this->template['nicEdit'] = $this->getExternalScript("nicEdit");
 	}
 
-	function getExternalScript($file){
+	private function getExternalScript($file){
 		$file = zroot."libs/external_packages/".$file.".js";
 		return file_exists($file) ? file_get_contents($file) : false;
 	}
 
-	function getValidView(){
-		$uri = new URIMaper();
+	private function getValidView(){
+		$uri = new URIMaper;
 		$controler = $uri->controler == "" ? "default" : $uri->controler;
 		$method = $uri->method;
-
 		$viewFile = zroot."engines/{$controler}/view/{$this->view}.html";
 		if(file_exists($viewFile)){
 			$view = file_get_contents($viewFile);	
 		} elseif(file_exists(zroot."engines/{$controler}/view/{$method}.html")){
 			$view = file_get_contents(zroot."engines/{$controler}/view/{$method}.html");
-		} elseif(file_exists(zroot."engines/{$controler}/view/index.html")){
+		} elseif(file_exists(zroot."engines/{$controler}/view/none.html")){
 			$view = file_get_contents(zroot."engines/{$controler}/view/none.html");
 		} elseif(file_exists(zroot."engines/default/view/{$this->view}.html")){
 			$view = file_get_contents(zroot."engines/default/view/{$this->view}.html");
@@ -127,24 +141,24 @@ class ZView extends Zedek{
 		return $view;		
 	}
 
-	function getTheme(){
-		$conf = new ZConfig();
+	public function getTheme(){
+		$conf = new ZConfig;
 		return $conf->get("theme");
 	}
 
-	function setTheme($theme){
-		$conf = new ZConfig();
+	private function setTheme($theme){
+		$conf = new ZConfig;
 		$conf->set("theme", $theme);
 	}
 
-	function simpleReplace($html, $k, $v){
+	private function simpleReplace($html, $k, $v){
 		if(is_string($v)){
 			$html = str_replace("{{".$k."}}", $v, $html);
 		}
 		return $html;
 	}
 
-	function makeLoop($view, $k, $v){
+	private function makeLoop($view, $k, $v){
 		preg_match_all("#{%for[\s]*(.*) in (.*) :[\s]*(.*)[\s]*endfor%}#", $view, $match);
 		$i = 0;
 		foreach($match[2] as $loop){
@@ -174,6 +188,8 @@ class ZView extends Zedek{
 		}
 		return $view;
 	}
+
+	private function logic(){}
 }
 
 ?>

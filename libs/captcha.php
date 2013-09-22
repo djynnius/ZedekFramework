@@ -1,6 +1,6 @@
 <?php
 
-namespace djynnius\zedekframework;
+namespace __zf__;
 
 class Captcha{
 	function __construct(){}
