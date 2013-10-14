@@ -6,11 +6,11 @@ session_start();
 #application root /path/to/zedek/ 
 const zroot = "/var/djynnius/projects/zedek2.0.1/";
 const zweb = "/var/www/";
-const zsubpath = "work";
+const zsubpath = "";
 
 #set include path
 $os = strtolower($_SERVER['SERVER_SOFTWARE']);
-$zedekCorePath = strpos($os, "win32") ? ".;"	.zroot."core" : ":.:".zroot."core";
+$zedekCorePath = strpos($os, "win") ? ".;"	.zroot."core" : ":.:".zroot."core";
 ini_set('include_path', $zedekCorePath);
 
 #Error reporting - On for development and production
