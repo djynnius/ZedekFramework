@@ -1,7 +1,6 @@
 <?php
 #url mapper
 namespace __zf__;
-
 class URIMaper extends Zedek{
 	public $url;
 	public $controler;

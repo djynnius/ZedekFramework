@@ -3,9 +3,9 @@
 namespace __zf__;
 
 class Article extends ZControler{
-	const itemsadmin;
-	const catadmin;
-	const index;
+	const itemsadmin = "itemsadmin";
+	const catadmin = "catadmin";
+	const index = "index";
 
 	function _dbInit(){
 		$articlesDesc = array(

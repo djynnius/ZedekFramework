@@ -51,11 +51,16 @@ abstract class ZControler extends Zedek implements ZIControler{
 		return array();
 	}
 
-	public function _bounce(){
+	public function _bounce($msg=false){
+		$msg = $msg == false ? "" : "msg={$msg}";
 		if(isset($_SERVER['HTTP_REFERER'])){
-			header("Location: ".$_SERVER['HTTP_REFERER']);
+			$url = $_SERVER['HTTP_REFERER'];
+			$url = explode("?msg=", $url);
+			$url = $url[0];
+			$url = strpos($url, "?") != false ? $url."&{$msg}" : rtrim($url, "/")."/?{$msg}";
+			header("Location: {$url}");
 		} else {
-			header("Location: /");
+			header("Location: /"."{$msg}");
 		}
 	}
 }

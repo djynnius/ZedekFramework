@@ -21,7 +21,7 @@ class CMS extends ZControler{
 		}
 	}
 
-	function addContent($content, $image, $imgFolder, $table=false $orm){
+	function addContent($content, $image, $imgFolder, $table=false, $orm){
 		$timestamp = time();
 		$table = $table == false ? $orm->table("content") : $orm->table($table);
 		if(strlen($image['name']) > 3){

@@ -2,7 +2,6 @@
 #the zedek super parent
 namespace __zf__;
 use \Exception as Exception;
-
 abstract class Zedek{
 
 	public $configFile;
