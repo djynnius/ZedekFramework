@@ -35,15 +35,15 @@ This is a json file that shuld be edited directly. Unlike the general config it 
 
  #engine represents which Relational Database Management System in use and may be sqlite, mysql or any other option allowed by PDO.
 
-#host represents the host and does not have to be set for sqlite
+host represents the host and does not have to be set for sqlite
 
-#user represents database username and does not have to be set for sqlite
+user represents database username and does not have to be set for sqlite
 
-#pass represents password and does not have to be set for sqlite 
+pass represents password and does not have to be set for sqlite 
 
-#db represents database name. In the case of sqlite it is the path to the sqlite database
+db represents database name. In the case of sqlite it is the path to the sqlite database
 
-#prefix represents any chosen prefix for database table names - akin to a namespace
+prefix represents any chosen prefix for database table names - akin to a namespace
 
     {
         "engine": "mysql",
