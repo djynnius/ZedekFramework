@@ -1,3 +1,3 @@
 <?php
-	require_once "/var/djynnius/projects/cedar/anchor.php";
+	require_once "/path/to/zedek/anchor.php";
 ?>
