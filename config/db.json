@@ -3,5 +3,5 @@
   "host": "localhost",
   "user": "secure",
   "pass": "secure",
-  "db": "/var/djynnius/projects/zedek2.0.1/databases/zedek.db" 
+  "db": "/path/to/zedek/databases/zedek.db" 
 }
