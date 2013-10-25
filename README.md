@@ -1,4 +1,4 @@
-Zedek2.0
+Zedek2.1
 ========
 
 Zedek Web Development Framework version 2.1
@@ -24,19 +24,23 @@ Requirements
 2. PHP5.3+
 3. Knowledge of PHP
 4. Knowledge of Object Oriented Programming (OOP)
+5. PHPUnit and understanding of Test Driven Development (TDD) in PHP
 
 
 Creating your first application follow these steps:
 ===================================================
 
 1. Download this repo and extract so you have a folder named "zedek" or what ever else you want to call it in a non web accessible folder. This is one of the security features of Zedek2.0.
-2. in your web accessible folder (web root) u will require 3 files and a folder being a ".htaccess" file, a router file named as you desire such as "router.php", a "favicon.ico" file and a folder for your public files.
-3. The contents of the .htaccess file should redirect all traffic to the router file while excluding the public folder contents:
+2. in your web accessible folder (web root) u will require 3 files and a folder being a ".htaccess" file, a router file named as you desire such as "router.php", a "favicon.ico" file and a folder for your public files. To get these you may copy them out of the /zedek/public folder or make this folder your web folder by creating a virtual host for this folder
+3. The contents of the .htaccess file should redirect all traffic to the router file while excluding the public folder contents and any other folders you define:
 
 ## .htaccess contents ##
 
     RewriteEngine On
-    RewriteCond %{REQUEST_URI} !/public/.*$ 
+    RewriteCond %{REQUEST_URI} !/images/.*$ 
+    RewriteCond %{REQUEST_URI} !/fonts/.*$ 
+    RewriteCond %{REQUEST_URI} !/stylesheets/.*$ 
+    RewriteCond %{REQUEST_URI} !/scripts/.*$ 
     RewriteCond %{REQUEST_URI} !/favicon\.ico$
     RewriteRule ^(.*)$ router.php
 
@@ -69,7 +73,7 @@ Once done you should see your app on your website with a successful install mess
 Hello World!
 ============
 
-Zedek 2.0 is built to map urls to controllers and methods in a style:
+Zedek 2.1 is built to map urls to classes and methods in a style:
 http://mysite.com/class/method/arguments
 (this mapping is handled primarily by a class named URLMaper)
 
