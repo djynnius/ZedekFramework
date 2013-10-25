@@ -2,14 +2,16 @@
 #the zedek super parent
 namespace __zf__;
 use \Exception as Exception;
+use \PHPUnit_Framework_TestCase as PHPUnit;
+
 abstract class Zedek{
 
 	public $configFile;
 
 	static function import($module = "default"){
 		try{
-			if(file_exists(zroot."engines/{$module}/controler.php")){
-				require_once zroot."engines/{$module}/controler.php";
+			if(file_exists(zroot."engines/{$module}/model.php")){
+				require_once zroot."engines/{$module}/model.php";
 			} else {
 				throw new Exception();
 			}
@@ -108,9 +110,29 @@ class Z extends Zedek{
 				require_once $file;
 			}
 		}
-	}	
+	}
+
+	static function message(){
+		return isset($_GET['msg']) ? $_GET['msg']: "";
+	}
+
+	static function createTest($name){
+		$file = zroot."test/{$name}.php";
+		try{
+			if(!file_exists($file = zroot."test/{$name}.php")){
+				$code = file_get_contents(zroot."templates/test.tmp");
+				file_put_contents($file, $code);
+				chmod($file, 0777);				
+			} else {
+				throw new ZException("{$name} Test exists<br />\r\n");
+			}
+		} catch(ZException $e){
+			echo $e->getMessage();
+		}
+
+	}
 }
 
-class ZFException extends Exception{}
+class ZException extends Exception{}
 
 ?>

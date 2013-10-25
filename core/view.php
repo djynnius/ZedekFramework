@@ -11,14 +11,16 @@ class ZView extends Zedek{
 	public $style;
 	public $script;
 	public $configFile;
+	public $uri;
 
 	function __construct($arg1=null, $arg2=null){
-		$fix = self::fixArgs($arg1, $arg2);
+		$fix = $this->fixArgs($arg1, $arg2);
 		$this->template = $fix['template'];
 		$this->view = $fix['view'];
 		$this->theme = $this->getTheme() != false && $this->getTheme() != null ? $this->getTheme() : "default";
 		$this->getAllThemeFiles();
 		$this->configFile = zroot."config/template.json";
+		$this->uri = new URIMaper;
 	}
 
 	#cleans up arguments
@@ -65,13 +67,10 @@ class ZView extends Zedek{
 
 	#returns default template
 	private function template(){
-		$uri = new URIMaper;
 		$config = new ZConfig;
-
 		$a = array(
 			'footer'=>"Zedek Framework. Version".$config->get("version"), 
 		);
-
 		$b = $this->configTemplate();
 		$a = array_merge($a, $b);
 		return $a;
@@ -116,21 +115,20 @@ class ZView extends Zedek{
 	}
 
 	private function getExternalScript($file){
-		$file = zroot."libs/external_packages/".$file.".js";
+		$file = zroot."libs/external_packages/js/".$file.".js";
 		return file_exists($file) ? file_get_contents($file) : false;
 	}
 
 	private function getValidView(){
-		$uri = new URIMaper;
-		$controler = $uri->controler == "" ? "default" : $uri->controler;
-		$method = $uri->method;
-		$viewFile = zroot."engines/{$controler}/view/{$this->view}.html";
+		$class = $this->uri->class == "" ? "default" : $this->uri->class;
+		$method = $this->uri->method;
+		$viewFile = zroot."engines/{$class}/view/{$this->view}.html";
 		if(file_exists($viewFile)){
 			$view = file_get_contents($viewFile);	
-		} elseif(file_exists(zroot."engines/{$controler}/view/{$method}.html")){
-			$view = file_get_contents(zroot."engines/{$controler}/view/{$method}.html");
-		} elseif(file_exists(zroot."engines/{$controler}/view/none.html")){
-			$view = file_get_contents(zroot."engines/{$controler}/view/none.html");
+		} elseif(file_exists(zroot."engines/{$class}/view/{$method}.html")){
+			$view = file_get_contents(zroot."engines/{$class}/view/{$method}.html");
+		} elseif(file_exists(zroot."engines/{$class}/view/none.html")){
+			$view = file_get_contents(zroot."engines/{$class}/view/none.html");
 		} elseif(file_exists(zroot."engines/default/view/{$this->view}.html")){
 			$view = file_get_contents(zroot."engines/default/view/{$this->view}.html");
 		} elseif(file_exists(zroot."engines/default/view/none.html")){

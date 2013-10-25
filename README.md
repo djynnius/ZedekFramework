@@ -1,7 +1,7 @@
 Zedek2.0
 ========
 
-Zedek Web Development Framework version 2.0
+Zedek Web Development Framework version 2.1
 
 This is a PHP web development framework built as a very light framework while taking from some of the nicer modern ideas. 
 
@@ -46,7 +46,7 @@ Creating your first application follow these steps:
 ## router.php contents ##
 
     <?php
-      require_once "/path/to/zedek/anchor.php";
+      require_once "/path/to/zedek/controller.php";
     ?>
     
 and you are about done with the web parts.
@@ -54,11 +54,11 @@ and you are about done with the web parts.
 on a windows machine it would look more like:
 
     <?php
-        require_once "drive:\\path\\to\\anchor.php";
+        require_once "drive:\\path\\to\\controller.php";
     ?>
 
-## anchor.php ##
-Within the anchor file online 6 set the root constant to the path leading to the zedek app ending with a trailing slash
+## controller.php ##
+Within the controller file online 6 set the root constant to the path leading to the zedek app ending with a trailing slash
 
     const zroot="/path/to/zedek/";
 
@@ -70,18 +70,18 @@ Hello World!
 ============
 
 Zedek 2.0 is built to map urls to controllers and methods in a style:
-http://mysite.com/controler/method/arguments
+http://mysite.com/class/method/arguments
 (this mapping is handled primarily by a class named URLMaper)
 
 the MVC is made literal within the engine folder. 
 
 1. To create a new app called foo create a folder with the name foo within the engines folder.
-2. within this create a controler file "controler.php" note the single "l" in the spelling.
-3. within the controller file enter the following code inside your php tags
+2. within this create a class file "model.php".
+3. within the model file enter the following code inside your php tags
 
 ## ##
 
-    class CControler extends ZControler{
+    class CModel extends ZModel{
       function bar(){
         echo "Hello World";
       }

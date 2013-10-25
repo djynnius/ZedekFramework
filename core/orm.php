@@ -137,13 +137,21 @@ class ZORMTable extends ZORM{
 	}
 
 	public function fetch(){
-		$q = "SELECT * FROM {$this->table}";
-		$q = $this->dbo->query($q);
-		$a = array();
-		while($r = $q->fetch(PDO::FETCH_ASSOC)){
-			$a[] = $r;
+		$q = "SELECT * FROM `{$this->table}`";
+		try{
+			if($q = $this->dbo->query($q)){
+				$a = array();
+				while($r = $q->fetch(PDO::FETCH_ASSOC)){
+					$a[] = $r;
+				}
+				return $a;				
+			} else {
+				throw new ZException("The table ({$this->table}) does not exist. \r\n");
+			}
+		} catch(ZException $e){
+			echo $e->getMessage();
+			return false;
 		}
-		return $a;
 	}
 
 	private function removeEmptyArrayInput($a){
@@ -346,19 +354,6 @@ class ZORMRow extends ZORM{
 		$q = "DELETE FROM `{$this->table}` WHERE `id`='{$this->currentRow()->id}'";
 		$this->dbo->query($q);
 	}
-}
-
-abstract class ZApp extends ZORM implements ZIApp{
-	function __construct(){
-		$this->orm = new ZORM;
-		$this->_init();
-	}
-
-	function _init(){}
-}
-
-interface ZIApp{
-	function _init();
 }
 
 ?>

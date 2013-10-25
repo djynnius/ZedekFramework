@@ -2,7 +2,7 @@
 
 namespace __zf__;
 
-class Article extends ZControler{
+class Article extends ZModel{
 	const itemsadmin = "itemsadmin";
 	const catadmin = "catadmin";
 	const index = "index";
