@@ -3,5 +3,10 @@
   "host": "localhost",
   "user": "secure",
   "pass": "secure",
+<<<<<<< HEAD
   "db": "/path/to/zedek/db/or/db/name" 
 }
+=======
+  "db": "/path/to/zedek/databases/zedek.db" 
+}
+>>>>>>> b2ee626f17a83ccd8850e8cc7b7645a48245bbe8
