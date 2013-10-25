@@ -3,21 +3,5 @@
   "host": "localhost",
   "user": "secure",
   "pass": "secure",
-<<<<<<< HEAD
-<<<<<<< HEAD
   "db": "/path/to/zedek/db/or/db/name" 
 }
-=======
-=======
-<<<<<<< HEAD
-  "db": "/path/to/zedek/db/or/db/name" 
-}
-=======
-  "db": "/path/to/zedek/databases/zedek.db" 
-}
->>>>>>> b2ee626f17a83ccd8850e8cc7b7645a48245bbe8
-=======
->>>>>>> 1eee4a11512906aae59d27706de5fa1822a07599
-  "db": "/path/to/zedek/databases/zedek.db" 
-}
->>>>>>> b2ee626f17a83ccd8850e8cc7b7645a48245bbe8
