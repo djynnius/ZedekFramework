@@ -7,7 +7,7 @@ The themes are located in the /zedek/themes folder and contain 4 files:
 The theme may be selected by setting within the config file /zedek/config/config.json
 
     {
-        "version": "2.0", 
+        "version": "2.1", 
         "theme": "new_theme"
     }
 

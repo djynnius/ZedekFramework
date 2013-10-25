@@ -3,7 +3,7 @@
 namespace __zf__;
 use ZORM as ORM, \PDOException as PDOException;
 
-class CMS extends ZControler{
+class CMS extends ZModel{
 
 	function __call($method, $args){
 		if(!method_exists($this, $method)){

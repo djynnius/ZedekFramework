@@ -1,3 +1,6 @@
 {
-  "version": "2.0.1", "theme": "basic"
+  "version": "2.1", 
+  "error": "On", 
+  "app": "zedek", 
+  "theme": "basic"
 }

@@ -2,19 +2,31 @@
 #url mapper
 namespace __zf__;
 class URIMaper extends Zedek{
+	public $http;
+	public $https;
+	public $port;
+	public $server;
 	public $url;
-	public $controler;
+	public $class;
 	public $method;
 	public $arguments;
 	public $gets;
 	public $args = array();
 
 	function __construct($subpath=false){
-		$url = $_SERVER['REQUEST_URI'];
+		$url = @$_SERVER['REQUEST_URI'];
 		$this->url = $url;
 		$this->mvc($subpath, $url);
 		$get = $this->getRequests($url);
 		$this->getArguments($get);
+		$this->serverInfo();
+	}
+
+	private function serverInfo(){
+		$this->server = @$_SERVER['SERVER_NAME'];
+		$this->port = @	$_SERVER['SERVER_PORT'];
+		$this->http = "http://{$this->server}:{$this->port}";
+		$this->https = "https://{$this->server}:{$this->port}";		
 	}
 
 	private function mvc($subpath, $url){
@@ -22,7 +34,7 @@ class URIMaper extends Zedek{
 			explode("/", $url) : 
 			explode("{$subpath}/", $url);
 		array_shift($mvc);
-		$this->controler = array_shift($mvc);
+		$this->class = array_shift($mvc);
 		$this->method = array_shift($mvc);
 		$this->arguments = join("/", $mvc);
 

@@ -36,22 +36,22 @@ remove($key) public function destroys the config value
 ===Attributes===
 
 $url public 
-$controler controler portion of url
+$class class portion of url
 $method method portio of url
 $gets any part of a url after a ? 
 $args = array() returns array of get request
 
 
-==ZControler==
+==Zclass==
 
-abstract class extends Zedek implements ZIControler
+abstract class extends Zedek implements ZIclass
 
 ===Methods===
-_init() replaces construct for all controlers
+_init() replaces construct for all classs
 
 template($arg1=null, $arg2=null) takes 2 arguments in no specific order - view file, and placeholder array
 
-importApp($controler = false) allows access to models other than those of the current controler
+importApp($class = false) allows access to models other than those of the current class
 
 _default() sets default view
 
