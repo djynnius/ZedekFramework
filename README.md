@@ -61,8 +61,8 @@ on a windows machine it would look more like:
         require_once "drive:\\path\\to\\controller.php";
     ?>
 
-## controller.php ##
-Within the controller file online 6 set the root constant to the path leading to the zedek app ending with a trailing slash
+## initializer.php ##
+Within the controller file on line 7 set the root constant to the path leading to the zedek app ending with a trailing slash
 
     const zroot="/path/to/zedek/";
 

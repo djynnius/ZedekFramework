@@ -3,13 +3,6 @@
 namespace __zf__;
 session_start();
 
-/*
-chmod database/ rw
-chmod config/ rw
-chmod test/ rwx
-chmod public/ r
-*/
-
 #application root /path/to/zedek/ 
 const zroot = "/path/to/zedek/root";
 const zweb = "/path/to/web/";
