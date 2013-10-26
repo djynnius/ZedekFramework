@@ -48,7 +48,7 @@ class ZConfig extends Zedek{
 
 	private function cast(){
 		$config = json_encode($this->config);
-		file_put_contents($this->file, $config);		
+		file_put_contents($this->configFile, $config);		
 	}
 }
 

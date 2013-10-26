@@ -131,6 +131,16 @@ class Z extends Zedek{
 		}
 
 	}
+
+	static function webTest(){
+		$config = new ZConfig;
+		if($config->get("webUnitTest") == "Off"){
+			require_once zroot."libs/external_packages/php/nowebtest.php";
+		} else {
+			require_once zroot."libs/external_packages/php/simpletest/autorun.php";	
+		}
+		
+	}
 }
 
 class ZException extends Exception{}

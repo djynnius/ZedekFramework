@@ -1,6 +1,7 @@
 {
-  "version": "2.1", 
-  "error": "On", 
-  "app": "zedek", 
-  "theme": "basic"
+	"version":"2.1",
+	"error":"On",
+	"webUnitTest":"Off",
+	"app":"zedek",
+	"theme":"phliteman"
 }
