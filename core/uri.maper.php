@@ -12,6 +12,7 @@ class URIMaper extends Zedek{
 	public $arguments;
 	public $gets;
 	public $args = array();
+	static public $subpath;
 
 	function __construct($subpath=false){
 		$url = @$_SERVER['REQUEST_URI'];
