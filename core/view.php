@@ -70,6 +70,7 @@ class ZView extends Zedek{
 		$config = new ZConfig;
 		$a = array(
 			'footer'=>"Zedek Framework. Version".$config->get("version"), 
+			'version'=>$config->get("version"), 
 		);
 		$b = $this->configTemplate();
 		$a = array_merge($a, $b);
