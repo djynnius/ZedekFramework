@@ -29,7 +29,8 @@ class ZORM extends Zedek{
 		$db_config_file = file_get_contents(zroot."config/db.json");
 		$db_config = json_decode($db_config_file);
 		$this->engine = $db_config->{'engine'};
-		$this->db = $db_config->{'db'};
+		$this->db = $this->engine == "sqlite" && !file_exists($db_config->{'db'}) ? 
+			zroot."databases/zedek.db" : $this->db = $db_config->{'db'};
 		$this->host = $db_config->{'host'};
 		$this->user = $db_config->{'user'};
 		$this->pass = $db_config->{'pass'};		
