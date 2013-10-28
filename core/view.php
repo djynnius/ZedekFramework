@@ -4,20 +4,22 @@ namespace __zf__;
 
 class ZView extends Zedek{
 	public $template;
-	public $view;
-	public $theme;
+	public $view; //current view file
+	public $theme; //theme folder name
+	public $folder; //path to theme folder
 	public $header;
 	public $footer;
 	public $style;
-	public $script;
-	public $configFile;
-	public $uri;
+	public $script; 
+	public $configFile; //template.json file path
+	public $uri; //URIMaper Object
 
 	function __construct($arg1=null, $arg2=null){
 		$fix = $this->fixArgs($arg1, $arg2);
 		$this->template = $fix['template'];
 		$this->view = $fix['view'];
 		$this->theme = $this->getTheme() != false && $this->getTheme() != null ? $this->getTheme() : "default";
+		$this->folder = zroot."themes/{$this->theme}/";
 		$this->getAllThemeFiles();
 		$this->configFile = zroot."config/template.json";
 		$this->uri = new URIMaper;
@@ -56,21 +58,20 @@ class ZView extends Zedek{
 	private function getAllThemeFiles(){
 		$themeFolder = zroot."themes/";
 		$files = scandir($themeFolder.$this->theme);
-
 		foreach($files as $file){
 			if(!is_dir($themeFolder.$file)){
 				$info = pathinfo($themeFolder.$file);
-				$this->$info['filename'] = $this->getThemeFile($info['filename'], $info['extension']);
+				$this->$info['filename'] = $this->getThemeFile($info['filename'], @$info['extension']);
 			}
-		}		
-	}	
+		}
+	}
 
 	#returns default template
 	private function template(){
 		$config = new ZConfig;
 		$a = array(
 			'footer'=>"Zedek Framework. Version".$config->get("version"), 
-			'version'=>$config->get("version"), 
+			'version'=> $config->get("version"), 
 		);
 		$b = $this->configTemplate();
 		$a = array_merge($a, $b);
@@ -104,8 +105,8 @@ class ZView extends Zedek{
 	}
 
 	private function stylesAndScripts(){
-		$this->template['style'] = $this->style;
-		$this->template['script'] = $this->script;
+		$this->template['style'] = $this->getThemeStyles();
+		$this->template['script'] = $this->getThemeScripts();
 		#external scripts
 		$this->template['jQuery2'] = $this->getExternalScript("jQuery1.10.2");
 		$this->template['jQuery1'] = $this->getExternalScript("jQuery2.0.3");
@@ -113,6 +114,40 @@ class ZView extends Zedek{
 		$this->template['jQueryUI'] = $this->getExternalScript("jQueryUI");
 		$this->template['jQueryNivo'] = $this->getExternalScript("jQueryNivo");
 		$this->template['nicEdit'] = $this->getExternalScript("nicEdit");
+	}
+
+	/**
+		reads all styles in /zedek/theme/styles/ folder that have the extension .css
+	*/
+	private function getThemeStyles(){
+		return $this->getThemeIncludes("style", "css");
+	}
+
+	/**
+		reads all scripts in /zedek/theme/scripts/ folder that have the extension .js
+	*/
+	private function getThemeScripts(){
+		return $this->getThemeIncludes("script", "js");
+	}
+
+	/**
+		reads all scripts and styles
+	*/
+	private function getThemeIncludes($type, $extension){
+		$folder = "{$this->folder}{$type}s/";
+		$files = scandir($folder);
+		$puts = "";
+		$puts .= file_exists("{$this->folder}{$type}.{$extension}") ? file_get_contents() : "";
+		if(file_exists("{$this->folder}{$type}s")){
+			foreach($files as $file){
+				$ext = explode(".", $file);
+				$ext = end($ext);
+				if(!is_dir("{$folder}{$file}") && $ext == $extension){
+					$puts .= file_get_contents("{$folder}{$file}");
+				}
+			}		
+		}
+		return $puts;		
 	}
 
 	private function getExternalScript($file){
