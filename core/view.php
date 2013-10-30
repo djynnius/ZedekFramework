@@ -97,7 +97,7 @@ class ZView extends Zedek{
 			if(is_string($v)){
 				$view = str_replace("{{".$k."}}", "$v", $view);
 			} elseif(is_array($v)){
-				$view = $this->makeLoop($view, $k, $v);
+				$view = $this->loop($view, $k, $v);
 			}
 		}
 		$render = $header.$view.$footer;		
@@ -220,6 +220,24 @@ class ZView extends Zedek{
 			}
 			$i++;
 		}
+		return $view;
+	}
+
+	private function loop($view, $k, $v){
+		$regex = "#{%for[\s](.*)[\s]*in[\s]*(.*)[\s]*:[\s]*(.*)[\s]*endfor%}#";
+		preg_match_all($regex, $view, $match);
+		$raw = $match[3][0]; //portion to replace		 
+		$item = trim($match[1][0]); //item 
+		$items = trim($match[2][0]); //items 
+		$index = "#{%for[\s]{$item}[\s]*in[\s]*{$items}[\s]*:[\s]*(.*)[\s]*endfor%}#";
+		$loop = "";
+		foreach($v as $vsub	){
+			foreach($vsub as $l=>$w){
+				$virtual = "{$item}.{$l}";
+				$loop .= str_replace($virtual, $w, $raw);
+			}
+		}
+		$view = preg_replace($index, $loop, $view);
 		return $view;
 	}
 
