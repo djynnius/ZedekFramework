@@ -97,7 +97,7 @@ class ZView extends Zedek{
 			if(is_string($v)){
 				$view = str_replace("{{".$k."}}", "$v", $view);
 			} elseif(is_array($v)){
-				$view = $this->loop($view, $k, $v);
+				$view = $this->makeLoop($view, $k, $v);
 			}
 		}
 		$render = $header.$view.$footer;		
