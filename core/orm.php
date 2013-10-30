@@ -12,6 +12,7 @@ class ZORM extends Zedek{
 	protected $name;
 	protected $engine;
 	protected $db;
+	const scaffold = 1;
 
 	function __construct($dbo=false){
 		if($dbo == false){
@@ -29,8 +30,7 @@ class ZORM extends Zedek{
 		$db_config_file = file_get_contents(zroot."config/db.json");
 		$db_config = json_decode($db_config_file);
 		$this->engine = $db_config->{'engine'};
-		$this->db = $this->engine == "sqlite" && !file_exists($db_config->{'db'}) ? 
-			zroot."databases/zedek.db" : $this->db = $db_config->{'db'};
+		$this->db = $db_config->{'db'};
 		$this->host = $db_config->{'host'};
 		$this->user = $db_config->{'user'};
 		$this->pass = $db_config->{'pass'};		
@@ -220,7 +220,10 @@ class ZORMTable extends ZORM{
 		return $row;
 	}
 
-	public function scafold(){}
+	public function scafold($app_name = null){
+		$app_name = is_null($app_name) ? $this->table : $app_name;
+		ZModel::create($app_name, ZORM::scaffold, $this->table);
+	}
 
 	public function drop(){
 		$q = "DROP TABLE {$this->table}";

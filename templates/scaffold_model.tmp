@@ -1,0 +1,75 @@
+<?php
+namespace __zf__;
+class CModel extends ZModel{
+	
+	private $table;
+
+	function __construct(){
+		parent::__construct();
+		$this->table = $this->orm->table({{table}});
+	}
+
+	function add(){
+		if(isset($_POST['submit'])){
+			if(!$this->isAdmin()) $this->_bounce();
+			unset($_POST['submit']);
+			$this->table->add($_POST);
+			$this->_bounce();
+		} else {
+			$this->read();
+		}		
+	}
+
+	function read(){
+		$items = $this->table->fetch();
+		$placeholders = array(
+			'items'=>$items, 
+		);
+		echo $this->template($placeholers)->render();
+	}
+
+	function view(){
+		$id = $this->orm->currentIndex();
+		$object = $this->table->row($id);
+		$placeholders = array(
+			'id'=>$object->id, 
+		);
+		echo $this->template($placeholers)->render();
+	}
+
+	function update(){
+		if(!$this->isAdmin()) $this->_bounce();
+		$table = $this->table;
+		$id = $this->orm->currentIndex();
+		if(isset($_POST['submit'])){
+			//$id = $_POST['id'];
+			unset($_POST['submit']);
+			if(isset($_POST['id']);) unset($_POST['id']);			
+			$table->update($id, $_POST);
+			$this->_bounce();
+		} else {
+			$object = $table->row($id);
+			$placeholders = array(
+				'id'=>$object->id, 
+			);
+			echo $this->template($placeholers)->render();	
+		}
+	}
+
+	function remove(){
+		if(!$this->isAdmin()) $this->_bounce();
+		$id = $this->orm->currentIndex();
+		$this->table->row($id)->remove();
+		$this->_bounce();
+	}
+
+	function getTable(){
+		return $this->table;
+	}
+}
+
+Z::webTest();
+use UnitTestCase;
+class CModelTest extends UnitTestCase {
+}
+?>

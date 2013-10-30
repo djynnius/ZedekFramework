@@ -12,10 +12,16 @@ class URIMaper extends Zedek{
 	public $arguments;
 	public $gets;
 	public $args = array();
-	static public $subpath;
 
-	function __construct($subpath=false){
-		$url = @$_SERVER['REQUEST_URI'];
+	function __construct(){
+		$sub = zsub;
+		$subpath = empty($sub) ? null : true;
+		$url  = @$_SERVER['REQUEST_URI'];
+		//check if using a sub folder
+		if(!is_null($subpath)){
+			$url = explode(zsub, $url);
+			$url = $url[1];
+		}
 		$this->url = $url;
 		$this->mvc($subpath, $url);
 		$get = $this->getRequests($url);
@@ -32,8 +38,7 @@ class URIMaper extends Zedek{
 
 	private function mvc($subpath, $url){
 		$mvc = $subpath == false ? 
-			explode("/", $url) : 
-			explode("{$subpath}/", $url);
+			explode("/", $url) : explode("{$subpath}/", $url);
 		array_shift($mvc);
 		$this->class = array_shift($mvc);
 		$this->method = array_shift($mvc);
@@ -68,8 +73,7 @@ class URIMaper extends Zedek{
 			return null;
 		} else {
 			return;
-		}
-		
+		}		
 	}
 }
 ?>

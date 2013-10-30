@@ -3,9 +3,13 @@
 namespace __zf__;
 session_start();
 
-#application root /path/to/zedek/ 
-const zroot = "/path/to/zedek/root";
+#application constants for doc root, web root and sub folder path 
+#This is OS specific windows will be "C:\\path\\to\\root\\" 
+#"C:\\path\\to\\web\\" and "/subfolder/" for both unix and windows 
+#This is OS specific windows will be "C:\\path\\to\\root\\" 
+const zroot = "/path/to/zedek/root/";
 const zweb = "/path/to/web/";
+const zsub = "";
 
 #set include path
 $os = strtolower(@$_SERVER['SERVER_SOFTWARE']);
@@ -13,7 +17,6 @@ $zedekCorePath = strpos($os, "win") ? ".;"	.zroot."core" : ":.:".zroot."core";
 ini_set('include_path', $zedekCorePath);
 
 #Error reporting - On for development and production
-
 
 #main zedek classes
 require_once "zedek.php";
@@ -26,4 +29,3 @@ Z::importLibs();
 
 $config = new ZConfig;
 ini_set('display_errors', $config->get("error"));
-?>
