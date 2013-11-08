@@ -15,5 +15,3 @@ abstract class Zlibs implements ZIlib{
 interface ZIlib{
 	function _init();
 }
-
-?>

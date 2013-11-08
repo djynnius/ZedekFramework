@@ -20,16 +20,16 @@ class User extends ZModel{
 		);
 		switch($this->role){
 			case 'admin': 
-				echo $this->template("admin", $placeholders)->render();
+				print $this->template("admin", $placeholders)->render();
 				break;
 			case 'user':
-				echo $this->template("user", $placeholders)->render();
+				print $this->template("user", $placeholders)->render();
 				break;
 			case 'guest':
-				echo $this->template("guest", $placeholders)->render();
+				print $this->template("guest", $placeholders)->render();
 				break;
 			default:
-				echo $this->template("index", $placeholders)->render();
+				print $this->template("index", $placeholders)->render();
 		}
 	}
 
@@ -97,7 +97,7 @@ class User extends ZModel{
 			unset($_POST['submit']);
 			$this->_registerByEmail($_POST);
 		} else {
-			echo $this->template($placeholders)->render();	
+			print $this->template($placeholders)->render();	
 		}		
 	}
 
@@ -146,7 +146,7 @@ class User extends ZModel{
 		$placeholders = array(
 			'email'=>$email
 		);
-		echo $this->template($placeholders)->render();
+		print $this->template($placeholders)->render();
 	}
 
 	/**
@@ -184,7 +184,7 @@ class User extends ZModel{
 	}
 
 	private function _unconfirmedEmailRegistration(){
-		echo $this->template()->render();
+		print $this->template()->render();
 	}	
 
 	function _recoverPassword($username, $answer, $password, $cpassword){
@@ -215,7 +215,7 @@ class User extends ZModel{
 		if(isset($_POST['submit'])){
 			$this->_sendRecoveryMessage($_POST['email'], $orm);
 		} else {
-			echo $this->template()->render();	
+			print $this->template()->render();	
 		}
 	}
 
@@ -244,7 +244,7 @@ class User extends ZModel{
 	* @depends _sendRecoveryMessage
 	*/
 	function recoverpassword(){
-		echo $this->template()->render(); 
+		print $this->template()->render(); 
 	}
 
 	/**
@@ -262,7 +262,7 @@ class User extends ZModel{
 		if(isset($_POST['submit'])){
 			$this->_compareAndResetPassword($_POST, $orm);
 		} else {
-			echo $this->template($placeholders)->render();
+			print $this->template($placeholders)->render();
 		}
 	}
 
@@ -363,7 +363,7 @@ class User extends ZModel{
 
 	function profile(){
 		if(!$this->isUser()) header("Location: /");
-		echo $this->template($this->_placeholders())->render();
+		print $this->template($this->_placeholders())->render();
 	}	
 
 	function update(){
@@ -381,7 +381,7 @@ class User extends ZModel{
 			}
 			header("Location: /user/profile");
 		} else {
-			echo $this->template($this->_placeholders())->render();	
+			print $this->template($this->_placeholders())->render();	
 		}
 	}
 
@@ -414,5 +414,3 @@ class User extends ZModel{
 		);
 	}
 }
-
-?>	

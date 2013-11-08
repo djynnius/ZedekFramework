@@ -28,4 +28,3 @@ if(method_exists($class, $method)){
 		$class->_default();
 	}
 }
-?>

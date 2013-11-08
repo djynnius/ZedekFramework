@@ -9,5 +9,3 @@ class Postman{
 		mail($to, $subject, $message, "From: {$senderMail}");
 	}	
 }
-
-?>

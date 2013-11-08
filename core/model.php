@@ -54,7 +54,7 @@ abstract class ZModel extends Zedek implements ZIModel{
 			}
 		} catch(ZException $e){
 			return false;
-			//echo $e->getMessage();
+			//print $e->getMessage();
 		}		
 	}
 	
@@ -83,7 +83,7 @@ abstract class ZModel extends Zedek implements ZIModel{
 
 	#sets default to render index
 	public function _default(){
-		echo $this::template("index")->render();
+		print $this::template("index")->render();
 	} 
 
 	public function _placeholders(){
@@ -109,5 +109,3 @@ interface ZIModel{
 	function _default();
 	function _placeholders();
 }
-
-?>

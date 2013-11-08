@@ -6,5 +6,3 @@ require_once zroot."engines/{$app}/model.php";
 
 class AppTest extends ZUnit{
 }
-
-?>

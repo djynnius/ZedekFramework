@@ -72,4 +72,3 @@ Z::webTest();
 use UnitTestCase;
 class CModelTest extends UnitTestCase {
 }
-?>

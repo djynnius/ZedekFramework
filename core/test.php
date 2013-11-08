@@ -39,5 +39,3 @@ class ZUnit extends PHPUnit_Framework_TestCase {
 }
 
 $foo = new ZTest;
-
-?>

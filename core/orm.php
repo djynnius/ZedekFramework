@@ -92,7 +92,7 @@ class ZORM extends Zedek{
 				return false;
 			}
 		} catch(PDOException $e){
-			//echo $e->getMessage();
+			//print $e->getMessage();
 		}
 	}
 
@@ -150,7 +150,7 @@ class ZORMTable extends ZORM{
 				throw new ZException("The table ({$this->table}) does not exist. \r\n");
 			}
 		} catch(ZException $e){
-			echo $e->getMessage();
+			print $e->getMessage();
 			return false;
 		}
 	}
@@ -281,7 +281,6 @@ class ZORMView extends ZORMTable{
 	public function create($table, $q){
 		$q = "CREATE VIEW `{$table}` AS {$q}";		
 		$this->dbo->query($q);
-		echo $q;
 	}
 
 	public function drop(){
@@ -359,5 +358,3 @@ class ZORMRow extends ZORM{
 		$this->dbo->query($q);
 	}
 }
-
-?>

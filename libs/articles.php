@@ -56,13 +56,13 @@ class Article extends ZModel{
 		$temp = array_merge($temp, $placeholders);
 		switch($uri->arguments){
 			case "articles":
-				echo $this->template($views[0])->render();
+				print $this->template($views[0])->render();
 				break;
 			case "categories":
-				echo $this->template($views[1], $temp)->render();
+				print $this->template($views[1], $temp)->render();
 				break;
 			default:
-				echo $this->template($temp, $views[2])->render();
+				print $this->template($temp, $views[2])->render();
 		}		
 	}
 
@@ -131,7 +131,7 @@ class Article extends ZModel{
 		$category = $orm->table("article_categories")->row($article->cat)->category;
 		$attachment = $orm->table("article_attachments")->row($article->id, "article_id");
 		$file = $this->getAttachedFiles($attachment);
-		echo $this->template($temp, $view)->render();
+		print $this->template($temp, $view)->render();
 	}
 
 	private function getAttachedFiles($attachment){
@@ -157,9 +157,7 @@ class Article extends ZModel{
 
 	function publications(){
 		$uri = new URIMaper;
-		echo $uri->arguments;
+		print $uri->arguments;
 	}
 
 }
-
-?>

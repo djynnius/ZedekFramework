@@ -243,5 +243,3 @@ class ZView extends Zedek{
 
 	private function logic(){}
 }
-
-?>

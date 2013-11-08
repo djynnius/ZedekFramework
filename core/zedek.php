@@ -58,7 +58,7 @@ abstract class Zedek{
 				return false;
 			}
 		} catch(Exception $e){
-			//echo $e->getMessage();
+			//print $e->getMessage();
 		}
 	}
 
@@ -127,7 +127,7 @@ class Z extends Zedek{
 				throw new ZException("{$name} Test exists<br />\r\n");
 			}
 		} catch(ZException $e){
-			echo $e->getMessage();
+			print $e->getMessage();
 		}
 
 	}
@@ -144,5 +144,3 @@ class Z extends Zedek{
 }
 
 class ZException extends Exception{}
-
-?>

@@ -76,4 +76,3 @@ class URIMaper extends Zedek{
 		}		
 	}
 }
-?>

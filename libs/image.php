@@ -78,9 +78,7 @@ class Image{
 			}
 			closedir($handleS);
 		} else {
-			echo "Either your source or destination is not a valid folder.";
+			print "Either your source or destination is not a valid folder.";
 		}
 	}
 }
-
-?>

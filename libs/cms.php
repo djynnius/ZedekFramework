@@ -110,7 +110,7 @@ class CMS extends ZModel{
 			$this->addContent($_POST, $_FILES['image']);
 			header('Location: ' . $_SERVER['HTTP_REFERER']);
 		} else {
-			echo $this->template('add')->render();
+			print $this->template('add')->render();
 		}
 	}
 
@@ -125,7 +125,7 @@ class CMS extends ZModel{
 			$image = end(explode("/", $content->image));
 			$image = $imgFolder.$image;
 		}
-		echo $this->template($view, $temp)->render();
+		print $this->template($view, $temp)->render();
 	}
 
 	function edit($view, $temp=array()){
@@ -133,9 +133,7 @@ class CMS extends ZModel{
 			$this->updateContent($_POST, $_FILES['image']);
 			header('Location: ' . $_SERVER['HTTP_REFERER']);
 		} else {
-			echo $this->template($view, $temp)->render();	
+			print $this->template($view, $temp)->render();	
 		}	
 	}
 }
-
-?>
