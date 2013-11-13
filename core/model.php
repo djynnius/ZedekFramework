@@ -81,9 +81,14 @@ abstract class ZModel extends Zedek implements ZIModel{
 		return new ZView($arg1, $arg2);
 	}
 
+	#shorter method for rendering
+	final protected function render($arg1=null, $arg2=null){
+		print $this->template($arg1, $arg2)->render();
+	}
+
 	#sets default to render index
 	public function _default(){
-		print $this::template("index")->render();
+		$this->render("index");
 	} 
 
 	public function _placeholders(){
