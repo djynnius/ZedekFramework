@@ -5,9 +5,9 @@ require_once "initializer.php";
 #instantiate uri maper 
 $uri = new URIMaper;
 if(file_exists(zroot."engines/{$uri->class}/model.php")){
-	$uri->import($uri->class);
+	Z::import($uri->class);
 } else {
-	$uri->import();
+	Z::import();
 }
 
 #instantiating model class

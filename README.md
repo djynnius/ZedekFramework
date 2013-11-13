@@ -3,17 +3,19 @@ Zedek2.1
 
 Zedek Web Development Framework version 2.1
 
-This is a PHP web development framework built as a very light framework while taking from some of the nicer modern ideas. 
+This is a lightweight PHP web development framework. 
 
 The features include:
 
-1. Model View Controller
+1. Model-View-Controller
 2. Object Oriented
-3. Encourages agile development
-4. Has an Object Relational Model (ORM) built in called ZORM
+3. Encourages Agile development
+4. Has an Object Relational Mapper (ORM) built in called ZORM
 5. Has a templating engine accessed from a class called ZView
 6. Templating engines allows some logic in the html view file such as looping through an array 
 7. URL rewriting allowing for clean urls
+8. Tested with apache, and currently being tested on lighttpd
+9. Works on Unix, unix-like and Windows Operating Systems
 
 Requirements
 =============
@@ -22,13 +24,13 @@ Requirements
 2. PHP5.3+
 3. Knowledge of PHP
 4. Knowledge of Object Oriented Programming (OOP)
-5. PHPUnit and understanding of Test Driven Development (TDD) in PHP
+5. PHPUnit and understanding of Test Driven Development (TDD) in PHP - Simpletest library has been included to take care of web presentation of tests
 
 
 Creating your first application follow these steps:
 ===================================================
 
-1. Download this repo and extract so you have a folder named "zedek" or what ever else you want to call it in a non web accessible folder. This is one of the security features of Zedek2.0.
+1. Download this repo and extract so you have a folder named "zedek" or what ever else you want to call it in a non web accessible folder. This is one of the security features of Zedek Framework.
 2. in your web accessible folder (web root) u will require 3 files and a folder being a ".htaccess" file, a router file named as you desire such as "router.php", a "favicon.ico" file and a folder for your public files. To get these you may copy them out of the /zedek/public folder or make this folder your web folder by creating a virtual host for this folder
 3. The contents of the .htaccess file should redirect all traffic to the router file while excluding the public folder contents and any other folders you define.
 
@@ -55,7 +57,7 @@ Creating your first application follow these steps:
     
 and you are about done with the web parts.
 
-on a windows machine it would look more like:
+on a windows machine it would look like this:
 
     <?php
         require_once "drive:\\path\\to\\controller.php";
@@ -74,8 +76,8 @@ Once done you should see your app on your website with a successful install mess
 Hello World!
 ============
 
-Zedek 2.1 is built to map urls to classes and methods in a style:
-http://mysite.com/class/method/arguments
+Zedek 2.1 is built to map urls to engine directories and methods of the class CModel (for current model) in a style:
+http://mysite.com/engine/method/arguments
 (this mapping is handled primarily by a class named URLMaper)
 
 the MVC is made literal within the engine folder. 

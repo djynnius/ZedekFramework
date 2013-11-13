@@ -22,7 +22,7 @@ abstract class ZModel extends Zedek implements ZIModel{
 		if(!method_exists($this, $method)) $this->_default();
 	}
 
-	static function create($name, $bool=0, $table=null){
+	static public function create($name, $bool=0, $table=null){
 		$args = func_num_args();
 		$args = count($args);
 		switch($args){
@@ -54,7 +54,7 @@ abstract class ZModel extends Zedek implements ZIModel{
 			}
 		} catch(ZException $e){
 			return false;
-			//print $e->getMessage();
+			#print $e->getMessage();
 		}		
 	}
 	

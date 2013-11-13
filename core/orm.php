@@ -220,7 +220,7 @@ class ZORMTable extends ZORM{
 		return $row;
 	}
 
-	public function scafold($app_name = null){
+	public function scaffold($app_name = null){
 		$app_name = is_null($app_name) ? $this->table : $app_name;
 		ZModel::create($app_name, ZORM::scaffold, $this->table);
 	}

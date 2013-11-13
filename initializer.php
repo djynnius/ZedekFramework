@@ -13,8 +13,8 @@ const zsub = "";
 
 #set include path
 $os = strtolower(@$_SERVER['SERVER_SOFTWARE']);
-$zedekCorePath = strpos($os, "win") ? ".;"	.zroot."core" : ":.:".zroot."core";
-ini_set('include_path', $zedekCorePath);
+$zedek_core_path = strpos($os, "win") ? ".;"	.zroot."core" : ":.:".zroot."core";
+ini_set('include_path', $zedek_core_path);
 
 #Error reporting - On for development and production
 

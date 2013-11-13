@@ -24,7 +24,7 @@ class ZConfig extends Zedek{
 				return false;
 			}
 		} catch(Exception $e){
-			//print $e->getMessage();
+			#print $e->getMessage();
 		}
 	}
 

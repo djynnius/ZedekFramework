@@ -1,7 +1,7 @@
 {
   "engine": "sqlite",
   "host": "localhost",
-  "user": "secure",
-  "pass": "secure",
+  "user": "db_user_name",
+  "pass": "secure_password",
   "db": "/path/to/zedek/db/or/db/name" 
 }

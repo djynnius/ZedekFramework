@@ -5,13 +5,14 @@ class URIMaper extends Zedek{
 	public $http;
 	public $https;
 	public $port;
-	public $server;
-	public $url;
-	public $class;
-	public $method;
-	public $arguments;
+	public $server; // server name eg webapp.com
+	public $url; // request uri
+	public $class; // engine name
+	public $method; // called method
+	public $arguments; //
 	public $gets;
 	public $args = array();
+	public $get_args = array();
 
 	function __construct(){
 		$sub = zsub;
@@ -66,6 +67,7 @@ class URIMaper extends Zedek{
 			}
 		}
 		$this->args = $a;		
+		$this->get_args = $a;		
 	}
 
 	function __get($attr){
