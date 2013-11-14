@@ -10,14 +10,14 @@ class ZORM extends Zedek{
 	protected $user;
 	protected $pass;
 	protected $name;
-	protected $engine;
+	protected $adapter;
 	protected $db;
 	const scaffold = 1;
 
 	function __construct($dbo=false){
 		if($dbo == false){
 			$this->_dbConfig();
-			$this->_engineSelect();			
+			$this->_adapterSelect();			
 		} else {
 			$this->dbo = $dbo;
 		}
@@ -29,29 +29,37 @@ class ZORM extends Zedek{
 	private function _dbConfig(){
 		$db_config_file = file_get_contents(zroot."config/db.json");
 		$db_config = json_decode($db_config_file);
-		$this->engine = $db_config->{'engine'};
+		$this->adapter = $db_config->{'adapter'};
 		$this->db = $db_config->{'db'};
 		$this->host = $db_config->{'host'};
 		$this->user = $db_config->{'user'};
 		$this->pass = $db_config->{'pass'};		
 	}
 
-	private function _engineSelect(){
-		switch($this->engine){
+	private function _adapterSelect(){
+		switch($this->adapter){
 			case "mysql":
-				$this->dbo = new PDO(
-					"mysql: host={$this->host}; dbname={$this->db}", 
-					$this->user, 
-					$this->pass, 
-					array(
-						PDO::ATTR_ERRMODE, 
-						PDO::ERRMODE_EXCEPTION
-					)
-				);
+				try{
+					$this->dbo = new PDO(
+						"mysql: host={$this->host}; dbname={$this->db}", 
+						$this->user, 
+						$this->pass, 
+						array(
+							PDO::ATTR_ERRMODE, 
+							PDO::ERRMODE_EXCEPTION
+						)
+					);
+				} catch(PDOException $e){
+					print "There was a problem connecting to the database";
+				}
 				break;
 			default:
-				$this->dbo = new PDO(
-					"sqlite:{$this->db}", PDO::ERRMODE_EXCEPTION);
+				try{
+					$this->dbo = new PDO(
+						"sqlite:{$this->db}", PDO::ERRMODE_EXCEPTION);	
+				} catch(PDOException $e){
+					print "There was a problem connecting to the database";
+				}
 		}		
 	}
 
