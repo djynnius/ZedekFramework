@@ -193,7 +193,7 @@ class ZView extends Zedek{
 	}
 
 	private function makeLoop($view, $k, $v){
-		preg_match_all("#{%for[\s]*(.*) in (.*) :[\s]*(.*)[\s]*endfor%}#", $view, $match);
+		preg_match_all("#{%for[\s]*(.*) in (.*) :[\s]*(.*)[\s]*end%}#", $view, $match);
 		$i = 0;
 		foreach($match[2] as $loop){
 			if($k == $loop){
