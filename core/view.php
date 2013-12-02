@@ -177,7 +177,8 @@ class ZView extends Zedek{
 
 	public function getTheme(){
 		$conf = new ZConfig;
-		return $conf->get("theme");
+		$theme = $conf->get("theme");
+		return (file_exists(zroot."themes/".$theme."/")) ? $theme : "basic";
 	}
 
 	private function setTheme($theme){
@@ -193,7 +194,7 @@ class ZView extends Zedek{
 	}
 
 	private function makeLoop($view, $k, $v){
-		preg_match_all("#{%for[\s]*(.*) in (.*) :[\s]*(.*)[\s]*end%}#", $view, $match);
+		preg_match_all("#{%foreach[\s]*(.*) in (.*) :[\s]*(.*)[\s]*%}#", $view, $match);
 		$i = 0;
 		foreach($match[2] as $loop){
 			if($k == $loop){

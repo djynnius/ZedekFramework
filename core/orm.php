@@ -138,7 +138,12 @@ class ZORMTable extends ZORM{
 		$count = count($attrs);
 		$i = 1;
 		foreach($attrs as $k=>$v){
-			$q .= $i == $count ? "{$k} {$v} " : "{$k} {$v}, ";	
+			if($k == 'primary key'){
+				$q .= $i == $count ? "{$k} ({$v}) " : "{$k} ({$v}), ";
+			} else {
+				$q .= $i == $count ? "{$k} {$v} " : "{$k} {$v}, ";	
+			}
+				
 			$i++;
 		}
 		$q .= ")";		
