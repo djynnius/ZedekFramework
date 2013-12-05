@@ -110,6 +110,7 @@ class ZView extends Zedek{
 		#external scripts
 		$this->template['jQuery2'] = $this->getExternalScript("jQuery1.10.2");
 		$this->template['jQuery1'] = $this->getExternalScript("jQuery2.0.3");
+		$this->template['AngularJS'] = $this->getExternalScript("angular");
 		$this->template['jQueryMigrate'] = $this->getExternalScript("jQueryMigrate1.2.1");
 		$this->template['jQueryUI'] = $this->getExternalScript("jQueryUI");
 		$this->template['jQueryNivo'] = $this->getExternalScript("jQueryNivo");

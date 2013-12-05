@@ -1,15 +1,24 @@
 <?php
 namespace __zf__;
 
-class Placeholders {
-	static function output(){}
-
-	static public function role(){
-		if(!isset($_SESSION['__z__']['user']['id']) || empty($_SESSION['__z__']['user']['id'])) return 'Guest';
-		$orm = new ZORM;
-		$table = $orm->table('user_roles');
-		$row = $table->row($_SESSION['__z__']['user']['id'], 'user_id');
-		$role = $orm->table('roles')->row($row->role_id)->role;
-		return $role;
+class Placeholder {
+	static function values($arg = array()){
+		$userDetails = self::userDetails();
+		$puts = array(
+			'username'=>$userDetails->username, 
+			'email'=>$userDetails->email, 
+			'mobile'=>$userDetails->mobile, 
+		);
+		$puts = array_merge($puts, $arg);
+		return $puts;
 	}
+
+	static function orm(){
+		return new ZORM;
+	}
+
+	static function userDetails(){
+		return isset($_SESSION['__z__']['user']['id']) ? self::orm()->table('users')->row($_SESSION['__z__']['user']['id']) : null;
+	}
+
 }
