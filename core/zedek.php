@@ -28,11 +28,19 @@ abstract class Zedek{
 	}
 
 	function isUser(){
-		return isset($_SESSION['__z__']['user']['role']) && !empty($_SESSION['__z__']['user']['role']) ? true : false;
+		return 
+			isset($_SESSION['__z__']['user']['roles']) && 
+			count($_SESSION['__z__']['user']['roles']) != 0 ? 
+				true : 
+				false;
 	}
 
 	function isAdmin(){
-		return $this->isUser() && $_SESSION['__z__']['user']['role'] == "1" ? true : false;
+		return 
+			$this->isUser() && 
+			in_array('1', $_SESSION['__z__']['user']['roles']) ? 
+				true : 
+				false;
 	}
 
 	protected function jsonConfig(){
