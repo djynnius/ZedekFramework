@@ -195,18 +195,19 @@ class ZView extends Zedek{
 	}
 
 	private function makeLoop($view, $k, $v){
-		preg_match_all("#{%foreach[\s]*(.*) in (.*) :[\s]*(.*)[\s]*%}#", $view, $match);
+		preg_match_all("#{%foreach[\s]*(.*) as (.*) :[\s]*(.*)[\s]*%}#", $view, $match);
 		$i = 0;
-		foreach($match[2] as $loop){
+		$item = @$match[2][0];
+		foreach($match[1] as $loop){
 			if($k == $loop){
 				$html = $match[0][$i];
 				$j = 0;
 				$replace = "";
-				foreach($v as $match[1]){
+				foreach($v as $match[2]){
 					global $_loopObj;
 					$_loopObj = (object)$v[$j];
 					$find = preg_replace_callback(
-						'#([a-z0-9_-]+)(\.)([a-zA-Z0-9_-]+)#', 
+						'#\{\{('.$item.')(\.)([a-zA-Z0-9_-]+)\}\}#', 
 						create_function(
 							'$m', 
 							'global $_loopObj; 
