@@ -235,7 +235,7 @@ class ZORMTable extends ZORM{
 
 	public function scaffold($app_name = null){
 		$app_name = is_null($app_name) ? $this->table : $app_name;
-		ZModel::create($app_name, ZORM::scaffold, $this->table);
+		ZController::create($app_name, ZORM::scaffold, $this->table);
 	}
 
 	public function drop(){

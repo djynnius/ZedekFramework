@@ -2,7 +2,7 @@
 namespace __zf__;
 require_once "zunit.php";
 $app = str_replace(".php", "", end(explode('/', __file__)));
-require_once zroot."engines/{$app}/model.php";
+require_once zroot."engines/{$app}/controller.php";
 
 class AppTest extends ZUnit{
 }

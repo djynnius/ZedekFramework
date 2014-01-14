@@ -8,7 +8,7 @@ class ZTest{
 		$this->getZCore();
 		$this->requireInit();
 		$this->requireCore();
-		$this->requireLibs();
+		$this->requireModels();
 	}
 
 	function getZCore(){
@@ -26,7 +26,7 @@ class ZTest{
 		require_once "zedek.php";
 		require_once "uri.maper.php";
 		require_once "orm.php";
-		require_once "model.php";		
+		require_once "controller.php";		
 	}
 
 }
@@ -34,7 +34,7 @@ class ZTest{
 class ZUnit extends PHPUnit_Framework_TestCase {
 	function setUp(){
 		parent::setUp();
-		$this->app = new CModel;
+		$this->app = new CController;
 	}	
 }
 

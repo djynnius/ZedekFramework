@@ -10,8 +10,8 @@ abstract class Zedek{
 
 	static function import($module = "default"){
 		try{
-			if(file_exists(zroot."engines/{$module}/model.php")){
-				require_once zroot."engines/{$module}/model.php";
+			if(file_exists(zroot."engines/{$module}/controller.php")){
+				require_once zroot."engines/{$module}/controller.php";
 			} else {
 				throw new Exception();
 			}
@@ -109,11 +109,11 @@ abstract class Zedek{
 }
 
 class Z extends Zedek{
-	static function importLibs($type = false){
-		require_once "lib.php";
-		$libs = scandir(zroot."libs/");
-		foreach($libs as $lib){
-			$file = zroot."libs/".$lib;
+	static function importModels($type = false){
+		require_once "model.php";
+		$models = scandir(zroot."models/");
+		foreach($models as $model){
+			$file = zroot."models/".$model;
 			if(!is_dir($file)){
 				require_once $file;
 			}
@@ -143,9 +143,9 @@ class Z extends Zedek{
 	static function webTest(){
 		$config = new ZConfig;
 		if($config->get("webUnitTest") == "Off"){
-			require_once zroot."libs/external_packages/php/nowebtest.php";
+			require_once zroot."libs/php/nowebtest.php";
 		} else {
-			require_once zroot."libs/external_packages/php/simpletest/autorun.php";	
+			require_once zroot."libs/php/simpletest/autorun.php";	
 		}
 		
 	}

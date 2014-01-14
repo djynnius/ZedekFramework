@@ -69,7 +69,11 @@ class ZView extends Zedek{
 	#returns default template
 	private function template(){
 		$config = new ZConfig;
+		$uri = new URIMaper;
 		$a = array(
+			'app'=>"Zedek Framework", 
+			'controller'=>$uri->controller, 
+			'method'=>$uri->method, 
 			'footer'=>"Zedek Framework. Version".$config->get("version"), 
 			'version'=> $config->get("version"), 
 		);
@@ -152,20 +156,20 @@ class ZView extends Zedek{
 	}
 
 	private function getExternalScript($file){
-		$file = zroot."libs/external_packages/js/".$file.".js";
+		$file = zroot."libs/js/".$file.".js";
 		return file_exists($file) ? file_get_contents($file) : false;
 	}
 
 	private function getValidView(){
-		$class = $this->uri->class == "" ? "default" : $this->uri->class;
+		$controller = $this->uri->controller == "" ? "default" : $this->uri->controller;
 		$method = $this->uri->method;
-		$viewFile = zroot."engines/{$class}/view/{$this->view}.html";
+		$viewFile = zroot."engines/{$controller}/view/{$this->view}.html";
 		if(file_exists($viewFile)){
 			$view = file_get_contents($viewFile);	
-		} elseif(file_exists(zroot."engines/{$class}/view/{$method}.html")){
-			$view = file_get_contents(zroot."engines/{$class}/view/{$method}.html");
-		} elseif(file_exists(zroot."engines/{$class}/view/none.html")){
-			$view = file_get_contents(zroot."engines/{$class}/view/none.html");
+		} elseif(file_exists(zroot."engines/{$controller}/view/{$method}.html")){
+			$view = file_get_contents(zroot."engines/{$controller}/view/{$method}.html");
+		} elseif(file_exists(zroot."engines/{$controller}/view/none.html")){
+			$view = file_get_contents(zroot."engines/{$controller}/view/none.html");
 		} elseif(file_exists(zroot."engines/default/view/{$this->view}.html")){
 			$view = file_get_contents(zroot."engines/default/view/{$this->view}.html");
 		} elseif(file_exists(zroot."engines/default/view/none.html")){
@@ -195,9 +199,12 @@ class ZView extends Zedek{
 	}
 
 	private function makeLoop($view, $k, $v){
-		preg_match_all("#{%foreach[\s]*(.*) as (.*) :[\s]*(.*)[\s]*%}#", $view, $match);
+		preg_match_all("#{%foreach[\s]+(.*)[\s]+as[\s]+(.*):[\s]*(.*)[\s]*%}#", $view, $match);
 		$i = 0;
+		$items = @$match[1][0];
 		$item = @$match[2][0];
+		$template = @$match[3][0];
+		
 		foreach($match[1] as $loop){
 			if($k == $loop){
 				$html = $match[0][$i];
@@ -207,7 +214,7 @@ class ZView extends Zedek{
 					global $_loopObj;
 					$_loopObj = (object)$v[$j];
 					$find = preg_replace_callback(
-						'#\{\{('.$item.')(\.)([a-zA-Z0-9_-]+)\}\}#', 
+						"#\{\{(".$item.")(\.)([a-zA-Z0-9_-]+)\}\}#", 
 						create_function(
 							'$m', 
 							'global $_loopObj; 

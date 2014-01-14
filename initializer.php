@@ -21,11 +21,12 @@ ini_set('include_path', $zedek_core_path);
 #main zedek classes
 require_once "zedek.php";
 require_once "uri.maper.php";
-require_once "model.php";
+require_once "controller.php";
 require_once "orm.php";
 require_once "config.php";
 
-Z::importLibs();
+Z::importModels();
 
 $config = new ZConfig;
 ini_set('display_errors', $config->get("error"));
+

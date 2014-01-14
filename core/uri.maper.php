@@ -7,7 +7,7 @@ class URIMaper extends Zedek{
 	public $port;
 	public $server; // server name eg webapp.com
 	public $url; // request uri
-	public $class; // engine name
+	public $controller; // engine name
 	public $method; // called method
 	public $arguments; //
 	public $gets;
@@ -41,7 +41,7 @@ class URIMaper extends Zedek{
 		$mvc = $subpath == false ? 
 			explode("/", $url) : explode("{$subpath}/", $url);
 		array_shift($mvc);
-		$this->class = array_shift($mvc);
+		$this->controller = array_shift($mvc);
 		$this->method = array_shift($mvc);
 		$this->arguments = join("/", $mvc);
 

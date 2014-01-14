@@ -1,6 +1,6 @@
 <?php
 namespace __zf__;
-class CModel extends ZModel{
+class CController extends ZController{
 }
 
 Z::webTest();

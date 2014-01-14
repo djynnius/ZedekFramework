@@ -1,7 +1,7 @@
 <?php
 namespace __zf__;
 use \PDO as PDO;
-class CModel extends ZModel{
+class CController extends ZController{
 	function _default(){
 		$this->render('index');
 	}

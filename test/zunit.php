@@ -8,7 +8,7 @@ class Foo{
 		$this->getZCore();
 		$this->requireInit();
 		$this->requireCore();
-		$this->requireLibs();
+		$this->requireModels();
 	}
 
 	function getZCore(){
@@ -26,14 +26,14 @@ class Foo{
 		require_once "{$this->rootDir}/core/zedek.php";
 		require_once "{$this->rootDir}/core/uri.maper.php";
 		require_once "{$this->rootDir}/core/orm.php";
-		require_once "{$this->rootDir}/core/model.php";		
+		require_once "{$this->rootDir}/core/controller.php";		
 	}
 
-	function requireLibs(){
-		$plugins = scandir("{$this->rootDir}/libs/");
-		foreach($plugins as $plugin){
-			if(!is_dir("{$this->rootDir}/libs/{$plugin}")){
-				require_once "{$this->rootDir}/libs/{$plugin}";				
+	function requireModels(){
+		$models = scandir("{$this->rootDir}/Models/");
+		foreach($models as $model){
+			if(!is_dir("{$this->rootDir}/models/{$model}")){
+				require_once "{$this->rootDir}/models/{$model}";				
 			}
 		}
 	}	
@@ -43,7 +43,7 @@ class Foo{
 class ZUnit extends PHPUnit_Framework_TestCase {
 	function setUp(){
 		parent::setUp();
-		$this->app = new CModel;
+		$this->app = new CController;
 	}	
 }
 
