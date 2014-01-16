@@ -52,7 +52,7 @@ Creating your first application follow these steps:
 ## router.php contents ##
 
     <?php
-      require_once "/path/to/zedek/controller.php";
+      require_once "/path/to/zedek/anchor.php";
     ?>
     
 and you are about done with the web parts.
@@ -60,11 +60,11 @@ and you are about done with the web parts.
 on a windows machine it would look like this:
 
     <?php
-        require_once "drive:\\path\\to\\controller.php";
+        require_once "drive:\\path\\to\\anchor.php";
     ?>
 
 ## initializer.php ##
-Within the controller file on line 7 set the root constant to the path leading to the zedek app ending with a trailing slash
+Within the anchor file on line 7 set the root constant to the path leading to the zedek app ending with a trailing slash
 
     const zroot="/path/to/zedek/";
     const zweb="/path/to/web/folder/";
