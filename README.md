@@ -1,7 +1,7 @@
 Zedek2.1
 ========
 
-Zedek Web Development Framework version 2.1
+Zedek Web Development Framework version 2.2
 
 This is a lightweight PHP web development framework. 
 
@@ -87,10 +87,10 @@ the MVC is made literal within the engine folder.
 3. within the model file enter the following code inside your php tags
 
 ## ##
-
-    class CModel extends ZModel{
+    namespace __zf__;
+    class CController extends ZController{
       function bar(){
-        echo "Hello World";
+        print "Hello World";
       }
     }
 
