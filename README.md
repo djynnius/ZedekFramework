@@ -1,4 +1,4 @@
-Zedek2.1
+Zedek2.2
 ========
 
 Zedek Web Development Framework version 2.2
