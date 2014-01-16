@@ -76,15 +76,15 @@ Once done you should see your app on your website with a successful install mess
 Hello World!
 ============
 
-Zedek 2.1 is built to map urls to engine directories and methods of the class CModel (for current model) in a style:
-http://mysite.com/engine/method/arguments
+Zedek 2.1 is built to map urls to engine directories and methods of the class CController (for current controller) in a style:
+http://mysite.com/controller/method/arguments
 (this mapping is handled primarily by a class named URLMaper)
 
 the MVC is made literal within the engine folder. 
 
 1. To create a new app called foo create a folder with the name foo within the engines folder.
-2. within this create a class file "model.php".
-3. within the model file enter the following code inside your php tags
+2. within this create a class file "controller.php".
+3. within the controller file enter the following code inside your php tags
 
 ## ##
     namespace __zf__;
