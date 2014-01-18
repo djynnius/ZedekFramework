@@ -106,6 +106,24 @@ abstract class Zedek{
 	function forAdmin(){
 		if(!$this->isAdmin()){header("Location: ". $_SERVER['HTTP_REFERER']);}
 	}
+
+	function redirect($uri=Zedek::controller, $method=Zedek::method, $arguments=Zedek::arguments){
+		$args = func_num_args();
+		switch($args){
+			case 1:
+				header("Location: ".$uri);
+				break;
+			case 2:
+				header("Location: ".$uri."/".$method);
+				break;
+			case 3:
+				header("Location: ".$uri."/". $method."/".$arguments);
+				break;
+			default:
+				header("Location: /");		
+		}
+		
+	}
 }
 
 class Z extends Zedek{

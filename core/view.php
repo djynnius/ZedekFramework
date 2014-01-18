@@ -72,8 +72,8 @@ class ZView extends Zedek{
 		$uri = new URIMaper;
 		$a = array(
 			'app'=>"Zedek Framework", 
-			'controller'=>$uri->controller, 
-			'method'=>$uri->method, 
+			'controller'=>is_null($uri->controller) ? "" : $uri->controller, 
+			'method'=>is_null($uri->method) ? "" : $uri->method, 
 			'footer'=>"Zedek Framework. Version".$config->get("version"), 
 			'version'=> $config->get("version"), 
 		);
@@ -88,6 +88,19 @@ class ZView extends Zedek{
 		$pseudoArray = json_decode($json);
 		$array = (array)$pseudoArray;
 		return $array;
+	}
+
+	public function display(){
+		$view = $this->getValidView();
+		foreach($this->template as $k=>$v){
+			if(is_string($v)){
+				$view = str_replace("{{".$k."}}", "$v", $view);
+			} elseif(is_array($v)){
+				$view = $this->makeLoop($view, $k, $v);
+			}
+		}
+		$render = $view;		
+		return $render;		
 	}
 
 	public function render(){

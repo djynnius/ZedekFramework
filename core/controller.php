@@ -86,6 +86,10 @@ abstract class ZController extends Zedek implements ZIController{
 		print $this->template($arg1, $arg2)->render();
 	}
 
+	final protected function display($arg1=null, $arg2=null){
+		print $this->template($arg1, $arg2)->display();
+	}
+
 	#sets default to render index
 	public function _default(){
 		$this->render("index");
