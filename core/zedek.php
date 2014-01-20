@@ -107,17 +107,24 @@ abstract class Zedek{
 		if(!$this->isAdmin()){header("Location: ". $_SERVER['HTTP_REFERER']);}
 	}
 
-	function redirect($uri=Zedek::controller, $method=Zedek::method, $arguments=Zedek::arguments){
+	function redirect($controller=false, $method=false, $arguments=false){
 		$args = func_num_args();
+		$url = new URIMAper;
 		switch($args){
 			case 1:
-				header("Location: ".$uri);
+				if($controller = -1){
+					header("Location: " . $_SERVER['HTTP_REFERER']);
+				} elseif($controller = 0){
+					header("Location: " . $_SERVER['REQUEST_URI']);
+				} else {
+					header("Location: ".$controller);	
+				}
 				break;
 			case 2:
-				header("Location: ".$uri."/".$method);
+				header("Location: ".$controller."/".$method);
 				break;
 			case 3:
-				header("Location: ".$uri."/". $method."/".$arguments);
+				header("Location: ".$controller."/". $method."/".$arguments);
 				break;
 			default:
 				header("Location: /");		
