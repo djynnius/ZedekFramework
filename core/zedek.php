@@ -112,9 +112,9 @@ abstract class Zedek{
 		$url = new URIMAper;
 		switch($args){
 			case 1:
-				if($controller = -1){
+				if($controller == -1){
 					header("Location: " . $_SERVER['HTTP_REFERER']);
-				} elseif($controller = 0){
+				} elseif($controller == 0){
 					header("Location: " . $_SERVER['REQUEST_URI']);
 				} else {
 					header("Location: ".$controller);	
