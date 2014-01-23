@@ -104,6 +104,15 @@ class ZORM extends Zedek{
 		}
 	}
 
+	public function paginate($q, $page=1, $count=10){
+		$q = $q." LIMIT='".((int)$count)."' OFFSET='".(((int)$page)-1)*((int)$count)."'";
+		try{
+			return $this->fetch($q);
+		} catch(Exception $e){
+			return false;
+		}
+	}	
+
 	public function write($q){
 		$this->dbo->query($q);
 	}

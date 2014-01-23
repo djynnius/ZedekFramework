@@ -22,7 +22,7 @@ abstract class ZController extends Zedek implements ZIController{
 		if(!method_exists($this, $method)) $this->_default();
 	}
 
-	static public function create($name, $bool=0, $table=null){
+	final static public function create($name, $bool=0, $table=null){
 		$args = func_num_args();
 		$args = count($args);
 		switch($args){
@@ -58,7 +58,7 @@ abstract class ZController extends Zedek implements ZIController{
 		}		
 	}
 	
-	static private function insertScaffoldViewFiles($name, $args=0){
+	final static private function insertScaffoldViewFiles($name, $args=0){
 		if($args != 3) return false;
 		$enumerate = self::$scaffold_file_names;
 		foreach($enumerate as $item){
@@ -111,6 +111,21 @@ abstract class ZController extends Zedek implements ZIController{
 			header("Location: /"."{$msg}");
 		}
 	}
+
+	final function paginate($array, $page=1, $count=10){
+		$array_size = count($array);
+		$pages = ceil($array_size/$count);
+		$a = array();
+		$start = ($page - 1);
+		for($i=($start*$count); $i<($page*$count); $i++){
+			if(isset($array[$i])) $a[] = $array[$i];
+		}
+		$puts = array(
+			'data'=>$puts, 
+			'pages'=>$pages
+		);
+		return $puts;
+	}	
 }
 
 interface ZIController{
