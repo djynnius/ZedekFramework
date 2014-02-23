@@ -40,6 +40,7 @@ class URIMaper extends Zedek{
 
 	private function mvc($url){
 		$mvc = explode("/", $url);
+		if(empty($mvc[0]) || is_null($mvc[0])) array_shift($mvc);
 		$this->controller = array_shift($mvc);
 		$this->method = array_shift($mvc);
 		$this->arguments = join("/", $mvc);
