@@ -121,6 +121,23 @@ class ZView extends Zedek{
 		return $render;
 	}
 
+	public function dynamic($controller=false){
+		$controller = empty($this->uri->controller) || is_null($this->uri->controller) ? "default" : $this->uri->controller;		
+		$view = empty($this->uri->method) || is_null($this->uri->method) ? "index" : $this->uri->method;	
+		$view = is_string($this->view) ? $this->view : $view;
+		
+		$header = $this->header;
+		$footer = $this->footer;		
+		$this->stylesAndScripts(); //set styles and scripts
+		foreach($this->template as $k=>$v){
+			$header = $this->simpleReplace($header, $k, $v);
+			$footer = $this->simpleReplace($footer, $k, $v);
+		}
+		print $header;		
+		@include_once zroot."engines/{$controller}/view/{$view}.php";				
+		print $footer;		
+	}
+
 	private function stylesAndScripts(){
 		$this->template['style'] = $this->getThemeStyles();
 		$this->template['script'] = $this->getThemeScripts();
@@ -132,6 +149,7 @@ class ZView extends Zedek{
 		$this->template['jQueryUI'] = $this->getExternalScript("jQueryUI");
 		$this->template['jQueryNivo'] = $this->getExternalScript("jQueryNivo");
 		$this->template['nicEdit'] = $this->getExternalScript("nicEdit");
+		$this->template['modernizr'] = $this->getExternalScript("modernizr-2.6.2.min");
 	}
 
 	/**

@@ -16,15 +16,16 @@ class URIMaper extends Zedek{
 
 	function __construct(){
 		$sub = zsub;
-		$subpath = empty($sub) ? null : true;
+		$subpath = empty($sub) || is_null($sub) ? null : true;	
 		$url  = @$_SERVER['REQUEST_URI'];
+
 		//check if using a sub folder
 		if(!is_null($subpath)){
 			$url = explode(zsub, $url);
 			$url = $url[1];
 		}
 		$this->url = $url;
-		$this->mvc($subpath, $url);
+		$this->mvc($url);
 		$get = $this->getRequests($url);
 		$this->getArguments($get);
 		$this->serverInfo();
@@ -37,14 +38,11 @@ class URIMaper extends Zedek{
 		$this->https = "https://{$this->server}:{$this->port}";		
 	}
 
-	private function mvc($subpath, $url){
-		$mvc = $subpath == false ? 
-			explode("/", $url) : explode("{$subpath}/", $url);
-		array_shift($mvc);
+	private function mvc($url){
+		$mvc = explode("/", $url);
 		$this->controller = array_shift($mvc);
 		$this->method = array_shift($mvc);
 		$this->arguments = join("/", $mvc);
-
 	}
 
 	private function getRequests($url){

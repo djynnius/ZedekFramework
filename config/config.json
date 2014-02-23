@@ -1,7 +1,7 @@
 {
-	"version":"2.2",
+	"version":"2.3",
 	"error":"On",
 	"webUnitTest":"On",
 	"app":"zedek",
-	"theme":"basic"
+	"theme":"default"
 }
