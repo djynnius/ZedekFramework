@@ -3,5 +3,5 @@
   "host": "localhost",
   "user": "db_user_name",
   "pass": "secure_password",
-  "db": "/path/to/zedek/db/or/db/name" 
+  "db": "default" 
 }

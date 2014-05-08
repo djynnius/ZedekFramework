@@ -109,24 +109,30 @@ abstract class Zedek{
 
 	function redirect($controller=false, $method=false, $arguments=false){
 		$args = func_num_args();
+		$dir = zsub;
+		$dir = ltrim(zsub, "/");
 		switch($args){
 			case 1:
 				if($controller == '-1'){
-					header("Location: " . $_SERVER['HTTP_REFERER']);
+					if(isset($_SERVER['HTTP_REFERER'])) {
+						header("Location: " . $_SERVER['HTTP_REFERER']);	
+					} else {
+						header("Location: /" . $dir);		
+					}
 				} elseif($controller == '0'){
 					header("Location: " . $_SERVER['REQUEST_URI']);
 				} else {
-					header("Location: /".$controller);	
+					header("Location: /". $dir .$controller);	
 				}
 				break;
 			case 2:
-				header("Location: /".$controller."/".$method);
+				header("Location: /". $dir .$controller."/".$method);
 				break;
 			case 3:
-				header("Location: /".$controller."/". $method."/".$arguments);
+				header("Location: /". $dir .$controller."/". $method."/".$arguments);
 				break;
 			default:
-				header("Location: /");		
+				header("Location: /" . $dir);		
 		}
 		
 	}

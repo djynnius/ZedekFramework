@@ -13,9 +13,14 @@ class URIMaper extends Zedek{
 	public $gets;
 	public $args = array();
 	public $get_args = array();
+	public $dir;
 
 	function __construct(){
 		$sub = zsub;
+		$dir = $sub;
+		$dir = trim($dir); 
+
+		$this->dir = "billing/";
 		$subpath = empty($sub) || is_null($sub) ? null : true;	
 		$url  = @$_SERVER['REQUEST_URI'];
 

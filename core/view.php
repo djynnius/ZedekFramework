@@ -76,6 +76,7 @@ class ZView extends Zedek{
 			'method'=>is_null($uri->method) ? "" : $uri->method, 
 			'footer'=>"Zedek Framework. Version".$config->get("version"), 
 			'version'=> $config->get("version"), 
+			'dir'=> $uri->dir, 
 		);
 		$b = $this->configTemplate();
 		$a = array_merge($a, $b);

@@ -30,7 +30,7 @@ class ZORM extends Zedek{
 		$db_config_file = file_get_contents(zroot."config/db.json");
 		$db_config = json_decode($db_config_file);
 		$this->adapter = $db_config->{'adapter'};
-		$this->db = $db_config->{'db'};
+		$this->db = isset($_SESSION['__z__']['db']) ? $_SESSION['__z__']['db'] : $db_config->{'db'};
 		$this->host = $db_config->{'host'};
 		$this->user = $db_config->{'user'};
 		$this->pass = $db_config->{'pass'};		
@@ -54,6 +54,7 @@ class ZORM extends Zedek{
 				}
 				break;
 			default:
+				$this->db = $this->db == "default" ? zroot."databases/zedek.db" : $this->db;
 				try{
 					$this->dbo = new PDO(
 						"sqlite:{$this->db}", PDO::ERRMODE_EXCEPTION);	
@@ -104,14 +105,61 @@ class ZORM extends Zedek{
 		}
 	}
 
-	public function paginate($q, $page=1, $count=10){
-		$q = $q." LIMIT='".((int)$count)."' OFFSET='".(((int)$page)-1)*((int)$count)."'";
+	public function serialize($array, $k='sn'){
+		if(gettype($array) != 'array') $array = array();
+		foreach($array as $i=>$item){
+			$array[$i]['sn'] = $i+1;
+		}
+		return $array;
+	}
+
+	public function paginateQuery($q, $total, $page=1, $count=10){
+		if($page < 1) $page = 1;
+		if($page > ceil($total/$count)) $page = ceil($total/$count);
+		$q = $q." LIMIT ".(($page-1)*$count).", ".$count;
 		try{
 			return $this->fetch($q);
-		} catch(Exception $e){
+		} catch(\Exception $e){
 			return false;
 		}
 	}	
+
+	public function paginateArray($a, $page=1, $count=10){
+		$start = $page <= 0 ? 0 : (($page-1)*$count);
+		$finish = $start+$count;
+
+		$records = count($a);
+		$pages = ceil($records/$count);
+
+		$b = array();
+		
+		for($i=$start; $i<$finish; $i++){
+			if(isset($a[$i])){
+				$b[$i] = $a[$i];
+			} else {
+				break;
+			}
+		}
+
+		return array('recordset'=>$b, 'pages'=>$pages, 'records'=>$records);
+	}
+
+	function paginationPages($url, $p='p', $pages){
+		$page = isset($_GET[$p]) ? $_GET[$p] : 1;
+
+		$previous = $page <= 0 ? 0 : $page-1;
+		$previous = "{$url}?{$p}={$previous}";
+		$next = $page >= $pages ? $pages : $page+1;
+		$next = "{$url}?{$p}={$next}";
+
+		$html = "<a href='{$previous}'>Previous</a>";
+		for($i=1;$i<=$pages;$i++){
+			$html .= " <a href='{$url}?{$p}={$i}'>{$i}</a> . ";
+		}
+		$html .= "</a> <a href='{$next}'>Next</a>";
+
+		return $html;
+	}
 
 	public function write($q){
 		$this->dbo->query($q);
@@ -124,6 +172,7 @@ class ZORM extends Zedek{
 	public function delete($q, $table=false){
 		$this->dbo->query($q);
 	}
+
 }
 
 #Table mapper
@@ -252,8 +301,8 @@ class ZORMTable extends ZORM{
 		$this->dbo->query($q);
 	}
 
-	public function size(){
-		$q = "SELECT COUNT(`id`) AS `count` FROM {$this->table}";
+	public function size($id='id'){
+		$q = "SELECT COUNT(`{$id}`) AS `count` FROM {$this->table}";
 		return $this
 				->dbo
 				->query($q)
@@ -270,6 +319,7 @@ class ZORMTable extends ZORM{
 				FROM {$this->table} 
 			WHERE `{$col1}`='{$arg1}' 
 				AND `{$col2}`='{$arg2}'"; 
+		
 		return $this->dbo->query($q)->fetchObject()->count > 0 ? true : false;
 	}
 
