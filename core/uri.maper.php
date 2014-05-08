@@ -20,14 +20,14 @@ class URIMaper extends Zedek{
 		$dir = $sub;
 		$dir = trim($dir); 
 
-		$this->dir = "billing/";
+		$this->dir = zsub;
 		$subpath = empty($sub) || is_null($sub) ? null : true;	
 		$url  = @$_SERVER['REQUEST_URI'];
 
 		//check if using a sub folder
 		if(!is_null($subpath)){
 			$url = explode(zsub, $url);
-			$url = $url[1];
+			$url = @$url[1];
 		}
 		$this->url = $url;
 		$this->mvc($url);

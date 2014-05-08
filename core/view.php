@@ -57,7 +57,8 @@ class ZView extends Zedek{
 	#pulls in all theme files and assigns them to class attibutes
 	private function getAllThemeFiles(){
 		$themeFolder = zroot."themes/";
-		$files = scandir($themeFolder.$this->theme);
+		$files = @scandir($themeFolder.$this->theme);
+		if(gettype($files) != "array") $files = array();
 		foreach($files as $file){
 			if(!is_dir($themeFolder.$file)){
 				$info = pathinfo($themeFolder.$file);
@@ -172,7 +173,7 @@ class ZView extends Zedek{
 	*/
 	private function getThemeIncludes($type, $extension){
 		$folder = "{$this->folder}{$type}s/";
-		$files = scandir($folder);
+		$files = @scandir($folder);
 		$puts = "";
 		$puts .= file_exists("{$this->folder}{$type}.{$extension}") ? file_get_contents() : "";
 		if(file_exists("{$this->folder}{$type}s")){
