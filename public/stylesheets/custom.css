@@ -26,3 +26,8 @@
 * {
   font-family: 'Open Sans';
 }
+
+section.welcome {
+  min-height: 280px;
+}
+
