@@ -1,0 +1,7 @@
+{
+  "adapter": "sqlite",
+  "host": "localhost",
+  "user": "your_database_username",
+  "pass": "your_database_password",
+  "db": "default" 
+}

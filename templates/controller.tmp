@@ -1,0 +1,13 @@
+<?php
+/**
+* @package Zedek Framework
+* @subpackage Controller class
+*/
+namespace __zf__;
+class CController extends ZController{
+}
+
+Z::webTest();
+use UnitTestCase;
+class ZTest extends UnitTestCase {
+}
