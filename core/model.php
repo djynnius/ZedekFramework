@@ -208,4 +208,11 @@ abstract class ZModel{
 		return $count;
 	}
 
+	final public function asObject($array){
+		if(count($array) == 1 && gettype($array[0]) == "array"){
+			return (object)$array[0];
+		} else {
+			return (object)$array;
+		}
+	}
 }

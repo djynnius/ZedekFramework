@@ -27,7 +27,7 @@ abstract class ZController extends Zedek{
 
 	#sets default to render index
 	public function _default(){
-		$this->display("404");
+		$this->display404("404");
 	} 
 
 	#controllar class templating array
@@ -64,7 +64,7 @@ abstract class ZController extends Zedek{
 		}
 		$controllerFile = zroot."engines/{$name}/controller.php";
 		$appFolder = zroot."engines/{$name}";
-		$viewFolder = zroot."engines/{$name}/view";
+		$viewFolder = zroot."engines/{$name}/views";
 		try{
 			if(!file_exists($appFolder)){
 				mkdir($appFolder);

@@ -172,6 +172,15 @@ class ZORM extends Zedek{
 		$this->dbo->query($q);
 	}
 
+	/**
+	* @param array $array array to convert
+	* @return object 
+	*/
+	public function arrayToObject($array){
+		$array = (object)$array;
+		return $array;
+	}	
+
 }
 
 /**
