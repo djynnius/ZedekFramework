@@ -25,7 +25,7 @@ session_start();
 #"C:\\path\\to\\web\\" and "/subfolder/" for both unix and windows 
 #This is OS specific windows will be "C:\\path\\to\\root\\" 
 
-const zweb = "/var/repo/zedek/public/";
+const zweb = "/path/to/web/";
 
 /*if installing zedek in a web sub directory
 ensure you set the path starting with a slash and ending in a trailing slash 
