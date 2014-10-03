@@ -39,7 +39,9 @@ abstract class ZModel{
 	*/
 	final function find($id, $col="id"){
 		$q = "SELECT * FROM `{$this->table}` WHERE `$col`='{$id}'";
-		return $this->orm->fetch($q);
+		$row = $this->orm->fetch($q);
+		$row = $row[0];
+		return $this->toObject($row);
 	}
 
 	/**

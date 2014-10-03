@@ -214,7 +214,7 @@ class ZView extends Zedek{
 			$footer = $this->simpleReplace($footer, $k, $v);
 		}
 		print $header;		
-		@include_once zroot."engines/{$controller}/view/{$view}.php";				
+		@include_once zroot."engines/{$controller}/views/{$view}.php";				
 		print $footer;		
 	}
 
@@ -232,7 +232,7 @@ class ZView extends Zedek{
 		if(file_exists($viewFile)){
 			$view = file_get_contents($viewFile);	
 		} elseif(file_exists($engine."{$controller}/views/{$method}.html")){
-			$view = file_get_contents($engine."{$controller}/view/{$method}.html");
+			$view = file_get_contents($engine."{$controller}/views/{$method}.html");
 		} elseif(file_exists($engine."{$controller}/views/none.html")){
 			$view = file_get_contents($engine."{$controller}/views/none.html");
 		} elseif(file_exists($engine."/default/views/{$this->view}.html")){
