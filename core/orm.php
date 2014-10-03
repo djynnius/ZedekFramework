@@ -227,7 +227,7 @@ class ZORMTable extends ZORM{
 	/**
 	* @return array
 	*/
-	public function fetch(){
+	public function fetch($x=false){
 		$q = "SELECT * FROM `{$this->table}`";
 		try{
 			if($q = $this->dbo->query($q)){
@@ -410,11 +410,11 @@ class ZORMView extends ZORMTable{
 		$this->dbo->query($q);
 	}	
 
-	public function add(){return false;}
+	public function add($a=false){return false;}
 
-	public function remove(){return false;}
+	public function remove($a=false, $b=false){return false;}
 
-	public function update(){return false;}	
+	public function update($a=false, $b=false, $c=false){return false;}	
 } 
 
 /**
