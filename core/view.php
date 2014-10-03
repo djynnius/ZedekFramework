@@ -83,7 +83,7 @@ class ZView extends Zedek{
 	*/
 	private function getAllThemeFiles(){
 		$themeFolder = zweb."themes/";
-		$files = @scandir($themeFolder.$this->theme);
+		$files = scandir($themeFolder.$this->theme);
 
 		if(gettype($files) != "array") $files = array();
 		foreach($files as $file){
