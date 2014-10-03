@@ -237,7 +237,7 @@ class ZView extends Zedek{
 			$view = file_get_contents($engine."{$controller}/views/none.html");
 		} elseif(file_exists($engine."/default/views/{$this->view}.html")){
 			$view = file_get_contents($engine."/default/views/{$this->view}.html");
-		} elseif(file_exists(zroot."engines/default/view/none.html")){
+		} elseif(file_exists(zroot."engines/default/views/none.html")){
 			$view = file_get_contents(zroot."engines/default/views/none.html");
 		} else {
 			$view = "";
