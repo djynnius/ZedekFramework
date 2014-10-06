@@ -122,3 +122,4 @@ abstract class ZController extends Zedek{
 		return $this->template($arg1, $arg2, $theme)->dynamic($controller);
 	}
 }
+

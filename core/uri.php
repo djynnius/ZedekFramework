@@ -12,7 +12,7 @@ namespace __zf__;
 class ZURI extends Zedek{
 	public $http;
 	public $https;
-	public $port;
+	public $port; 
 	public $server; // server name eg webapp.com
 	public $url; // request uri
 	public $controller; // engine name

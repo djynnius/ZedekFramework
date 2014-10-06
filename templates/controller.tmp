@@ -10,4 +10,8 @@ class CController extends ZController{
 Z::webTest();
 use UnitTestCase;
 class ZTest extends UnitTestCase {
+	function __construct(){
+		parent::__construct();
+		$this->app = new CController;
+	}
 }

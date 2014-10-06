@@ -77,17 +77,18 @@ Zedek 3 is built to map urls to engine directories and methods of the class CCon
 
 the MVC is made literal within the engine folder. 
 
-1. To create a new app called foo create a folder with the name foo within the engines folder.
+1. To create a new app named foo create a folder with the name foo within the engines folder.
 2. within this create a class file "controller.php".
 3. within the controller file enter the following code inside your php tags
 
-## ##
+    <?php
     namespace __zf__;
     class CController extends ZController{
         function bar(){
             print "Hello World";
         }
     }
+    
 
 4. Browse to http://mysite.com/foo/bar
 

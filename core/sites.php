@@ -34,10 +34,14 @@ class ZSites{
 					$engine = zroot."sites/".$site."/";
 					if(!file_exists($engine."default") && !is_dir($engine."default")){
 						//ensures the mandatory default folder and controller as well as view exist
+						echo 1;
 						$this->createDefault($engine);
 					}
 				} else {
-					$engine = zroot."engines/";
+					mkdir(zroot."sites/".$site);
+					chmod(zroot."sites/".$site, 0777);
+					$engine = zroot."sites/".$site."/";
+					$this->createDefault($engine);
 				}					
 				break;
 			default:
@@ -66,16 +70,20 @@ class ZSites{
 	* @param string $engine default
 	*/
 	function createDefault($engine){
+		$site = $engine;
+		$site = trim($site, "/");
+		$site = explode("sites/", $site);
+		$site = end($site);
 		if(!file_exists($engine."default/") && !is_dir($engine."default/")){
 			mkdir($engine."default/");
-			mkdir($engine."default/view/");
+			mkdir($engine."default/views/");
 			chmod($engine."default/", 0777);
-			chmod($engine."default/view/", 0777);
+			chmod($engine."default/views/", 0777);
 			$controller = file_get_contents(zroot."templates/default/controller.php");
 			file_put_contents($engine."default/controller.php", $controller);
 			chmod($engine."default/controller.php", 0777);
-			file_put_contents($engine."default/view/index.html", "");	
-			chmod($engine."default/view/index.html", 0777);		
+			file_put_contents($engine."default/views/index.html", "<h1>The <span style='text-decoration: underline'>{$site}</span> site was successfully created.</h1>");	
+			chmod($engine."default/views/index.html", 0777);		
 		}
 
 	}

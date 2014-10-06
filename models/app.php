@@ -11,5 +11,8 @@
 namespace __zf__;
 
 class App extends ZModel{
-	
+	function tmp(){
+		$tmp = array();
+		return $tmp;
+	}
 }
