@@ -10,6 +10,9 @@
 
 namespace __zf__;
 
-class ZInternal extends Zedek{
-	
+abstract class ZInternal extends Zedek{
+	function __construct(){
+		$this->orm = new ZORM;
+		$this->uri = new ZURI;
+	}
 }
