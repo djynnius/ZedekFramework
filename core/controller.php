@@ -1,27 +1,52 @@
 <?php
-#class abstract class/super class
+/**
+* @package Zedek Framework
+* @subpackage ZController zedek super controller class
+* @version 3
+* @author djyninus <psilent@gmail.com> Ikakke Ikpe
+* @link https://github.com/djynnius/zedek
+* @link https://github.com/djynnius/zedek.git
+*/
 
 namespace __zf__;
 use \Exception as Exception;
-abstract class ZController extends Zedek implements ZIController{
+abstract class ZController extends Zedek{
+	
 	public $orm;
 	public $uri;
-	static private $scaffold_file_names = array(
-		'read', 
-		'view', 
-		'update', 
-	);
 
 	function __construct(){
 		$this->orm = new ZORM;
-		$this->uri = new URIMaper;
-		$this->_init();	
+		$this->uri = new ZURI;
+		$this->app = new App;
 	}
 
 	function __call($method, $args){
 		if(!method_exists($this, $method)) $this->_default();
 	}
 
+	#sets default to render index
+	public function _default(){
+		$this->display404("404");
+	} 
+
+	#controllar class templating array
+	/**
+	* @return array
+	*/
+	public function _tmp(){
+		return $this->app->tmp();
+	}
+
+	public function _error(){
+		$this->display("404");
+	}
+
+	/**
+	* @param string $name of controller to be created
+	* @param
+	* @param
+	*/
 	final static public function create($name, $bool=0, $table=null){
 		$args = func_num_args();
 		$args = count($args);
@@ -39,7 +64,7 @@ abstract class ZController extends Zedek implements ZIController{
 		}
 		$controllerFile = zroot."engines/{$name}/controller.php";
 		$appFolder = zroot."engines/{$name}";
-		$viewFolder = zroot."engines/{$name}/view";
+		$viewFolder = zroot."engines/{$name}/views";
 		try{
 			if(!file_exists($appFolder)){
 				mkdir($appFolder);
@@ -71,69 +96,30 @@ abstract class ZController extends Zedek implements ZIController{
 		}
 	}
 
-	/**
-		replaces construct for all classs
-	*/
-	public function _init(){}
-
-	final protected function template($arg1=null, $arg2=null){
+	final protected function template($arg1=null, $arg2=null, $theme=false){
 		require_once "view.php";
-		return new ZView($arg1, $arg2);
+		return new ZView($arg1, $arg2, $theme);
 	}
 
 	#shorter method for rendering
-	final protected function render($arg1=null, $arg2=null){
-		print $this->template($arg1, $arg2)->render();
+	final protected function render($arg1=null, $arg2=null, $theme=false){
+		print $this->template($arg1, $arg2, $theme)->render();
 	}
 
-	final protected function display($arg1=null, $arg2=null){
-		print $this->template($arg1, $arg2)->display();
+	final protected function display($arg1=null, $arg2=null, $theme=false){
+		print $this->template($arg1, $arg2, $theme)->display();
 	}
 
-	final protected function dynamic($arg1=null, $arg2=null, $controller=null){
-		return $this->template($arg1, $arg2)->dynamic($controller);
+	final protected function displayIndex($arg1=null, $arg2=null, $theme=false){
+		print $this->template($arg1, $arg2, $theme)->displayIndex();
 	}
 
-	#sets default to render index
-	public function _default(){
-		$this->render("index");
-	} 
-
-	public function _placeholders(){
-		return array();
+	final protected function display404($arg1=null, $arg2=null, $theme=false){
+		print $this->template($arg1, $arg2, $theme)->display404();
 	}
 
-	final public function _bounce($msg=false){
-		$msg = $msg == false ? "" : "msg={$msg}";
-		if(isset($_SERVER['HTTP_REFERER'])){
-			$url = $_SERVER['HTTP_REFERER'];
-			$url = explode("?msg=", $url);
-			$url = $url[0];
-			$url = strpos($url, "?") != false ? $url."&{$msg}" : rtrim($url, "/")."/?{$msg}";
-			header("Location: {$url}");
-		} else {
-			header("Location: /"."{$msg}");
-		}
+	final protected function dynamic($arg1=null, $arg2=null, $theme=false, $controller=null){
+		return $this->template($arg1, $arg2, $theme)->dynamic($controller);
 	}
-
-	final function paginate($array, $page=1, $count=10){
-		$array_size = count($array);
-		$pages = ceil($array_size/$count);
-		$a = array();
-		$start = ($page - 1);
-		for($i=($start*$count); $i<($page*$count); $i++){
-			if(isset($array[$i])) $a[] = $array[$i];
-		}
-		$puts = array(
-			'data'=>$puts, 
-			'pages'=>$pages
-		);
-		return $puts;
-	}	
 }
 
-interface ZIController{
-	function _init();
-	function _default();
-	function _placeholders();
-}

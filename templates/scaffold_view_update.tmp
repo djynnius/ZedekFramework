@@ -1,8 +1,0 @@
-<article>
-	<h2>Update {{id}}</h2>
-	<form action='/{{app_name}}/update' method='post'>
-		<p></p>
-		<input type='hidden' name='id' value='{{id}}' />
-		<input type='submit' name='submit' value='submit' />
-	</form>
-</article>

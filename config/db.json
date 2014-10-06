@@ -1,7 +1,7 @@
 {
   "adapter": "sqlite",
   "host": "localhost",
-  "user": "db_user_name",
-  "pass": "secure_password",
+  "user": "your_database_username",
+  "pass": "your_database_password",
   "db": "default" 
 }

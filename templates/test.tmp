@@ -1,4 +1,9 @@
 <?php
+/**
+* @package Zedek Framework
+* @version 3.0
+* @author djyninus <psilent@gmail.com> Ikakke Ikpe
+*/
 namespace __zf__;
 require_once "zunit.php";
 $app = str_replace(".php", "", end(explode('/', __file__)));

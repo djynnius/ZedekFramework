@@ -1,5 +1,12 @@
 <?php
-#ORM for zedek
+/**
+* @package Zedek Framework
+* @subpackage ZORM zedek ORM class
+* @version 3
+* @author djyninus <psilent@gmail.com> Ikakke Ikpe
+* @link https://github.com/djynnius/zedek
+* @link https://github.com/djynnius/zedek.git
+*/
 
 namespace __zf__;
 use \PDO as PDO, \PDOException as PDOException, \Exception as Exception;
@@ -14,6 +21,9 @@ class ZORM extends Zedek{
 	protected $db;
 	const scaffold = 1;
 
+	/**
+	* @param PDO $dbo optionally takes a PDO object as argument or a boolean
+	*/
 	function __construct($dbo=false){
 		if($dbo == false){
 			$this->_dbConfig();
@@ -24,7 +34,7 @@ class ZORM extends Zedek{
 	}
 
 	/**
-		database configuration settings from /config/db.json
+	* database configuration settings from /config/db.json
 	*/
 	private function _dbConfig(){
 		$db_config_file = file_get_contents(zroot."config/db.json");
@@ -64,6 +74,9 @@ class ZORM extends Zedek{
 		}		
 	}
 
+	/**
+	* @return array of table column names
+	*/
 	public function getColumnNames(){
 		$q = "SELECT * FROM {$this->table} LIMIT 1";
 		$q = $this->dbo->query($q);
@@ -74,20 +87,37 @@ class ZORM extends Zedek{
 		return $puts;
 	}
 
+	/**
+	* @return int number of columns in table
+	*/
 	public function getColumnCount(){
 		return count($this->getColumnNames());
 	}
 
+	/**
+	* @param string $table database table name
+	* @param array $attrs database definition
+	* @return ZORMTable
+	*/
 	public function table($table=false, $attrs=false){
 		return $table == false || gettype($table) == 'array' ? 
 			false : new ZORMTable($table, $attrs, $this->dbo);
 	}
 
-	public function view($table=false, $q=false){
-		return $table == false || gettype($table) == 'array' ? 
-			false : new ZORMView($table, $q, $this->dbo);
+	/**
+	* @param string $view database view name
+	* @param string $q string defining view
+	* @return ZORMView
+	*/
+	public function view($view=false, $q=false){
+		return $view == false || gettype($view) == 'array' ? 
+			false : new ZORMView($view, $q, $this->dbo);
 	}
 
+	/**
+	* @param string $q query
+	* @return array multidimensional
+	*/
 	public function fetch($q){		
 		try{
 			if($q = $this->dbo->query($q)){
@@ -101,10 +131,15 @@ class ZORM extends Zedek{
 				return false;
 			}
 		} catch(PDOException $e){
-			//print $e->getMessage();
+			print $e->getMessage();
 		}
 	}
 
+	/**
+	* This sets a serial number column to db array
+	* @param array $array to serialize
+	* @return array serialized
+	*/
 	public function serialize($array, $k='sn'){
 		if(gettype($array) != 'array') $array = array();
 		foreach($array as $i=>$item){
@@ -113,86 +148,66 @@ class ZORM extends Zedek{
 		return $array;
 	}
 
-	public function paginateQuery($q, $total, $page=1, $count=10){
-		if($page < 1) $page = 1;
-		if($page > ceil($total/$count)) $page = ceil($total/$count);
-		$q = $q." LIMIT ".(($page-1)*$count).", ".$count;
-		try{
-			return $this->fetch($q);
-		} catch(\Exception $e){
-			return false;
-		}
-	}	
-
-	public function paginateArray($a, $page=1, $count=10){
-		$start = $page <= 0 ? 0 : (($page-1)*$count);
-		$finish = $start+$count;
-
-		$records = count($a);
-		$pages = ceil($records/$count);
-
-		$b = array();
-		
-		for($i=$start; $i<$finish; $i++){
-			if(isset($a[$i])){
-				$b[$i] = $a[$i];
-			} else {
-				break;
-			}
-		}
-
-		return array('recordset'=>$b, 'pages'=>$pages, 'records'=>$records);
-	}
-
-	function paginationPages($url, $p='p', $pages){
-		$page = isset($_GET[$p]) ? $_GET[$p] : 1;
-
-		$previous = $page <= 0 ? 0 : $page-1;
-		$previous = "{$url}?{$p}={$previous}";
-		$next = $page >= $pages ? $pages : $page+1;
-		$next = "{$url}?{$p}={$next}";
-
-		$html = "<a href='{$previous}'>Previous</a>";
-		for($i=1;$i<=$pages;$i++){
-			$html .= " <a href='{$url}?{$p}={$i}'>{$i}</a> . ";
-		}
-		$html .= "</a> <a href='{$next}'>Next</a>";
-
-		return $html;
-	}
-
+	/**
+	* @param string $q query
+	* @todo introspect and convert to prepare safe queries
+	*/
 	public function write($q){
 		$this->dbo->query($q);
 	}
 
+	/**
+	* @param string $q query
+	* @todo introspect and convert to prepare safe queries
+	*/
 	public function execute($q){
 		$this->dbo->query($q);
 	}
 
+	/**
+	* @param string $q query
+	* @todo introspect and convert to prepare safe queries
+	*/
 	public function delete($q, $table=false){
 		$this->dbo->query($q);
 	}
 
+	/**
+	* @param array $array array to convert
+	* @return object 
+	*/
+	public function arrayToObject($array){
+		$array = (object)$array;
+		return $array;
+	}	
+
 }
 
-#Table mapper
+/**
+* @subpackage ZORM Table class
+*/
 class ZORMTable extends ZORM{
 	public $dbo;
 	public $table;
 
+	/**
+	* @param string $table table name
+	* @param array $attrs table definition
+	*/
 	function __construct($table=false, $attrs=false, $dbo){
 		$this->dbo = $dbo;
 		$this->table = $table;
 
-		if(!is_array($attrs)){
-			$this->fetch();
-		} else {
-			$this->create($table, $attrs);
-		}
+		if(is_array($attrs)) $this->create($table, $attrs);
+
 	}
 
+	/**
+	* @param string $table table name
+	* @param array $attrs table definition
+	*/
 	public function create($table, $attrs){
-		$q = "CREATE TABLE IF NOT EXISTS {$table} (";
+		$q = "CREATE TABLE IF NOT EXISTS `{$table}` (";
 		$count = count($attrs);
 		$i = 1;
 		foreach($attrs as $k=>$v){
@@ -206,9 +221,13 @@ class ZORMTable extends ZORM{
 		}
 		$q .= ")";		
 		$this->dbo->query($q);
+		return $q;
 	}
 
-	public function fetch(){
+	/**
+	* @return array
+	*/
+	public function fetch($x=false){
 		$q = "SELECT * FROM `{$this->table}`";
 		try{
 			if($q = $this->dbo->query($q)){
@@ -226,9 +245,15 @@ class ZORMTable extends ZORM{
 		}
 	}
 
+	/**
+	* @param array $a input array
+	* @return array without empty value fields
+	*/
 	private function removeEmptyArrayInput($a){
 		foreach($a as $k=>$v){
 			if(empty($v)){
+				unset($a[$k]);
+			} elseif(strtolower(trim($k)) == "submit"){
 				unset($a[$k]);
 			} else {
 				$a[$k] = trim($v);
@@ -238,6 +263,10 @@ class ZORMTable extends ZORM{
 		return $a;
 	}
 
+	/**
+	* @param array $a array to be inserted in table
+	* @return string query
+	*/
 	public function add($a){
 		$a = $this->removeEmptyArrayInput($a);
 		$count = count($a);
@@ -258,14 +287,27 @@ class ZORMTable extends ZORM{
 			$insert = $this->dbo->prepare($q);
 			$insert->execute($values);
 		}
+		return $q;
 	}
 
+	/**
+	* May delete many rows
+	* @param mixed $val value to remove
+	* @param string $col column
+	* @return string query
+	*/
 	public function remove($val, $col="id"){
 		$q = "DELETE FROM {$this->table} WHERE {$col}=?";
 		$stmt = $this->dbo->prepare($q);
 		$stmt->execute(array($val,));
 	}
 
+	/**
+	* @param mixed $val value
+	* @param array $a array to insert
+	* @param string $col column
+	* @return string query
+	*/
 	public function update($val='*', $a=array(), $col="id"){
 		$a = $this->removeEmptyArrayInput($a);
 		$count = count($a);
@@ -280,8 +322,14 @@ class ZORMTable extends ZORM{
 		if($val == "*"){null;} else {array_push($a, $val);}
 		$stmt = $this->dbo->prepare($q);
 		$stmt->execute($a);
+		return $q;
 	}
 
+	/**
+	* @param mixed $val value to target
+	* @param string $col column
+	* @return ZORMRow
+	*/
 	public function row($val, $col='id'){
 		try{
 			$row = new ZORMRow($val, $col, $this->table, $this->dbo);
@@ -291,30 +339,34 @@ class ZORMTable extends ZORM{
 		return $row;
 	}
 
-	public function scaffold($app_name = null){
-		$app_name = is_null($app_name) ? $this->table : $app_name;
-		ZController::create($app_name, ZORM::scaffold, $this->table);
-	}
-
+	/**
+	* @return string query
+	*/
 	public function drop(){
 		$q = "DROP TABLE {$this->table}";
 		$this->dbo->query($q);
-	}
-
-	public function size($id='id'){
-		$q = "SELECT COUNT(`{$id}`) AS `count` FROM {$this->table}";
-		return $this
-				->dbo
-				->query($q)
-				->fetchObject()
-				->count;
+		return $q;
 	}
 
 	/**
-		many to many relatipnship check ensures 
-		no duplicates are entered in many to many tables
+	* @param string $col column 
+	* @param int row count 
 	*/
-	public function m2mExists($col1, $arg1, $col2, $arg2){
+	public function size($col='id'){
+		$q = "SELECT COUNT(`{$col}`) AS `count` FROM {$this->table}";
+		return (integer)$this->dbo->query($q)->fetchObject()->count;
+	}
+
+	/**
+	* many to many relatipnship check ensures 
+	* no duplicates are entered in many to many tables
+	* @param mixed $arg1 value 1
+	* @param string $col1 column 1
+	* @param mixed $arg2 value 2
+	* @param string $col2 column 2
+	* @return boolean
+	*/
+	public function m2mExists($arg1, $col1, $arg2, $col2="id"){
 		$q = "SELECT COUNT(*) AS `count` 
 				FROM {$this->table} 
 			WHERE `{$col1}`='{$arg1}' 
@@ -324,9 +376,12 @@ class ZORMTable extends ZORM{
 	}
 
 	/**
-		prevents duplicating of records
+	* prevents duplicating of records
+	* @param mixed $val value
+	* @param string $col column 
+	* @return object
 	*/
-	public function exists($col, $val){
+	public function exists($val, $col="id"){
 		$q = "SELECT COUNT({$col}) AS `count` 
 				FROM {$this->table} 
 			WHERE {$col}='{$val}'";
@@ -335,39 +390,35 @@ class ZORMTable extends ZORM{
 }
 
 /**
-	purely for the purpose of replicating the table actions 
-	except for the creation of a view
+* @subpackage ZORMView
 */
 class ZORMView extends ZORMTable{
-	function __construct($table=false, $q=false, $dbo){
+	function __construct($view=false, $q=false, $dbo){
 		$this->dbo = $dbo;
 		$this->table = $table;
 
-		if(is_bool($q)){
-			$this->fetch();
-		} else {
-			$this->create($table, $q);
-		}
+		if(is_string($q)) $this->create($view, $q);
 	}
 
-	public function create($table, $q){
-		$q = "CREATE VIEW `{$table}` AS {$q}";		
+	public function create($view, $q){
+		$q = "CREATE VIEW `{$view}` AS {$q}";		
 		$this->dbo->query($q);
 	}
 
 	public function drop(){
-		$q = "DROP VIEW {$this->table}";
+		$q = "DROP VIEW {$this->view}";
 		$this->dbo->query($q);
 	}	
-	public function add(){return false;}
 
-	public function remove(){return false;}
+	public function add($a=false){return false;}
 
-	public function update(){return false;}	
+	public function remove($a=false, $b=false){return false;}
+
+	public function update($a=false, $b=false, $c=false){return false;}	
 } 
 
 /**
-	row maper	
+* @subpackage ZORMRow
 */
 class ZORMRow extends ZORM{
 	public $dbo;
@@ -376,6 +427,12 @@ class ZORMRow extends ZORM{
 	public $value;
 	public $_row;
 
+	/**
+	* @param mixed $value
+	* @param string $column column
+	* @param string $table table
+	* @param PDO object
+	*/
 	function __construct($value, $column, $table, $dbo){
 		$this->column = $column;
 		$this->value = $value;
@@ -385,20 +442,35 @@ class ZORMRow extends ZORM{
 		$this->_row = $this->dbo->query($q)->fetchObject();
 	}
 
+	/**
+	* @return object
+	*/
 	function currentRow(){
 		return $this->_row;
 	}
 
+	/**
+	* @param mixed $val 
+	* @param string $col column
+	* @todo make prepare clean
+	* @return string query
+	*/
+	function commit($val=false, $col=false){	
+		
+		$val = $val == false ? $this->currentRow()->id : $val;	
+		$col = $col == false ? "id" : $col;
 
-	function commit(){		
 		foreach($this->currentRow() as $k=>$v){
 			if($v == $this->$k){
 				//continue;
 			} else {
-				$q = "UPDATE `{$this->table}` SET `{$k}`='{$this->$k}' WHERE id='{$this->currentRow()->id}'";
+				$q = "	UPDATE `{$this->table}` 
+						SET `{$k}`='{$this->$k}' 
+						WHERE {$col}='{$val}'";
 				$this->dbo->query($q);
 			}
 		}
+		return $q;
 	}
 
 	function __get($attr){
@@ -407,6 +479,9 @@ class ZORMRow extends ZORM{
 		}
 	}
 
+	/**
+	* @return int row count
+	*/
 	function size(){
 		$i = 0;
 		try{
@@ -425,8 +500,13 @@ class ZORMRow extends ZORM{
 	
 	}
 
+	/**
+	* Does not delete where the table does not have an id column
+	* @return string query
+	*/
 	function remove(){
 		$q = "DELETE FROM `{$this->table}` WHERE `id`='{$this->currentRow()->id}'";
 		$this->dbo->query($q);
+		return $q;
 	}
 }

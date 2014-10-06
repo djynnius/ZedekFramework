@@ -1,5 +1,12 @@
 <?php
-#configuration superclass
+/**
+* @package Zedek Framework
+* @version 3
+* @subpackage ZConfig zedek configuration class
+* @author djyninus <psilent@gmail.com> Ikakke Ikpe
+* @link https://github.com/djynnius/zedek
+* @link https://github.com/djynnius/zedek.git
+*/
 
 namespace __zf__;
 use \Exception as Exception;
@@ -15,6 +22,18 @@ class ZConfig extends Zedek{
 		$this->config = json_decode($config);
 	}
 
+	/**
+	* @param string $config configuration file without extension from config folder
+	*/
+	public function setConfig($config){
+		$this->configFile = zroot."config/{$config}.json";;
+		$config = file_get_contents($this->configFile);
+		$this->config = json_decode($config);
+	}
+
+	/**
+	* @param string $key 
+	*/
 	public function get($key){
 		try{
 			if(isset($this->config->{$key})){
@@ -28,11 +47,19 @@ class ZConfig extends Zedek{
 		}
 	}
 
+
+	/**
+	* @param string $key simple string as key
+	* @param string $value may be a json string or plain string
+	*/
 	public function set($key, $value){
 		$this->config->{$key} = $value;
 		$this->cast();
 	}
 
+	/**
+	* @param string $key 
+	*/
 	public function remove($key){
 		try{
 			if(isset($this->config->{$key})){
