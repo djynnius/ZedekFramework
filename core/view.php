@@ -109,6 +109,7 @@ class ZView extends Zedek{
 			'version'=> $config->get("version"), 
 			'dir'=> $uri->dir, 
 			'theme'=> $uri->dir."/themes/".$this->getTheme(), 
+			'common'=> $uri->dir."/themes/common", 
 			'this year'=> strftime("%Y", time()), 
 			'this month'=> strftime("%B", time()), 
 			'today'=> strftime("%A, %B %d, %Y", time()), 

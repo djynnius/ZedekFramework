@@ -21,8 +21,4 @@ class CController extends ZController{
 	function contact(){
 		$this->render('contact');
 	}
-
-	function feedback(){
-		print "Mesaage received :-)";
-	}
 }
