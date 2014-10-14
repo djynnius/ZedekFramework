@@ -77,8 +77,20 @@ class ZORM extends Zedek{
 	/**
 	* @return array of table column names
 	*/
+<<<<<<< HEAD
 	public function getColumnNames(){
 		$q = "SELECT * FROM {$this->table} LIMIT 1";
+=======
+
+	protected function secureSelect($q){
+		$q = addslashes($q);
+		return $q;
+	}
+
+	public function getColumnNames(){
+		$q = "SELECT * FROM {$this->table} LIMIT 1";
+		//$q = self::secureSelect($q);
+>>>>>>> 5d25f6041670e8b28e46724f1f1622e229d3193b
 		$q = $this->dbo->query($q);
 		$puts = array();
 		while($r = $q->fetch(PDO::FETCH_ASSOC)){
@@ -118,7 +130,12 @@ class ZORM extends Zedek{
 	* @param string $q query
 	* @return array multidimensional
 	*/
+<<<<<<< HEAD
 	public function fetch($q){		
+=======
+	public function fetch($q){
+		//$q = self::secureSelect($q);		
+>>>>>>> 5d25f6041670e8b28e46724f1f1622e229d3193b
 		try{
 			if($q = $this->dbo->query($q)){
 				$a = array();
@@ -229,6 +246,10 @@ class ZORMTable extends ZORM{
 	*/
 	public function fetch($x=false){
 		$q = "SELECT * FROM `{$this->table}`";
+<<<<<<< HEAD
+=======
+		$q = self::secureSelect($q);
+>>>>>>> 5d25f6041670e8b28e46724f1f1622e229d3193b
 		try{
 			if($q = $this->dbo->query($q)){
 				$a = array();
@@ -354,6 +375,10 @@ class ZORMTable extends ZORM{
 	*/
 	public function size($col='id'){
 		$q = "SELECT COUNT(`{$col}`) AS `count` FROM {$this->table}";
+<<<<<<< HEAD
+=======
+		$q = self::secureSelect($q);
+>>>>>>> 5d25f6041670e8b28e46724f1f1622e229d3193b
 		return (integer)$this->dbo->query($q)->fetchObject()->count;
 	}
 
@@ -371,7 +396,11 @@ class ZORMTable extends ZORM{
 				FROM {$this->table} 
 			WHERE `{$col1}`='{$arg1}' 
 				AND `{$col2}`='{$arg2}'"; 
+<<<<<<< HEAD
 		
+=======
+		//echo $q;
+>>>>>>> 5d25f6041670e8b28e46724f1f1622e229d3193b
 		return $this->dbo->query($q)->fetchObject()->count > 0 ? true : false;
 	}
 
@@ -385,6 +414,10 @@ class ZORMTable extends ZORM{
 		$q = "SELECT COUNT({$col}) AS `count` 
 				FROM {$this->table} 
 			WHERE {$col}='{$val}'";
+<<<<<<< HEAD
+=======
+		//$q = self::secureSelect($q);
+>>>>>>> 5d25f6041670e8b28e46724f1f1622e229d3193b
 		return $this->dbo->query($q)->fetchObject()->count > 0 ? true : false;
 	}
 }
@@ -439,6 +472,10 @@ class ZORMRow extends ZORM{
 		$this->table = $table;
 		$this->dbo = $dbo;
 		$q = "SELECT * FROM `{$table}` WHERE `{$column}`='{$value}' LIMIT 1";
+<<<<<<< HEAD
+=======
+		//$q = self::secureSelect($q);
+>>>>>>> 5d25f6041670e8b28e46724f1f1622e229d3193b
 		$this->_row = $this->dbo->query($q)->fetchObject();
 	}
 

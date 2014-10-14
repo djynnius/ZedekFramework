@@ -172,7 +172,11 @@ abstract class ZModel{
 	* @return boolean true id the value exists
 	*/
 	final function exists($val, $col="id"){
+<<<<<<< HEAD
 		return $this->orm->table($this->table)->exists($col, $val);
+=======
+		return $this->orm->table($this->table)->exists($val, $col);
+>>>>>>> 5d25f6041670e8b28e46724f1f1622e229d3193b
 	}
 
 	/**
