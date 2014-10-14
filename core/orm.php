@@ -77,8 +77,15 @@ class ZORM extends Zedek{
 	/**
 	* @return array of table column names
 	*/
+
+	protected function secureSelect($q){
+		$q = addslashes($q);
+		return $q;
+	}
+
 	public function getColumnNames(){
 		$q = "SELECT * FROM {$this->table} LIMIT 1";
+		//$q = self::secureSelect($q);
 		$q = $this->dbo->query($q);
 		$puts = array();
 		while($r = $q->fetch(PDO::FETCH_ASSOC)){
@@ -118,7 +125,8 @@ class ZORM extends Zedek{
 	* @param string $q query
 	* @return array multidimensional
 	*/
-	public function fetch($q){		
+	public function fetch($q){
+		//$q = self::secureSelect($q);		
 		try{
 			if($q = $this->dbo->query($q)){
 				$a = array();
@@ -229,6 +237,7 @@ class ZORMTable extends ZORM{
 	*/
 	public function fetch($x=false){
 		$q = "SELECT * FROM `{$this->table}`";
+		$q = self::secureSelect($q);
 		try{
 			if($q = $this->dbo->query($q)){
 				$a = array();
@@ -354,6 +363,7 @@ class ZORMTable extends ZORM{
 	*/
 	public function size($col='id'){
 		$q = "SELECT COUNT(`{$col}`) AS `count` FROM {$this->table}";
+		$q = self::secureSelect($q);
 		return (integer)$this->dbo->query($q)->fetchObject()->count;
 	}
 
@@ -371,7 +381,7 @@ class ZORMTable extends ZORM{
 				FROM {$this->table} 
 			WHERE `{$col1}`='{$arg1}' 
 				AND `{$col2}`='{$arg2}'"; 
-		
+		//echo $q;
 		return $this->dbo->query($q)->fetchObject()->count > 0 ? true : false;
 	}
 
@@ -385,6 +395,7 @@ class ZORMTable extends ZORM{
 		$q = "SELECT COUNT({$col}) AS `count` 
 				FROM {$this->table} 
 			WHERE {$col}='{$val}'";
+		//$q = self::secureSelect($q);
 		return $this->dbo->query($q)->fetchObject()->count > 0 ? true : false;
 	}
 }
@@ -439,6 +450,7 @@ class ZORMRow extends ZORM{
 		$this->table = $table;
 		$this->dbo = $dbo;
 		$q = "SELECT * FROM `{$table}` WHERE `{$column}`='{$value}' LIMIT 1";
+		//$q = self::secureSelect($q);
 		$this->_row = $this->dbo->query($q)->fetchObject();
 	}
 

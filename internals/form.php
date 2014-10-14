@@ -49,13 +49,13 @@ class _Form extends Zedek{
 		}
 	}
 
-	static public function encrypt($text, $type="long"){
+	static public function encrypt($text, $type="long", $cryptic=false){
 		switch($type){
 			case "long":
-				return self::longEncryption($text);
+				return self::longEncryption($text, $cryptic);
 				break;
 			case "short":
-				return self::shortEncryption($text);
+				return self::shortEncryption($text, $cryptic);
 				break;
 			default:
 				return false;
