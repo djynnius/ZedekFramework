@@ -49,15 +49,6 @@ class _Form extends Zedek{
 		}
 	}
 
-<<<<<<< HEAD
-	static public function encrypt($text, $type="long"){
-		switch($type){
-			case "long":
-				return self::longEncryption($text);
-				break;
-			case "short":
-				return self::shortEncryption($text);
-=======
 	static public function encrypt($text, $type="long", $cryptic=false){
 		switch($type){
 			case "long":
@@ -65,7 +56,6 @@ class _Form extends Zedek{
 				break;
 			case "short":
 				return self::shortEncryption($text, $cryptic);
->>>>>>> 5d25f6041670e8b28e46724f1f1622e229d3193b
 				break;
 			default:
 				return false;

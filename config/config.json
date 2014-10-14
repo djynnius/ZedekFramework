@@ -1,15 +1,7 @@
 {
-<<<<<<< HEAD
-	"version":"3.1.1",
-=======
 	"version":"3.1.3",
->>>>>>> 5d25f6041670e8b28e46724f1f1622e229d3193b
 	"error":"On",
 	"webUnitTest":"On",
 	"app":"zedek",
 	"theme":"default"
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 5d25f6041670e8b28e46724f1f1622e229d3193b
