@@ -139,6 +139,8 @@ class ZView extends Zedek{
 		foreach($this->template as $k=>$v){
 			if(is_string($v)){
 				$view = str_replace("{{".$k."}}", "$v", $view);
+			} elseif(empty($v)){
+				$view =  str_replace("{{".$k."}}", "", $view);
 			} elseif(is_array($v)){
 				$view = $this->makeLoop($view, $k, $v);
 			}
@@ -171,6 +173,8 @@ class ZView extends Zedek{
 		foreach($this->template as $k=>$v){
 			if(is_string($v)){
 				$view = str_replace("{{".$k."}}", "$v", $view);
+			} elseif(empty($v)){
+				$view =  str_replace("{{".$k."}}", "", $view);
 			} elseif(is_array($v)){
 				$view = $this->makeLoop($view, $k, $v);
 			}
@@ -191,6 +195,8 @@ class ZView extends Zedek{
 			$footer = $this->simpleReplace($footer, $k, $v);
 			if(is_string($v)){
 				$view = str_replace("{{".$k."}}", "$v", $view);
+			} elseif(empty($v)){
+				$view =  str_replace("{{".$k."}}", "", $view);
 			} elseif(is_array($v)){
 				$view = $this->makeLoop($view, $k, $v);
 			}

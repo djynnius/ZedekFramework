@@ -18,6 +18,20 @@ abstract class ZModel{
 	}
 
 	/**
+	* @param array $tmp a global variable
+	* @return bool
+	*/
+	function appendToTemplate(&$tmp){
+		if(!isset($tmp)) $tmp = array();
+		$vars = get_object_vars($this);
+		foreach($vars as $k=>$v){
+			if($k == "orm" || $k == "uri") continue;
+			$tmp[$k]=$v;
+		}
+		return true;
+	}	
+
+	/**
 	* @return array multidimentional array of all the rows in the table
 	*/
 	final function fetchAll(){

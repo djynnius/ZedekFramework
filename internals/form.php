@@ -78,7 +78,10 @@ class _Form extends Zedek{
 	}
 
 	static function fixDate($date){
-		if(strpos($date, "/") != false){
+		$dashed = explode("-", $date);
+		if(count($dashed) == 3 && strlen($dashed[2]) == 4){
+			$date = $dashed[2]."-".$dashed[1]."-".$dashed[0];
+		} elseif(strpos($date, "/") != false){
 			$date = explode("/", $date);
 			$date = $date[2]."-".$date[0]."-".$date[1];				
 		} elseif(strpos($date, "-") != false) {
