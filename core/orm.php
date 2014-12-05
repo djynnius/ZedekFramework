@@ -126,7 +126,10 @@ class ZORM extends Zedek{
 	* @return array multidimensional
 	*/
 	public function fetch($q){
-		//$q = self::secureSelect($q);		
+		$q = strtolower($q);
+		$q = str_replace("delete", "****", $q);
+		$q = str_replace("insert", "****", $q);
+		$q = str_replace("update", "****", $q);
 		try{
 			if($q = $this->dbo->query($q)){
 				$a = array();
@@ -138,6 +141,7 @@ class ZORM extends Zedek{
 				throw new PDOException("Invalid query.");
 				return false;
 			}
+
 		} catch(PDOException $e){
 			print $e->getMessage();
 		}
@@ -161,6 +165,9 @@ class ZORM extends Zedek{
 	* @todo introspect and convert to prepare safe queries
 	*/
 	public function write($q){
+		$q = strtolower($q);
+		$q = str_replace("delete", "****", $q);
+		$q = str_replace("select", "****", $q);
 		$this->dbo->query($q);
 	}
 
@@ -169,6 +176,7 @@ class ZORM extends Zedek{
 	* @todo introspect and convert to prepare safe queries
 	*/
 	public function execute($q){
+
 		$this->dbo->query($q);
 	}
 
@@ -177,6 +185,10 @@ class ZORM extends Zedek{
 	* @todo introspect and convert to prepare safe queries
 	*/
 	public function delete($q, $table=false){
+		$q = strtolower($q);
+		$q = str_replace("select", "****", $q);
+		$q = str_replace("insert", "****", $q);
+		$q = str_replace("update", "****", $q);
 		$this->dbo->query($q);
 	}
 

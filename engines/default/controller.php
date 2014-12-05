@@ -21,4 +21,5 @@ class CController extends ZController{
 	function contact(){
 		$this->render('contact');
 	}
+
 }

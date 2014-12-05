@@ -2,14 +2,51 @@
 
 namespace __zf__;
 
-class _Image {
+class Image {
 
 	function extension($file){
 		$ext = explode(".", $file);
 		return end($ext);
 	}
 
-	function resize($source, $target, $mime = "jpeg", $newWidth = 200, $newHeight = 160){
+	function crop($source, $target, $ext="jpeg", $width=256, $height=256){
+		list($w, $h) = getimagesize($source);
+		$src_w = ($w/2)-($width/2);
+		$src_h = ($h/2)-($height/2);
+		$ext = strtolower($ext);
+
+		$canvas = imagecreatetruecolor($width, $height);
+
+		switch($ext){
+			case "jpeg":
+				$nuImg = imagecreatefromjpeg($source);
+				break;
+			case "png":
+				$nuImg = imagecreatefrompng($source);
+				break;
+			case "gif":
+				$nuImg = imagecreatefromgif($source);
+				break;
+			default:
+				$nuImg = imagecreatefromjpeg($source);
+		}
+		
+		imagecopyresampled($canvas, $nuImg, 0, 0, $src_w, $src_h, $width, $height, $width, $height);
+		
+		switch($ext){
+			case "gif":
+				imagegif($canvas, $target, 100);
+				break;
+			case "png":
+				imagegif($canvas, $target, 100);
+				break;
+			default:
+				imagejpeg($canvas, $target, 100);		
+		}
+	}
+
+	function resize($source, $target, $mime = "jpeg", $newWidth = 512, $newHeight = 512){
+		$mime = strtolower($mime);
 		$sourceStats = getimagesize($source);
 		$sourceRawDimensions = $sourceStats[3];
 		$sourceDimensions = explode("\"", $sourceRawDimensions);
@@ -26,10 +63,7 @@ class _Image {
 		$canvas = imagecreatetruecolor($newWidth, $newHeight);
 		
 		switch($mime){
-			case "jpeg":
-				$nuImg = imagecreatefromjpeg($source);
-				break;
-			case "png":
+ 			case "png":
 				$nuImg = imagecreatefrompng($source);
 				break;
 			case "gif":
@@ -40,7 +74,17 @@ class _Image {
 		}
 		
 		imagecopyresampled($canvas, $nuImg, 0, 0, 0, 0, $newWidth, $newHeight, $sourceWidth, $sourceHeight);
-		imagejpeg($canvas, $target, 100);	
+		switch($mime){
+			case "gif":
+				imagegif($canvas, $target, 100);
+				break;
+			case "png":
+				imagegif($canvas, $target, 100);
+				break;
+			default:
+				imagejpeg($canvas, $target, 100);		
+		}
+			
 	}
 		
 	function batchResize($sourceFolder, $destinationFolder){
