@@ -51,7 +51,7 @@ class ZORM extends Zedek{
 			case "mysql":
 				try{
 					$this->dbo = new PDO(
-						"mysql: host={$this->host}; dbname={$this->db}", 
+						"mysql:host={$this->host};dbname={$this->db}", 
 						$this->user, 
 						$this->pass, 
 						array(
