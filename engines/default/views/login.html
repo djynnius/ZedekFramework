@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Zedek Admin</title>
+<META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+<link href="{{dir}}/themes/common/stylesheets/bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="{{dir}}/themes/admin/assets/login/admin.css" rel="stylesheet" type="text/css" />
+<script src="{{dir}}/themes/common/scripts/jquery.js"></script>
+</head>
+<body class="light_theme  fixed_header left_nav_fixed">
+<div class="wrapper">
+  <!--\\\\\\\ wrapper Start \\\\\\-->
+  
+  <div class="login_page">
+  <div class="login_content">
+  <div class="panel-heading border login_heading">Zedek Admin</div>	
+ <form role="form" class="form-horizontal" action="{{dir}}/login" method="post">
+      <div class="form-group">
+        
+        <div class="col-sm-10">
+          <input name="email" type="email" placeholder="Email" id="inputEmail3" class="form-control">
+        </div>
+      </div>
+      <div class="form-group">
+        
+        <div class="col-sm-10">
+          <input name="password" type="password" placeholder="Password" id="inputPassword3" class="form-control">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class=" col-sm-10">
+          <div class="checkbox checkbox_margin">
+            <label class="lable_margin">
+              <input type="checkbox"><p class="pull-left"> Remember me</p></label>
+              <a href="index.html">
+              <button name="submit" class="btn btn-default pull-right" type="submit" disabled>Sign in</button>
+              </a></div>
+        </div>
+      </div>
+      
+    </form>
+ </div>
+  </div>
+  
+</div>
+<script type="text/javascript">
+  jQuery(document).ready(function($){
+    function checkForEmptyFields(){
+      if($("input[name=email]").val().length == 0 || $("input[name=password]").val().length == 0){
+        $("button[name=submit]").attr("disabled", "On");
+      } else {
+        $("button[name=submit]").removeAttr("disabled");
+      }
+    }
+    $("input[name=email], input[name=password]").keypress(checkForEmptyFields);
+    $("form").submit(function(){
+      if($("input[name=email]").val().length == 0 || $("input[name=password]").val().length == 0){
+        alert("Enter your email and password. ");
+        return false;
+      }
+    });
+  });
+</script>
+
+
+<script src="{{dir}}/themes/common/scripts/bootstrap.js"></script>
+<!--Ultimo Admin//-->
+</body>
+</html>

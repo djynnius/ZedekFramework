@@ -11,7 +11,7 @@
 namespace __zf__;
 class CController extends ZController{
 	function _default(){
-		$this->display("index");
+		$this->displayIndex();
 	}
 
 	function about(){
@@ -22,4 +22,19 @@ class CController extends ZController{
 		$this->render('contact');
 	}
 
+	/*Admin*/
+	function login(){
+		if(_Form::submitted()){
+			$app = new App;
+			if(empty($_POST["email"]) || empty($_POST["password"])) self::redirect("login", "?error=empty_fields");
+			unset($_POST["submit"]);
+			if($app->login($_POST["email"], $_POST["password"]) != false){
+				self::redirect("admin");
+			} else {
+				self::redirect("?error=credentials_mismatch");
+			}
+			return false;
+		}
+		$this->display("login");
+	}
 }
