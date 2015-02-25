@@ -389,12 +389,21 @@ class ZORMTable extends ZORM{
 	* @return boolean
 	*/
 	public function m2mExists($arg1, $col1, $arg2, $col2="id"){
-		$q = "SELECT COUNT(*) AS `count` 
+		$sql = "SELECT COUNT(*) AS `count` 
 				FROM {$this->table} 
-			WHERE `{$col1}`='{$arg1}' 
-				AND `{$col2}`='{$arg2}'"; 
-		//echo $q;
-		return $this->dbo->query($q)->fetchObject()->count > 0 ? true : false;
+				WHERE `{$col1}`= :arg1 
+					AND `{$col2}`= :arg2"; 
+
+		$stmt = $this->dbo->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+		$stmt->execute(array(':arg1'=>$arg1, ':arg2'=>$arg2));
+		return $stmt->fetchObject()->count > 0 ? true : false;
+	}
+
+	/**
+	*Alias for m2mExists
+	*/
+	public function pairExists($arg1, $col1, $arg2, $col2="id"){
+		return $this->m2mExists($arg1, $col1, $arg2, $col2);
 	}
 
 	/**
@@ -462,7 +471,6 @@ class ZORMRow extends ZORM{
 		$this->table = $table;
 		$this->dbo = $dbo;
 		$q = "SELECT * FROM `{$table}` WHERE `{$column}`='{$value}' LIMIT 1";
-		//$q = self::secureSelect($q);
 		$this->_row = $this->dbo->query($q)->fetchObject();
 	}
 
