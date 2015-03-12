@@ -4,7 +4,7 @@ namespace __zf__;
 
 class _Form extends Zedek{
 
-	const cryptic = "SirAbubakarTafawaBalewa";
+	const cryptic = "RevealerOfSecrets";
 
 	public static function captcha($request=false, $session=false){
 		$request = $request == false ? @$_POST['captcha'] : $request;

@@ -2,14 +2,14 @@
 
 namespace __zf__;
 
-class Image {
+class _Image {
 
 	function extension($file){
 		$ext = explode(".", $file);
 		return end($ext);
 	}
 
-	function crop($source, $target, $ext="jpeg", $width=256, $height=256){
+	function crop($source, $target, $width=256, $height=256, $ext="jpeg"){
 		list($w, $h) = getimagesize($source);
 		$src_w = ($w/2)-($width/2);
 		$src_h = ($h/2)-($height/2);
@@ -45,7 +45,7 @@ class Image {
 		}
 	}
 
-	function resize($source, $target, $mime = "jpeg", $newWidth = 512, $newHeight = 512){
+	function resize($source, $target, $newWidth = 512, $newHeight = 512, $mime = "jpeg"){
 		$mime = strtolower($mime);
 		$sourceStats = getimagesize($source);
 		$sourceRawDimensions = $sourceStats[3];
