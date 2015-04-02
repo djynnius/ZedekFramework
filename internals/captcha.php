@@ -62,7 +62,7 @@ class _Captcha extends Zedek{
 			default: $textColor = $blue;
 		}
 
-		$font = zroot."internals/Montez-Regular.ttf";
+		$font = zroot."libs/fonts/Montez-Regular.ttf";
 		$text = gettype($dictionary) == 'array' ? $value : $dictionary;
 		
 		imagefilledrectangle($bg, 0, 0, 500, 120, $white);
