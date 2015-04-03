@@ -16,8 +16,8 @@ class ZConfig extends Zedek{
 	public $config;
 	public $configFile;
 
-	function __construct(){
-		$this->configFile = zroot."config/config.json";;
+	function __construct($config="config"){
+		$this->configFile = zroot."config/".$config.".json";;
 		$config = file_get_contents($this->configFile);
 		$this->config = json_decode($config);
 	}

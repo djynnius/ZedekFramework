@@ -18,6 +18,19 @@ abstract class ZModel{
 	}
 
 	/**
+	*@param $record array multidmensional array
+	*@return array array multidmensional array UTF encoded 
+	*/
+	function UTF8EncodeRecords($records){
+		foreach($records as $i=>$record){
+			foreach($record as $j=>$cell){
+				$records[$i][$j] = utf8_encode($cell);
+			}
+		}
+		return $records;
+	}	
+
+	/**
 	* @param array $tmp a global variable
 	* @return bool
 	*/
