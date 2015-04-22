@@ -34,7 +34,7 @@ class _Form extends Zedek{
 		unset($a["submit"]);
 		foreach($a as $k=>$v){
 			$o = trim($v);
-			$o = addslashes($o);
+			$o = $k == "password" ? self::encrypt($v) : addslashes($o);
 			$a[$k] = $o;
 		}
 		return $a;
