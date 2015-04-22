@@ -13,6 +13,33 @@ class _Form extends Zedek{
 		return $request == $session ? true : false;
 	}
 
+	/**
+	* @param string $a 
+	* @return string
+	* aimed at preparing strings to avoid SQL injection 
+	*/
+	static function prepare($a){
+		$a = trim($a);
+		return addslashes($a);
+	}
+
+	/**
+	* @param array $a
+	* @return array 
+	* aimed at preparing $_POST request
+	*/
+	static function prepareArray($a = false){
+		$a = $a == false ? $_POST : $a;
+		if(gettype($a) != "array") return false;
+		unset($a["submit"]);
+		foreach($a as $k=>$v){
+			$o = trim($v);
+			$o = addslashes($o);
+			$a[$k] = $o;
+		}
+		return $a;
+	}
+
 	static function today(){
 		return strftime("%Y-%m-%d", time());
 	}
