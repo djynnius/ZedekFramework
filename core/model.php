@@ -178,8 +178,8 @@ abstract class ZModel{
 	* @param int $id row id
 	* @param array $array data for row update
 	*/
-	function update($id, $array){
-		$this->orm->table($this->table)->update($id, $array);
+	function update($id, $array, $col="id"){
+		$this->orm->table($this->table)->update($id, $array, $col);
 	}
 
 	/**
