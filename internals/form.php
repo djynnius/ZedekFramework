@@ -76,6 +76,10 @@ class _Form extends Zedek{
 		}
 	}
 
+	static public function same($field1=false, $field2=false){
+		return self::compare($field1, $field2);
+	}	
+
 	function same($a, $b){
 		return $a == $b ? true : false;
 	}
