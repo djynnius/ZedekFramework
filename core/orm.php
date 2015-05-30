@@ -360,6 +360,31 @@ class ZORMTable extends ZORM{
 		return $row;
 	}
 
+	public function rows($val, $col='id'){
+		$sql = "SELECT * FROM `{$this->table}` WHERE `$col`='$row'";
+		return $this->fetch($sql);
+	}
+
+	public function lastRow($val, $col='id'){
+		$id = $this->dbo->query("SELECT id FROM `{$this->table}` WHERE `$col`='$val' ORDER BY id DESC LIMIT 1")->fetchObject()->id;
+		try{
+			$row = $this->row($id);
+		} catch(PDOException $e){
+			$row = false;
+		}
+		return $row;
+	}
+
+	public function firstRow($val, $col='id'){
+		$id = $this->dbo->query("SELECT id FROM `{$this->table}` WHERE `$col`='$val' ORDER BY id ASC LIMIT 1")->fetchObject()->id;
+		try{
+			$row = $this->row($id);
+		} catch(PDOException $e){
+			$row = false;
+		}
+		return $row;
+	}	
+
 	/**
 	* @return string query
 	*/
