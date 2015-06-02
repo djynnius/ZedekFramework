@@ -25,13 +25,20 @@ session_start();
 #"C:\\path\\to\\web\\" and "/subfolder/" for both unix and windows 
 #This is OS specific windows will be "C:\\path\\to\\root\\" 
 
+$global_conf = "config/global.conf";
+$global_conf = file_get_contents($global_conf);
+$global_conf = json_encode($global_conf);
+
+
 const zweb = "/var/repo/zedek/public/";
+//define("zweb", $global_conf->web_document_root);
 
 /*if installing zedek in a web sub directory
 ensure you set the path starting with a slash and ending in a trailing slash 
 eg: "/sub/folder/""
 */
 const zsub = ""; 
+//define("zsub", $global_conf->web_sub_folder); 
 
 #set include path
 define("zroot", __dir__."/");
