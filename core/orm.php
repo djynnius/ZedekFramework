@@ -34,10 +34,10 @@ class ZORM extends Zedek{
 	}
 
 	/**
-	* database configuration settings from /config/db.json
+	* database configuration settings from /config/db.conf
 	*/
 	private function _dbConfig(){
-		$db_config_file = file_get_contents(zroot."config/db.json");
+		$db_config_file = file_get_contents(zroot."config/db.conf");
 		$db_config = json_decode($db_config_file);
 		$this->adapter = $db_config->{'adapter'};
 		$this->db = isset($_SESSION['__z__']['db']) ? $_SESSION['__z__']['db'] : $db_config->{'db'};

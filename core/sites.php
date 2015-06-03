@@ -26,7 +26,7 @@ class ZSites{
 	function getEngine(){
 		switch($_SERVER["SERVER_NAME"]){
 			case @property_exists($this->getSites(), $_SERVER["SERVER_NAME"]):  
-				//checks if the sites.json contains the pairing
+				//checks if the sites.conf contains the pairing
 				if(!isset($this->get($_SERVER["SERVER_NAME"])->engine)) return zroot."engines/";
 				$site = $this->get($_SERVER["SERVER_NAME"])->engine;
 				if(file_exists(zroot."sites/".$site) && is_dir(zroot."sites/".$site)){

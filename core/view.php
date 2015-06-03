@@ -17,7 +17,7 @@ class ZView extends Zedek{
 	public $folder; //path to theme folder
 	public $header;
 	public $footer;
-	public $configFile; //template.json file path
+	public $configFile; //tpl.conf file path
 	public $uri; //URIMaper Object
 
 	/**
@@ -34,7 +34,7 @@ class ZView extends Zedek{
 
 		$this->folder = zweb."themes/{$this->theme}/";
 		$this->getAllThemeFiles();
-		$this->configFile = zroot."config/template.json";
+		$this->configFile = zroot."config/tpl.conf";
 		$this->uri = new ZURI;
 	}
 
@@ -101,12 +101,16 @@ class ZView extends Zedek{
 	private function template(){
 		$config = new ZConfig;
 		$uri = new ZURI;
+
+		$version = new ZConfig("version");
+
 		$a = array(
 			'app'=>"Zedek Framework", 
 			'controller'=>is_null($uri->controller) ? "" : $uri->controller, 
 			'method'=>is_null($uri->method) ? "" : $uri->method, 
 			'footer'=>"Zedek Framework. Version".$config->get("version"), 
-			'version'=> $config->get("version"), 
+			'version'=> $version->get("version"), 
+			'sub version'=> "Zedek Framework " . $version->get("sub_version"), 
 			'dir'=> $uri->dir, 
 			'theme'=> $uri->dir."/themes/".$this->getTheme(), 
 			'common'=> $uri->dir."/themes/common", 
@@ -123,7 +127,7 @@ class ZView extends Zedek{
 	* @return simple templating resident in template.config
 	*/
 	public function configTemplate(){
-		$file = zroot."config/template.json";
+		$file = zroot."config/tpl.conf";
 		$json = file_get_contents($file);
 		$pseudoArray = json_decode($json);
 		$array = (array)$pseudoArray;

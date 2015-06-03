@@ -21,6 +21,12 @@ abstract class ZController extends Zedek{
 		$this->app = new App;
 	}
 
+	function index(){
+		$version = new ZConfig("version");
+		print "<pre>";
+		print $version->get("theme");
+	}
+
 	function __call($method, $args){
 		if(!method_exists($this, $method)) $this->_default();
 	}
