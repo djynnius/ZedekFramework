@@ -8,10 +8,10 @@ This is a PHP web development framework.
 The features include:
 
 1. Model-View-Controller
-2. Object Oriented
+2. Object Orientation
 3. Encourages Agile development
 4. Has an Object Relational Mapper (ORM) built in called ZORM
-5. Has a templating engine accessed from a class called ZView
+5. Has a templating engine accessed through a class called ZView
 6. Templating engines allows some logic in the html view file such as looping through an array with the option of including raw php in the markup 
 7. URL rewriting allowing for clean urls, and sub folder installation
 8. Tested with apache, and currently being tested on lighttpd
@@ -22,49 +22,67 @@ Requirements
 1. Apache
 2. PHP5.3+
 3. Knowledge of PHP
-4. Knowledge of Object Oriented Programming (OOP)
-5. PHPUnit and understanding of Test Driven Development (TDD) in PHP - Simpletest library has been included to take care of web presentation of tests
 
 
 Creating your first application follow these steps:
 ===================================================
 
 1. Download this repo and extract so you have a folder named "zedek" or what ever else you want to call it in a non web accessible folder (one of the security features of Zedek Framework).
-2. In your web accessible folder (web root) you will require 3 files and a folder being a ".htaccess" file, a router file named as you desire such as "router.php", a "favicon.ico" file and a folder named themes for your publicly accessible files. To get these you may copy them out of the /zedek/public folder or make this folder your web folder by creating a virtual host for this folder
-3. The contents of the .htaccess file should redirect all traffic to the router file while excluding the public folder(s) contents and any other folders you define.
-
-* You may also copy the contents of the /zedek/public/ folder into your web root or create a virtual host that points to that folder. 
-
-## .htaccess contents ##
-
-    RewriteEngine On
-    RewriteCond %{REQUEST_URI} !/themes/.*$ 
-    RewriteCond %{REQUEST_URI} !/favicon\.ico$
-    RewriteRule ^(.*)$ router.php
-
-*Ensure you have mod_rewrite enabled and properly configured
-
-## router.php contents ##
+2. Move the contents of the public folder to your web accessible folder
+3. In your web accessible folder ser the path to the anchor.php on the non webacessible folder
 
     <?php
       require_once "/path/to/zedek/anchor.php";
     ?>
     
-and you are about done with the web parts.
-
 on a windows machine it would look like this:
 
     <?php
         require_once "drive:\\path\\to\\anchor.php";
     ?>
 
-## initializer.php ##
-Within the anchor file on line 24 set the web path physical path leading to the zedek app ending with a trailing slash
+## config/global.conf ##
+in the global.conf file set 2 variables:
+    {
+    "web_document_root":"/path/to/your/public/folder/ending/with/a/trailing/slash/",
+    "web_sub_folder":"/web/sub/folder/",
+    ...
+    }
 
-    const zweb="/path/to/web/folder/";
+the web_document_root to point to your web accessible folder. Leave the web_sub_folder empty or in the case of a web sub folder installation the path enclosed in slashes.
 
-Once done you should see your app on your website with a successful install message.
-* if installing in a sub folder also include the web sub folder path from web root on line 30
+    {
+    "web_document_root":"/var/www/",
+    "web_sub_folder":"",
+    ...
+    }
+
+or on a windows machine
+
+    {
+    "web_document_root":"C:\\wamp\\www\\",
+    "web_sub_folder":"",
+    ...
+    }
+
+
+and in the case of web sub folder installation
+
+    {
+    "web_document_root":"/var/www/subfolder/",
+    "web_sub_folder":"/subfolder/",
+    ...
+    }
+
+and for windows:
+
+    {
+    "web_document_root":"C:\\wamp\\www\\subfolder\\",
+    "web_sub_folder":"/subfolder/",
+    ...
+    }
+
+Yor are done!
 
 Hello World!
 ============
@@ -73,9 +91,11 @@ Zedek 3 is built to map urls to engine directories and methods of the class CCon
 
     http://mysite.com/controller/method/id/?arg1=val1&arg2=val2...$argn=valn
 
-(this mapping is handled primarily by a class named URLMaper)
+(this mapping is handled primarily by a class named URLMaper) 
 
-the MVC is made literal within the engine folder. 
+No routing files are required.
+
+The MVC is made literal within the engine folder. 
 
 1. To create a new app named foo create a folder with the name foo within the engines folder.
 2. within this create a class file "controller.php".
