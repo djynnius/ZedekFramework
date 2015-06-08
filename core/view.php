@@ -137,76 +137,27 @@ class ZView extends Zedek{
 	/**
 	* @return string html to output on page
 	*/
-	public function display(){
-		$view = $this->getValidView();
+	public function display($view = false){
+		$view = $view == false ? $this->getValidView() : $view;
+		$view = self::zvEOL($view);
 
-		foreach($this->template as $k=>$v){
-			if(is_string($v)){
-				$view = str_replace("{{".$k."}}", "$v", $view);
-			} elseif(empty($v)){
-				$view =  str_replace("{{".$k."}}", "", $view);
-			} elseif(is_array($v)){
-				$view = $this->makeLoop($view, $k, $v);
-			}
-		}
-		$render = $view;		
-		return $render;		
+		$view = self::zvfor($view);
+		$view = self::zvforeach($view);
+		$view = self::zvif($view);
+		$view = self::zvtemplate($view);
+		
+		return $view;		
 	}
 
-	/**
-	* @return string html to output on page for index.html in theme folder
-	*/
-	public function displayIndex(){
-		return $this->displayOne("index");
-	}
-
-	/**
-	* @return string html to output on page for 404.html in theme folder
-	*/
-	public function display404(){
-		return $this->displayOne("404");
-	}
-
-	/**
-	* @return string html to output on page
-	*/
-	private function displayOne($type){
-		$view = file_exists(zweb."themes/{$this->theme}/{$type}.html") ? 
-					file_get_contents(zweb."themes/{$this->theme}/{$type}.html") : "The view you requested does not exist.";
-
-		foreach($this->template as $k=>$v){
-			if(is_string($v)){
-				$view = str_replace("{{".$k."}}", "$v", $view);
-			} elseif(empty($v)){
-				$view =  str_replace("{{".$k."}}", "", $view);
-			} elseif(is_array($v)){
-				$view = $this->makeLoop($view, $k, $v);
-			}
-		}
-		$render = $view;		
-		return $render;		
-	}
 
 	/**
 	* @return string html to output on page: themed
 	*/	
 	public function render(){
-		$header = $this->header;
-		$footer = $this->footer;		
-		$view = $this->getValidView();
-		foreach($this->template as $k=>$v){
-			$header = $this->simpleReplace($header, $k, $v);
-			$footer = $this->simpleReplace($footer, $k, $v);
-			if(is_string($v)){
-				$view = str_replace("{{".$k."}}", "$v", $view);
-			} elseif(empty($v)){
-				$view =  str_replace("{{".$k."}}", "", $view);
-			} elseif(is_array($v)){
-				$view = $this->makeLoop($view, $k, $v);
-			}
-		}
-		$render = $header.$view.$footer;		
-		return $render;
+		$view = self::display($this->header);
+		$view .= self::display();
+		$view .= self::display($this->footer);
+		return $view;
 	}
 
 	/**
@@ -220,12 +171,12 @@ class ZView extends Zedek{
 		$header = $this->header;
 		$footer = $this->footer;		
 		$this->stylesAndScripts(); //set styles and scripts
-		foreach($this->template as $k=>$v){
-			$header = $this->simpleReplace($header, $k, $v);
-			$footer = $this->simpleReplace($footer, $k, $v);
-		}
+
+		$header = self::display($header);
+		$footer = self::display($footer);
+
 		print $header;		
-		@include_once zroot."engines/{$controller}/views/{$view}.php";				
+		if(file_exists(zroot."engines/{$controller}/views/{$view}.php")) @include_once zroot."engines/{$controller}/views/{$view}.php";				
 		print $footer;		
 	}
 
@@ -236,9 +187,19 @@ class ZView extends Zedek{
 		$controller = $this->uri->controller == "" ? "default" : $this->uri->controller;
 		$method = $this->uri->method;
 
+		if(strpos($this->view, "@") != false){
+			$split = explode("@", $this->view);
+			$controller = trim($split[1]);
+			$view = trim($split[0]);
+		} else {
+			$view = $this->view;
+		}
+
 		$s = new ZSites;
 		$engine = $s->getEngine();
-		$viewFile = $engine."{$controller}/views/{$this->view}.html";
+		$viewFile = $controller == "ztheme" ? 
+			zweb."themes/{$this->theme}/{$view}.html" : 
+			$engine."{$controller}/views/{$view}.html";
 
 		if(file_exists($viewFile)){
 			$view = file_get_contents($viewFile);	
@@ -279,51 +240,109 @@ class ZView extends Zedek{
 		$conf->set("theme", $theme);
 	}
 
-	/**
-	* @return string html to output on page after replacing template information
-	*/		
-	private function simpleReplace($html, $k, $v){
-		if(is_string($v)){
-			$html = str_replace("{{".$k."}}", $v, $html);
+	function zvEOL($view){
+		$view = str_replace(PHP_EOL, "", $view);
+		$view = str_replace(array("\n","\r"), "", $view);		
+		return $view;
+	}
+
+	function zvtemplate($view){
+		global $__zf__core__view__template;
+		$__zf__core__view__template = $this->template;
+
+		$re = "/{{(\s)*([a-zA-Z_-\s]+)(\s)*}}/";
+		
+		$view = preg_replace_callback(
+			$re, 
+			create_function('$m', 
+				'
+				global $__zf__core__view__template;
+				$tmp = $__zf__core__view__template;
+				$ak = array_keys($tmp);
+				return in_array($m[2], $ak) && gettype($tmp[$m[2]]) == "string" ?  $tmp[$m[2]] : $m[0]; 
+				
+			'), 
+			$view);	
+		return $view;
+	}
+
+	function zvif($view){
+		global $__zf__core__view__template;
+		$__zf__core__view__template = $tmp = $this->template;
+		$re = "/{%if\s+\@([a-zA-Z0-9]+)\s+\=\=\s+([a-zA-Z0-9._-]+)\s+\?\s+([a-zA-Z0-9_.-]+)\s+\:\s+([a-zA-Z0-9_.-]+)\s+%}/";
+		preg_match_all($re, $view, $a);
+
+		$out = "";
+		$ak = array_keys($tmp);
+		foreach($a[0] as $i=>$s){			
+			if(in_array($a[1][$i], $ak) && $tmp[$a[1][$i]] == $a[2][$i]){
+				$out = $a[3][$i];
+			} else {
+				$out = $a[4][$i];
+			}						
+			$view = str_replace($s, $out, $view);	
 		}
-		return $html;
+		return $view;
 	}
 
 	/**
-	* @return string html to output on page after replacing multidimensional array as loop
-	*/		
-	private function makeLoop($view, $k, $v){
-		preg_match_all("#{%foreach[\s]+(.*)[\s]+as[\s]+(.*):[\s]*(.*)[\s]*%}#", $view, $match);
-		$i = 0;
-		$items = @$match[1][0];
-		$item = @$match[2][0];
-		$template = @$match[3][0];
-		
-		foreach($match[1] as $loop){
-			if($k == $loop){
-				$html = $match[0][$i];
-				$j = 0;
-				$replace = "";
-				foreach($v as $match[2]){
-					global $_loopObj;
-					$_loopObj = (object)$v[$j];
-					$find = preg_replace_callback(
-						"#\{\{(".$item.")(\.)([a-zA-Z0-9_-]+)\}\}#", 
-						create_function(
-							'$m', 
-							'global $_loopObj; 
-							$arg = $m[3]; 
-							return @$_loopObj->{$arg};'
-						), 
-						$match[3][$i]
-					);	
-						$replace .= $find;
-					$j++;
+	* for simple lists not matrices
+	*/
+	function zvfor($view){ 
+		global $__zf__core__view__template;
+		$__zf__core__view__template = $tmp = $this->template;
+		$re = "/{%for\s+([a-zA-Z0-9_-]+)\s+in\s+([a-zA-Z0-9_-]+)\s+\:\s+([^%]+)\s+%}/";
+		preg_match_all($re, $view, $all);
+
+		$ak = array_keys($tmp);
+
+		foreach($all[0] as $j=>$code){
+			if(in_array($all[2][$j], $ak)){
+				$items = $tmp[$all[2][$j]];
+				$o = "";
+				foreach($items as $item){
+					$_re = "/{{\s*(".$all[1][$j].")\s*}}/";
+					$o .= preg_replace($_re, $item, $all[3][$j]);
 				}
-				$view = str_replace($html, $replace, $view);
+				$view = str_replace($code, $o, $view);
+			} else {
+				$view = str_replace($code, "{{for loop}}", $view);
 			}
-			$i++;
 		}
+
+		return $view;
+	}
+
+	function zvforeach($view){
+		global $__zf__core__view__template;
+		$__zf__core__view__template = $tmp = $this->template;
+
+		$re = "/{%foreach\s+([a-z]+)\s+as\s+([a-z]+)\s+\:\s+([^%]+)\s+%}/";
+		preg_match_all($re, $view, $all);
+
+		$tkeys = array_keys($tmp);
+
+		foreach($all[1] as $j=>$items){
+			if(in_array($items, $tkeys) && gettype($tmp[$items]) == "array" ){
+				$o = "";
+				foreach($tmp[$items] as $item){
+					global $__zf__zv__tmp;
+					$_tmp = $__zf__zv__tmp = $item;
+					$_re = "/{{\s*".$all[2][$j]."\.([a-zA-Z0-9_-]+)\s*}}/";	
+					$rep = "$1";
+					//$o .= preg_replace($_re, $_tmp["$1"] , $all[3][$j]);
+					$o .= preg_replace_callback($_re, create_function('$m', '
+						global $__zf__zv__tmp;
+						$_tmp = $__zf__zv__tmp;
+						return isset($_tmp[$m[1]]) ? $_tmp[$m[1]] : "";
+					') , $all[3][$j]);
+				}
+				$view = str_replace($all[0][$j], $o, $view);
+			} else {
+				$view = str_replace($all[0][$j], "{{data loop}}", $view);
+			}
+		}
+
 		return $view;
 	}
 }

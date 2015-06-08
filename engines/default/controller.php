@@ -10,8 +10,8 @@
 
 namespace __zf__;
 class CController extends ZController{
-	function _default(){
-		$this->displayIndex();
+	function index(){
+		self::display("index@ztheme");
 	}
 
 	function about(){

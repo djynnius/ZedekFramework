@@ -21,18 +21,12 @@ abstract class ZController extends Zedek{
 		$this->app = new App;
 	}
 
-	function index(){
-		$version = new ZConfig("version");
-		print "<pre>";
-		print $version->get("theme");
-	}
-
 	function __call($method, $args){
-		if(!method_exists($this, $method)) $this->_default();
+		if(!method_exists($this, $method)) $this->index();
 	}
 
 	#sets default to render index
-	public function _default(){
+	public function index(){
 		$this->display404("404");
 	} 
 
@@ -114,14 +108,6 @@ abstract class ZController extends Zedek{
 
 	final protected function display($arg1=null, $arg2=null, $theme=false){
 		print $this->template($arg1, $arg2, $theme)->display();
-	}
-
-	final protected function displayIndex($arg1=null, $arg2=null, $theme=false){
-		print $this->template($arg1, $arg2, $theme)->displayIndex();
-	}
-
-	final protected function display404($arg1=null, $arg2=null, $theme=false){
-		print $this->template($arg1, $arg2, $theme)->display404();
 	}
 
 	final protected function dynamic($arg1=null, $arg2=null, $theme=false, $controller=null){
