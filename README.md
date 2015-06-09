@@ -36,7 +36,7 @@ Creating your first application follow these steps (Simple as 1-2-3):
 
 and on windows replace php with the path to the php binary - example:
 	
-	c:\xampp\php\php.exe localhost:8080 zedek.php
+	c:\xampp\php\php.exe -S localhost:8080 zedek.php
 
 Yor are done!
 
