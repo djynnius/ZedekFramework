@@ -20,42 +20,6 @@ namespace __zf__;
 #explicitly start session
 session_start();
 
-#application constants for doc root, web root and sub folder path 
-#This is OS specific windows will be "C:\\path\\to\\root\\" 
-#"C:\\path\\to\\web\\" and "/subfolder/" for both unix and windows 
-#This is OS specific windows will be "C:\\path\\to\\root\\" 
-
-$global_conf = __dir__."/config/global.conf";
-$global_conf = file_get_contents($global_conf);
-$global_conf = json_decode($global_conf);
-
-$foo = $bar = 1;
-$style = "<style>code{display: block; padding: 4px; margin:4px; color: maroon; border: solid 1px #aaa; width: 400px; background-color: #eee}</style>"."<pre><h1>Zedek Framework</h1>";
-
-switch($foo){
-	case !is_dir($global_conf->web_document_root):
-		print $style;
-		print "1.) Set <i>config/global.conf</i> values for <b>web_document_root</b> to your web server folder with trailing slash eg: <code>/var/www/</code> or on windows <code>C:\\\\wamp\\\\www\\\\</code>\r\n\r\n";
-		$bar++;
-	case !file_exists($global_conf->web_sub_folder."themes/common/z.chk"):
-			if($bar == 1){
-				print $style;
-			}
-			print "{$bar}.) Set <i>config/global.conf</i> values for <b>web_sub_folder</b> to your web server folder with a trailing slash eg: <code>/subfolder/</code> where the your public html contents are in a web sub folder same for windows and unix/unix like machines.";
-			print "</pre>";
-			exit;			
-		break;
-	default:
-		null;
-}
-
-define("zweb", $global_conf->web_document_root);
-
-/*if installing zedek in a web sub directory
-ensure you set the path starting with a slash and ending in a trailing slash 
-eg: "/sub/folder/""
-*/
-define("zsub", $global_conf->web_sub_folder); 
 
 #set include path
 define("zroot", __dir__."/");
