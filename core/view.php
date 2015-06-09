@@ -250,7 +250,7 @@ class ZView extends Zedek{
 		global $__zf__core__view__template;
 		$__zf__core__view__template = $this->template;
 
-		$re = "/{{(\s)*([a-zA-Z_-\s]+)(\s)*}}/";
+		$re = "/{{\s?([a-zA-Z0-9_-]+)\s?}}/";
 		
 		$view = preg_replace_callback(
 			$re, 
@@ -259,8 +259,7 @@ class ZView extends Zedek{
 				global $__zf__core__view__template;
 				$tmp = $__zf__core__view__template;
 				$ak = array_keys($tmp);
-				return in_array($m[2], $ak) && gettype($tmp[$m[2]]) == "string" ?  $tmp[$m[2]] : $m[0]; 
-				
+				return in_array("{$m[1]}", $ak) && gettype($tmp["{$m[1]}"]) == "string" ?  $tmp["{$m[1]}"] : $m[0]; 				
 			'), 
 			$view);	
 		return $view;
@@ -269,7 +268,7 @@ class ZView extends Zedek{
 	function zvif($view){
 		global $__zf__core__view__template;
 		$__zf__core__view__template = $tmp = $this->template;
-		$re = "/{%if\s+\@([a-zA-Z0-9]+)\s+\=\=\s+([a-zA-Z0-9._-]+)\s+\?\s+([a-zA-Z0-9_.-]+)\s+\:\s+([a-zA-Z0-9_.-]+)\s+%}/";
+		$re = "/{%if\s+\[([a-zA-Z0-9_-]+)\]\s+\=\=\s+([a-zA-Z0-9._-]+)\s+\?\s+([a-zA-Z0-9_.-]+)\s+\:\s+([a-zA-Z0-9_.-]+)\s+%}/";
 		preg_match_all($re, $view, $a);
 
 		$out = "";
