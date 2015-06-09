@@ -1,3 +1,0 @@
-git commit for x.x.5 model object now allows appending of its variables to tmp.
-fixed views to sop displying placeholders when empty
-fixed form to take care of dashed dates that are inverted
