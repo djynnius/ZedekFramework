@@ -23,7 +23,6 @@ Requirements
 2. PHP5.3+
 3. Knowledge of PHP
 
-
 Creating your first application follow these steps:
 ===================================================
 
@@ -41,46 +40,9 @@ on a windows machine it would look like this:
         require_once "drive:\\path\\to\\anchor.php";
     ?>
 
-## config/global.conf ##
-in the global.conf file set 2 variables:
-    {
-    "web_document_root":"/path/to/your/public/folder/ending/with/a/trailing/slash/",
-    "web_sub_folder":"/web/sub/folder/",
-    ...
-    }
+in the case of web sub folder installation
 
-the web_document_root to point to your web accessible folder. Leave the web_sub_folder empty or in the case of a web sub folder installation the path enclosed in slashes.
-
-    {
-    "web_document_root":"/var/www/",
-    "web_sub_folder":"",
-    ...
-    }
-
-or on a windows machine
-
-    {
-    "web_document_root":"C:\\wamp\\www\\",
-    "web_sub_folder":"",
-    ...
-    }
-
-
-and in the case of web sub folder installation
-
-    {
-    "web_document_root":"/var/www/subfolder/",
-    "web_sub_folder":"/subfolder/",
-    ...
-    }
-
-and for windows:
-
-    {
-    "web_document_root":"C:\\wamp\\www\\subfolder\\",
-    "web_sub_folder":"/subfolder/",
-    ...
-    }
+    define("zsub", "/subfolder/");
 
 Yor are done!
 

@@ -37,7 +37,7 @@ enter path to anchor file
 on windows the path will have the structure
 c:\\path\\to\\anchor.php
 */
-$anchor = "/path/to/zedek/anchor.php";
+$anchor = "../anchor.php";
 
 if(file_exists($anchor)){
 	require_once $anchor;	
