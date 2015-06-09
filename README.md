@@ -61,7 +61,8 @@ The MVC is made literal within the engine folder.
 
 1. To create a new app named foo create a folder with the name foo within the engines folder.
 2. within this create a class file "controller.php".
-3. within the controller file enter the following code inside your php tags
+
+next within the controller file enter the following code inside your php tags
 
     <?php
     namespace __zf__;
@@ -72,7 +73,7 @@ The MVC is made literal within the engine folder.
     }
     
 
-4. Browse to http://mysite.com/foo/bar
+3. Browse to http://mysite.com/foo/bar
 
 and you should see your hello world message!
 
