@@ -23,28 +23,21 @@ Requirements
 2. PHP5.3+
 3. Knowledge of PHP
 
-Creating your first application follow these steps:
-===================================================
+Creating your first application follow these steps (Simple as 1-2-3):
+======================================================================
 
 1. Download this repo and extract so you have a folder named "zedek" or what ever else you want to call it in a non web accessible folder (one of the security features of Zedek Framework).
-2. Move the contents of the public folder to your web accessible folder
-3. In your web accessible folder ser the path to the anchor.php on the non webacessible folder
 
-    <?php
-      require_once "/path/to/zedek/anchor.php";
-    ?>
-    
-on a windows machine it would look like this:
+2. set persmissions to allow reading and writing to zedek folder
 
-    <?php
-        require_once "drive:\\path\\to\\anchor.php";
-    ?>
+3. Change directory into the public folder and from command line run :
 
-in the case of web sub folder installation
-
-    define("zsub", "/subfolder/");
+    php -S localhost:8080 zedek.php
 
 Yor are done!
+
+You can now view your application on localhost:8080
+
 
 Hello World!
 ============
