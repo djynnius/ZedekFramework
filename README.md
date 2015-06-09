@@ -34,6 +34,10 @@ Creating your first application follow these steps (Simple as 1-2-3):
 
     php -S localhost:8080 zedek.php
 
+and on windows replace php with the path to the php binary - example:
+	
+	c:\xampp\php\php.exe localhost:8080 zedek.php
+
 Yor are done!
 
 You can now view your application on localhost:8080
