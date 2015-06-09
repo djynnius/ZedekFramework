@@ -30,12 +30,12 @@ ini_set('include_path', $zedek_core_path);
 #Error reporting - On for development and production
 
 #main zedek classes
-require_once "zedek.php";
-require_once "uri.php";
-require_once "controller.php";
-require_once "orm.php";
-require_once "config.php";
-require_once "sites.php";
+require_once zroot."core/zedek.php";
+require_once zroot."core/uri.php";
+require_once zroot."core/controller.php";
+require_once zroot."core/orm.php";
+require_once zroot."core/config.php";
+require_once zroot."core/sites.php";
 
 Z::importInternals();
 Z::importModels();
