@@ -20,23 +20,26 @@ The features include:
 Requirements
 =============
 1. Apache
-2. PHP5.3+
-3. Knowledge of PHP
+2. PHP5.4+
+3. Some knowledge of PHP (expert knowledge isnt required)
 
 Creating your first application follow these steps (Simple as 1-2-3):
 ======================================================================
 
-1. Download this repo and extract so you have a folder named "zedek" or what ever else you want to call it in a non web accessible folder (one of the security features of Zedek Framework).
+Download this repo and extract so you have a folder named "zedek" or what ever else you want to call it in a non web accessible folder (one of the security features of Zedek Framework). You can either download the zip file or easier clone 
 
-2. set persmissions to allow reading and writing to zedek folder
+	git clone https://github.com/djynnius/ZedekFramework.git
 
-3. Change directory into the public folder and from command line run :
+set persmissions to allow reading and writing to zedek folder
+
+Change directory into the public folder and from command line run :
 
     php -S localhost:8080 zedek.php
 
-and on windows replace php with the path to the php binary - example:
+on windows replace php with the path to the php binary - example:
 	
 	c:\xampp\php\php.exe -S localhost:8080 zedek.php
+
 
 Yor are done!
 
