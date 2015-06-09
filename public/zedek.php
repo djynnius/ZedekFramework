@@ -1,0 +1,7 @@
+<?php
+
+if(file_exists(__dir__."/".$_SERVER["REQUEST_URI"]) && $_SERVER["REQUEST_URI"] != "/"){
+	return false;
+} else {
+	include_once "router.php";
+}
