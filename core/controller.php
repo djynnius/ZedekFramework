@@ -19,19 +19,20 @@ abstract class ZController extends Zedek{
 		$this->orm = new ZORM;
 		$this->uri = new ZURI;
 		$this->app = new App;
+
 	}
 
 	function __call($method, $args){
-		if(!method_exists($this, $method)) $this->index();
+		if(!method_exists($this, $this->uri->method)) $this->index();
 	}
 
 	#sets default to render index
 	public function index(){
-		self::display("none");
+		self::display("404@ztheme");
 	} 
 
 	public function _error(){
-		$this->display("404");
+		self::display("404@ztheme");
 	}
 
 	/**
@@ -76,15 +77,15 @@ abstract class ZController extends Zedek{
 
 	#shorter method for rendering
 	final protected function render($arg1=null, $arg2=null, $theme=false){
-		print $this->template($arg1, $arg2, $theme)->render();
+		print self::template($arg1, $arg2, $theme)->render();
 	}
 
 	final protected function display($arg1=null, $arg2=null, $theme=false){
-		print $this->template($arg1, $arg2, $theme)->display();
+		print self::template($arg1, $arg2, $theme)->display();
 	}
 
 	final protected function dynamic($arg1=null, $arg2=null, $theme=false, $controller=null){
-		return $this->template($arg1, $arg2, $theme)->dynamic($controller);
+		return self::template($arg1, $arg2, $theme)->dynamic($controller);
 	}
 }
 

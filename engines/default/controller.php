@@ -15,10 +15,6 @@ class CController extends ZController{
 	}
 
 	function about(){
-		self::render('about');
-	}
-
-	function contact(){
-		self::render('contact');
+		self::display();
 	}
 }

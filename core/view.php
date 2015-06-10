@@ -110,12 +110,12 @@ class ZView extends Zedek{
 			'method'=>is_null($uri->method) ? "" : $uri->method, 
 			'footer'=>"Zedek Framework. Version".$config->get("version"), 
 			'version'=> $version->get("version"), 
-			'sub version'=> "Zedek Framework " . $version->get("sub_version"), 
+			'sub_version'=> "Zedek Framework " . $version->get("sub_version"), 
 			'dir'=> $uri->dir, 
 			'theme'=> $uri->dir."/themes/".$this->getTheme(), 
 			'common'=> $uri->dir."/themes/common", 
-			'this year'=> strftime("%Y", time()), 
-			'this month'=> strftime("%B", time()), 
+			'this_year'=> strftime("%Y", time()), 
+			'this_month'=> strftime("%B", time()), 
 			'today'=> strftime("%A, %B %d, %Y", time()), 
 		);
 		$b = $this->configTemplate();
