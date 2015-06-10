@@ -1,5 +1,7 @@
 <?php
-
+/**
+* PHP WSGI routing file
+*/
 if(file_exists(__dir__."/".$_SERVER["REQUEST_URI"]) && $_SERVER["REQUEST_URI"] != "/"){
 	return false;
 } else {

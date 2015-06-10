@@ -27,16 +27,8 @@ abstract class ZController extends Zedek{
 
 	#sets default to render index
 	public function index(){
-		$this->display404("404");
+		self::display("none");
 	} 
-
-	#controllar class templating array
-	/**
-	* @return array
-	*/
-	public function _tmp(){
-		return $this->app->tmp();
-	}
 
 	public function _error(){
 		$this->display("404");
@@ -54,11 +46,6 @@ abstract class ZController extends Zedek{
 			case 1:
 				$code = file_get_contents(zroot."templates/controller.tmp");				
 				break;
-			case 3:
-				$code = file_get_contents(zroot."templates/scaffold_controller.tmp");
-				$code = str_replace("{{table}}", $table, $code);
-				$code = str_replace("{{app_name}}", $name, $code);				
-				break;				
 			default:
 				return false;
 		}
@@ -73,29 +60,15 @@ abstract class ZController extends Zedek{
 				chmod($appFolder, 0777);
 				chmod($viewFolder, 0777);
 				chmod($controllerFile, 0777);
-				self::insertScaffoldViewFiles($name, $args);
 			} else {
 				throw new ZException("{$name} App exists<br />\r\n");
 			}
 		} catch(ZException $e){
 			return false;
-			#print $e->getMessage();
+			/*print $e->getMessage();*/
 		}		
 	}
 	
-	final static private function insertScaffoldViewFiles($name, $args=0){
-		if($args != 3) return false;
-		$enumerate = self::$scaffold_file_names;
-		foreach($enumerate as $item){
-			$code = file_get_contents(zroot."templates/scaffold_view_{$item}.tmp");
-			$code = str_replace("{{table}}", $table, $code);
-			$code = str_replace("{{app_name}}", $name, $code);		
-			$file = zroot."engines/{$name}/view/{$item}.html";
-			file_put_contents($file, $code);
-			chmod($file, 0777);
-		}
-	}
-
 	final protected function template($arg1=null, $arg2=null, $theme=false){
 		require_once "view.php";
 		return new ZView($arg1, $arg2, $theme);
