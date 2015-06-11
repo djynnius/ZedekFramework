@@ -13,8 +13,4 @@ class CController extends ZController{
 	function index(){
 		self::display("index@ztheme");
 	}
-
-	function about(){
-		self::display();
-	}
 }

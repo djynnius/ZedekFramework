@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
-    <title>Home</title>
+    <title>Zedek Framework</title>
     <meta name="description" content="Startups template">
     <meta name="keywords" content="Startups template">
     <link rel="shortcut icon" href="{{theme}}/assets/img/favicon.ico">
@@ -13,6 +13,7 @@
     <link rel="apple-touch-icon" sizes="72x72" href="{{theme}}/assets/img/apple-touch-icon-72x72.jpg">
     <link rel="apple-touch-icon" sizes="114x114" href="{{theme}}/assets/img/apple-touch-icon-114x114.jpg">
     <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="{{theme}}/assets/css/bootstrap.min.css" type="text/css" media="all" />
     <link rel="stylesheet" href="{{theme}}/assets/css/font-awesome.min.css" type="text/css" media="all" />
     <link rel="stylesheet" href="{{theme}}/assets/css/font-lineicons.css" type="text/css" media="all" />
@@ -26,9 +27,15 @@
     <![endif]-->
 
     <style type="text/css">
-    li.active {
-      border: solid 1px #f0f0f0;
-    }
+      li.active {
+        border: solid 1px #f0f0f0;
+      }
+      a.foo {
+        color: #000;
+        font-family: "Lato";
+        font-size: 1.5em;
+        font-weight: lighter;
+      }
     </style>
 </head>
 
@@ -39,8 +46,8 @@
         <nav class="navigation navigation-header fixmenu-clone fixmenu-stick">
             <div class="container">
                 <div class="navigation-brand">
-                    <div class="brand-logo">
-                        <a href="{{dir}}/" style="font-family: 'Open Sans'; color: #888; font-size: 1.5em">Zedek Framework</a>
+                    <div>
+                        <a href="{{dir}}/" class="foo">Zedek Framework</a>
                         <span class="sr-only"></span>
                     </div>
                     <button class="navigation-toggle visible-xs" type="button" data-toggle="dropdown" data-target=".navigation-navbar">
@@ -108,7 +115,7 @@
         </div>
     </section>
 
-    <section style="height:128px; color: #888">
+    <section style="height:128px; color: #888; font-size: 0.8em">
         <div class="container">
             <hr>
             <div class="pull-right">{{sub_version}}. Copyright &copy;{{this_year}}.</div>

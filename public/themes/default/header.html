@@ -1,69 +1,85 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
+
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
+    <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
     <title>Zedek Framework</title>
+    <meta name="description" content="Startups template">
+    <meta name="keywords" content="Startups template">
+    <link rel="shortcut icon" href="{{theme}}/assets/img/favicon.ico">
+    <link rel="apple-touch-icon" href="{{theme}}/assets/img/apple-touch-icon.jpg">
+    <link rel="apple-touch-icon" sizes="72x72" href="{{theme}}/assets/img/apple-touch-icon-72x72.jpg">
+    <link rel="apple-touch-icon" sizes="114x114" href="{{theme}}/assets/img/apple-touch-icon-114x114.jpg">
+    <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="{{theme}}/assets/css/bootstrap.min.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="{{theme}}/assets/css/font-awesome.min.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="{{theme}}/assets/css/font-lineicons.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="{{theme}}/assets/css/animate.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="{{theme}}/assets/css/toastr.min.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="{{theme}}/assets/css/style.css" type="text/css" media="all" />
+    
+    <!--[if lt IE 9]>
+        <script src="{{theme}}/assets/js/html5.js"></script>
+        <script src="{{theme}}/assets/js/respond.min.js"></script>
+    <![endif]-->
 
-    <!-- Bootstrap core CSS -->
-    <link href="{{theme}}/stylesheets/bootstrap.css" rel="stylesheet">
-
-    <!-- Add custom CSS here -->
-    <link href="{{theme}}/stylesheets/modern-business.css" rel="stylesheet">
-    <link href="{{theme}}/stylesheets/font-awesome.min.css" rel="stylesheet">
-
-    <!-- JavaScript -->
-    <script src="{{theme}}/scripts/jquery.js"></script>
-    <script src="{{theme}}/scripts/bootstrap.js"></script>
-    <script src="{{theme}}/scripts/modern-business.js"></script>
+    <style type="text/css">
+      li.active {
+        border: solid 1px #f0f0f0;
+      }
+      a.foo {
+        color: #000;
+        font-family: "Lato";
+        font-size: 1.5em;
+        font-weight: lighter;
+      }
+      #main {
+        min-height: 512px;
+        
+      }
+      #main .container {
+        text-align: left;
+      }
+    </style>
 </head>
 
-<body>
+<body id="landing-page">
 
-    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        
+    <header>
+        <nav class="navigation navigation-header fixmenu-clone fixmenu-stick">
+            <div class="container">
+                <div class="navigation-brand">
+                    <div>
+                        <a href="{{dir}}/" class="foo">Zedek Framework</a>
+                        <span class="sr-only"></span>
+                    </div>
+                    <button class="navigation-toggle visible-xs" type="button" data-toggle="dropdown" data-target=".navigation-navbar">
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div class="navigation-navbar">
+                    <ul class="navigation-bar navigation-bar-right">
+                        <li class=""><a href="{{dir}}/">Home</a></li>
+                        <li class=""><a href="{{dir}}/about">About</a></li>
+                        <li><a href="{{dir}}/contact">Contacts</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    
+    
+    
+    <a id="showHere"></a>
+    
+    <hr class="no-margin" />
+    <div style="height:40px"></div>    
+    <section id="main" class="section inverted">
         <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <!-- You'll want to use a responsive image option so this logo looks good on devices - I recommend using something like retina.js (do a quick Google search for it and you'll find it) -->
-                <a class="navbar-brand" href="{{dir}}/">Zedek Framework {{version}}</a>
-            </div>
 
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse navbar-ex1-collapse">
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="{{dir}}/about">About</a>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Documentation <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="https://github.com/djynnius/ZedekFramework/wiki/1.0-Introduction">Getting Started</a>
-                            </li>
-                            <li><a href="https://github.com/djynnius/ZedekFramework/wiki/6.0-%28ZORM%29-The-Object-Relational-Mapper">ZORM</a>
-                            </li>
-                            <li><a href="https://github.com/djynnius/ZedekFramework/wiki/4.0-The-Templating-Engine">The View</a>
-                            </li>
-                            <li><a href="https://github.com/djynnius/ZedekFramework/wiki/7.0-Themeing">Themes</a>
-                            </li>
-                            <li><a href="https://github.com/djynnius/ZedekFramework/wiki/8.0-Model">Models</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li><a href="{{dir}}/contact">Contact</a>
-                    </li>                    
-                </ul>
-            </div>
-            <!-- /.navbar-collapse -->
-        </div>
-        <!-- /.container -->
-    </nav>
-
-<div class='container'>
