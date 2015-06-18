@@ -33,7 +33,7 @@ class ZView extends Zedek{
 		$this->theme = $this->getTheme($theme) != false && $this->getTheme($theme) != null ? $this->getTheme($theme) : "default";
 
 		$this->folder = zweb."themes/{$this->theme}/";
-		$this->getAllThemeFiles();
+		$this->setThemeFiles();
 		$this->configFile = zroot."config/tpl.conf";
 		$this->uri = new ZURI;
 	}
@@ -61,37 +61,17 @@ class ZView extends Zedek{
 		return $out;
 	}
 
-	#pulls theme files
-	/**
-	* @param string $file 
-	* @param string $type 
-	* @return string file contents 
-	*/
-	private function getThemeFile($file, $type="html"){
-		$puts = file_exists(zweb."themes/{$this->theme}/{$file}.{$type}") ? 
-					@file_get_contents(zweb."themes/{$this->theme}/{$file}.{$type}") : 
-					(file_exists(zweb."themes/default/{$file}.{$type}") ? 
-						file_get_contents(zweb."themes/default/{$file}.{$type}") : 
-						""
-					);		
-		return $puts;
-	}
-
 	/**
 	* Sets $this->header and $this->footer
 	* @return all theme html files
 	*/
-	private function getAllThemeFiles(){
+	private function setThemeFiles(){
 		$themeFolder = zweb."themes/";
 		$files = scandir($themeFolder.$this->theme);
-
-		if(gettype($files) != "array") $files = array();
-		foreach($files as $file){
-			if(!is_dir($themeFolder.$file)){
-				$info = pathinfo($themeFolder.$file);
-				$this->$info['filename'] = $this->getThemeFile($info['filename'], @$info['extension']);
-			}
-		}
+		$this->header = file_exists(zweb."themes/{$this->theme}/header.html") ? 
+			file_get_contents(zweb."themes/{$this->theme}/header.html") : "";
+		$this->footer = file_exists(zweb."themes/{$this->theme}/footer.html") ? 
+			file_get_contents(zweb."themes/{$this->theme}/footer.html") : "";
 	}
 
 	#returns default template
@@ -139,6 +119,7 @@ class ZView extends Zedek{
 	*/
 	public function display($view = false){
 		$view = $view == false ? $this->getValidView() : $view;
+
 		$view = self::zvEOL($view);
 
 		$view = self::zvfor($view);
@@ -154,7 +135,8 @@ class ZView extends Zedek{
 	* @return string html to output on page: themed
 	*/	
 	public function render(){
-		$view = self::display($this->header);
+		$view = "";
+		$view .= self::display($this->header);
 		$view .= self::display();
 		$view .= self::display($this->footer);
 		return $view;
