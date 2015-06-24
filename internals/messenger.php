@@ -10,7 +10,7 @@ class _Msg{
 		}
 
 		$to = self::fixEmailAddresses($to);
-		$cc = self::fixEmailAddresses($cc);
+		$cc = isset($cc) ? self::fixEmailAddresses($cc) : "";
 
 		$header  = 'MIME-Version: 1.0' . "\r\n";
 		$header .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";		
