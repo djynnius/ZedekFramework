@@ -55,9 +55,10 @@ class _Form extends Zedek{
 		return strftime("%Y-%m-%d %H:%M:%S", time());
 	}
 
-	static function submitted($submit = "submit"){
-		return isset($_POST[$submit]) ? true : false;
-	}
+	static function submitted($submit = "submit", $remove_submit=1){ 
+		$remove_submit = $remove_submit == 1 ? unset($_POST[$submit]) : null; 
+		return isset($_POST[$submit]) ? true : false; 
+	} 
 
 	static public function compare($field1=false, $field2=false){
 		$args = func_num_args();
