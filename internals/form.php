@@ -56,7 +56,6 @@ class _Form extends Zedek{
 	}
 
 	static function submitted($submit = "submit", $remove_submit=1){ 
-		$remove_submit = $remove_submit == 1 ? unset($_POST[$submit]) : null; 
 		return isset($_POST[$submit]) ? true : false; 
 	} 
 
