@@ -23,6 +23,13 @@ class _Form extends Zedek{
 		return addslashes($a);
 	}
 
+	static function batchPrepare($a=[]){
+		foreach($a as $i=>$v){
+			$a[$i] = self::prepare($v);
+		}
+		return $a;
+	}
+
 	/**
 	* @param array $a
 	* @return array 
