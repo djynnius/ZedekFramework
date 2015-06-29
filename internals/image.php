@@ -55,9 +55,9 @@ class _Image {
 		$aspectRatio = ($sourceWidth/$sourceHeight);
 	
 		if(($newWidth/$newHeight) > $aspectRatio){
-			$newWidth = ($newHeight * $aspectRatio);
-		} elseif(($newWidth/$newHeight) < $aspectRatio) {
 			$newHeight = ($newWidth/$aspectRatio);
+		} elseif(($newWidth/$newHeight) < $aspectRatio) {
+			$newWidth = ($newHeight * $aspectRatio);
 		}
 	
 		$canvas = imagecreatetruecolor($newWidth, $newHeight);
@@ -83,8 +83,7 @@ class _Image {
 				break;
 			default:
 				imagejpeg($canvas, $target, 100);		
-		}
-			
+		}			
 	}
 		
 	function batchResize($sourceFolder, $destinationFolder){
