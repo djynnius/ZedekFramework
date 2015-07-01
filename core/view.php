@@ -67,6 +67,7 @@ class ZView extends Zedek{
 	*/
 	private function setThemeFiles(){
 		$themeFolder = zweb."themes/";
+		$this->theme = is_dir(zweb."themes/".$this->theme) ? $this->theme : "default";
 		$files = scandir($themeFolder.$this->theme);
 		$this->header = file_exists(zweb."themes/{$this->theme}/header.html") ? 
 			file_get_contents(zweb."themes/{$this->theme}/header.html") : "";
