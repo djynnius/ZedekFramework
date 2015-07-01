@@ -87,6 +87,10 @@ class _Form extends Zedek{
 		return $a == $b ? true : false;
 	}
 
+	function different($a, $b){
+		return $a == $b ? false : true;
+	}
+
 	static public function encrypt($text, $type="long", $cryptic=false){
 		switch($type){
 			case "long":
