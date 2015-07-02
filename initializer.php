@@ -15,7 +15,7 @@ namespace __zf__;
 //for sub domain session management
 #ini_set('session.cookie_domain', '.zedekframework.com'); 
 //set path to save session
-#ini_set('session.save_path', "/path/to/zedek/sessions"); 
+ini_set('session.save_path', __dir__."/sessions"); 
 
 #explicitly start session
 session_start();
