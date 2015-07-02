@@ -51,7 +51,7 @@ Hello World!
 
 Zedek 3 is built to map urls to engine directories and methods of the class CController (for current controller) in a style:
 
-    http://mysite.com/controller/method/id/?arg1=val1&arg2=val2...$argn=valn
+    http://localhost:8080/controller/method/id/?arg1=val1&arg2=val2...$argn=valn
 
 (this mapping is handled primarily by a class named URLMaper) 
 
@@ -73,7 +73,7 @@ next within the controller file enter the following code inside your php tags
     }
     
 
-3. Browse to http://mysite.com/foo/bar
+3. Browse to http://localhost:8080/foo/bar
 
 and you should see your hello world message!
 
