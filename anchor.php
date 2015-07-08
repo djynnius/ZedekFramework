@@ -9,6 +9,7 @@
 */
 
 namespace __zf__;
+date_default_timezone_set("Africa/Lagos");
 require_once "initializer.php";
 
 #instantiate uri maper 
