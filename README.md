@@ -34,11 +34,11 @@ set persmissions to allow reading and writing to zedek folder
 
 Change directory into the public folder and from command line run :
 
-    php -S localhost:8080 zedek.php
+    php -S localhost:8080 zedek
 
 on windows replace php with the path to the php binary - example:
 	
-	c:\xampp\php\php.exe -S localhost:8080 zedek.php
+	c:\xampp\php\php.exe -S localhost:8080 zedek
 
 
 You are done!
