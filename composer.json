@@ -4,5 +4,7 @@
     "require": {
         "php": ">=5.4.0"
     }, 
-    "license": "Openimo"
+    "license": "Openimo", 
+    "keywords": ["framework", "mvc", "orm", "templating", "configuration", "convention", "php", "unit test"],
+    "type": "project"
 }
