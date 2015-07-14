@@ -6,6 +6,16 @@
 * @author djyninus <psilent@gmail.com>
 */
 
+/*PHYSICAL PATH TO ZEDEK CORE*/
+/*----------------------------*/
+/*
+enter path to anchor file 
+on windows the path will have the structure c:\\path\\to\\anchor.php
+on unix and unix like including mac the path will have the structure /path/to/anchor.php
+relative paths are also accepted
+*/
+$anchor = "../anchor.php";
+
 
 /*WEB  PHYSICAL PATH*/
 /*-----------------------*/
@@ -16,8 +26,6 @@ This is OS specific windows will be "C:\\path\\to\\root\\"
 This is OS specific windows will be "C:\\path\\to\\root\\"
 */ 
 define("zweb", __dir__."/");
-
-
 
 
 /*WEB  SUB FOLDER*/
@@ -41,23 +49,12 @@ if(empty($base)){
 	$subdir =  "/".$subdir."/";	
 }
 
-
 define("zsub", $subdir); /*You may override the subfolder by explicitly setting it*/
-
-
-/*PHYSICAL PATH TO ZEDEK CORE*/
-/*----------------------------*/
-/*
-enter path to anchor file 
-on windows the path will have the structure
-c:\\path\\to\\anchor.php
-*/
-$anchor = "zedek/anchor.php";
 
 if(file_exists($anchor)){
 	require_once $anchor;	
 } else {
 	print "<style>code{border-radius: 4px; text-shadow: 1px 1px 1px #fefefe; display: block; padding: 4px; margin:4px; color: maroon; border: solid 1px #aaa; width: 400px; background-color: #eee}</style>";
-	print "<pre><h1>Zedek Framework</h1>Set a valid path on <i>line 40 of router.php</i> to the <b>anchor.php</b> file in the zedek directory example: <code>/home/my_name/zedekbackend/anchor.php</code> or on a windows machine <code>C:\\\\zedekbackend\\\\anchor.php</code><br>*Also ensure you have write permissions on the zedek folder.</pre>";
+	print "<pre><h1>Zedek Framework</h1>Set a valid path on <i>line 17 of router.php</i> to the <b>anchor.php</b> file in the zedek directory example: <code>/home/my_name/zedekbackend/anchor.php</code> or on a windows machine <code>C:\\\\zedekbackend\\\\anchor.php</code><br>*Also ensure you have write permissions on the zedek folder.</pre>";
 	exit;	
 }
