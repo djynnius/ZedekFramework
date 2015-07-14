@@ -80,7 +80,7 @@ class Z extends Zedek{
 		$internals = scandir(zroot."internals/");
 		foreach($internals as $internal){
 			$file = zroot."internals/".$internal;
-			if(!is_dir($file)){
+			if(!is_dir($file) && strpos($file, ".php") != false){
 				require_once $file;
 			}
 		}
@@ -94,7 +94,7 @@ class Z extends Zedek{
 		$models = scandir(zroot."models/");
 		foreach($models as $model){
 			$file = zroot."models/".$model;
-			if(!is_dir($file)){
+			if(!is_dir($file) && strpos($file, ".php") != false){
 				require_once $file;
 			}
 		}
