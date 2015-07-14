@@ -30,7 +30,7 @@ eg: "/sub/folder/""
 
 $uri = explode("/", $_SERVER["REQUEST_URI"]);
 $base = trim($uri[1], "/");
-if(1 == 1){
+if(empty($base)){
 	$subdir = "";
 } else {
 	$sub = explode($base, __file__);
