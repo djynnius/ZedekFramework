@@ -30,7 +30,11 @@ Download this repo and extract so you have a folder named "zedek" or what ever e
 
 	git clone https://github.com/djynnius/ZedekFramework.git
 
-set persmissions to allow reading and writing to zedek folder
+For those comfortable with composer you can install with the command:
+
+    composer create-project zedekframework
+
+set persmissions to allow reading and writing to zedekframework folder
 
 Change directory into the public folder and from command line run :
 
