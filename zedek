@@ -1,0 +1,8 @@
+<?php
+
+//print_r($_SERVER['argv']);
+
+switch($_SERVER['argv']['1']){
+	default:
+		shell_exec("php -S localhost:8585 -t ./public ./public/zedek");
+}
