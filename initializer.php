@@ -19,7 +19,7 @@ namespace __zf__;
 
 #explicitly start session
 session_start();
-if(!isset($_SERVER["REDIRECT_STATUS"]) || $_SERVER["REDIRECT_STATUS"] != 200){
+if($_SERVER["DOCUMENT_ROOT"]."/" != zweb){
 	exit;	
 }
 

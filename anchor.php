@@ -10,10 +10,9 @@
 
 namespace __zf__;
 date_default_timezone_set("Africa/Lagos");
-if(!isset($_SERVER["REDIRECT_STATUS"]) || $_SERVER["REDIRECT_STATUS"] != 200){
+if($_SERVER["DOCUMENT_ROOT"]."/" != zweb){
 	exit;	
 }
-
 require_once "initializer.php";
 
 #instantiate uri maper 
