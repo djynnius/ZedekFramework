@@ -32,7 +32,7 @@ Download this repo and extract so you have a folder named "zedek" or what ever e
 
 For those comfortable with composer you can install with the command:
 
-    composer create-project openino/zedekframework
+    composer create-project openimo/zedekframework
 
 set persmissions to allow reading and writing to zedekframework folder
 
