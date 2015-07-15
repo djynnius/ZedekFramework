@@ -148,19 +148,34 @@ class ZView extends Zedek{
 	*/	
 	public function dynamic($controller=false){
 		$controller = empty($this->uri->controller) || is_null($this->uri->controller) ? "default" : $this->uri->controller;		
-		$view = empty($this->uri->method) || is_null($this->uri->method) ? "index" : $this->uri->method;	
+		$view = empty($this->uri->method) || is_null($this->uri->method) ? "index" : $this->uri->method;
 		$view = is_string($this->view) ? $this->view : $view;
-		
+
 		$header = $this->header;
 		$footer = $this->footer;		
-		$this->stylesAndScripts(); //set styles and scripts
 
-		$header = self::display($header);
-		$footer = self::display($footer);
+		$__zf__header = self::display($header);
+		$__zf__footer = self::display($footer);
 
-		print $header;		
-		if(file_exists(zroot."engines/{$controller}/views/{$view}.php")) @include_once zroot."engines/{$controller}/views/{$view}.php";				
-		print $footer;		
+
+		
+		print $__zf__header;
+
+		foreach($this->template as $i=>$var){
+			$$i = $var;
+		}
+
+		$complex_view = explode("@", $view);
+		if(count($complex_view) == 1 && file_exists(zroot."engines/{$controller}/views/{$view}.php")){
+			@include_once zroot."engines/{$controller}/views/{$view}.php";
+		} elseif(count($complex_view) == 2 && file_exists(zroot."engines/{$complex_view[1]}/views/{$complex_view[0]}.php")){
+			@include_once zroot."engines/{$complex_view[1]}/views/{$complex_view[0]}.php";
+		} else {
+
+		}
+
+
+		print $__zf__footer;		
 	}
 
 	/**
