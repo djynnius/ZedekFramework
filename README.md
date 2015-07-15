@@ -36,18 +36,18 @@ For those comfortable with composer you can install with the command:
 
 set persmissions to allow reading and writing to zedekframework folder
 
-Change directory into the public folder and from command line run :
+Change directory into your zedekframework folder and run :
 
-    php -S localhost:8080 zedek
+    php zedek start
 
 on windows replace php with the path to the php binary - example:
 	
-	c:\xampp\php\php.exe -S localhost:8080 zedek
+	c:\xampp\php\php.exe zedek start
 
 
 You are done!
 
-You can now view your application on localhost:8080
+You can now view your application on localhost:8585
 
 
 Hello World!
