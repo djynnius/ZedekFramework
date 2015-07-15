@@ -58,6 +58,12 @@ class Router{
 
 	static public function webSubFolder($path = null){
 
+			if(strpos($_SERVER['SERVER_SOFTWARE'], "Development Server") != false  ){	
+				define("zsub", "");
+				print 1;
+				return false;
+			}
+
 			$uri = explode("/", $_SERVER["REQUEST_URI"]);
 
 			$base = trim($uri[1], "/");
@@ -70,8 +76,12 @@ class Router{
 				$sub = @str_replace("zettings", "", $sub[1]);	
 				$subdir[] = $base;
 				$subdir[] = trim($sub, "/");
+				foreach($subdir as $i=>$v){
+					if(empty($v)) unset($subdir[$i]);
+				}
 				$subdir = join("/", $subdir);
 				$subdir =  "/".$subdir."/";	
+				print $subdir;
 			}
 			define("zsub", $subdir);		
 	}
