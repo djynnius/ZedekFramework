@@ -9,7 +9,7 @@
 * @link https://github.com/djynnius/zedekframework.git
 */
 
-require_once("settings");
+require_once("zettings");
 
 Router::webRoot();
 Router::webSubFolder();

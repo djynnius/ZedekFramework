@@ -19,9 +19,6 @@ namespace __zf__;
 
 #explicitly start session
 session_start();
-if($_SERVER["DOCUMENT_ROOT"]."/" != zweb){
-	exit;	
-}
 
 #set include path
 define("zroot", __dir__."/");

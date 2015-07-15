@@ -44,7 +44,7 @@ class Router{
 	*This is OS specific windows will be "C:\\path\\to\\root\\"
 	*/ 
 	static public function webRoot(){
-		define("zweb", __dir__."/");	
+		define("zweb", __dir__."/");
 	}
 
 
@@ -57,12 +57,7 @@ class Router{
 	*/
 
 	static public function webSubFolder($path = null){
-		if($path != null){
-			$path = trim($path);
-			$path = trim($path, "/");
-			$path = "/".$path."/";
-			define("zsub", $subdir);
-		} else {
+
 			$uri = explode("/", $_SERVER["REQUEST_URI"]);
 
 			$base = trim($uri[1], "/");
@@ -72,13 +67,12 @@ class Router{
 				$subdir = "";
 			} else {
 				$sub = explode($base, __file__);
-				$sub = @str_replace("router.php", "", $sub[1]);	
+				$sub = @str_replace("zettings", "", $sub[1]);	
 				$subdir[] = $base;
 				$subdir[] = trim($sub, "/");
 				$subdir = join("/", $subdir);
 				$subdir =  "/".$subdir."/";	
 			}
 			define("zsub", $subdir);		
-		}
 	}
 }
