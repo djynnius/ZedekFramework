@@ -57,32 +57,7 @@ class Router{
 	*/
 
 	static public function webSubFolder($path = null){
-
-			if(strpos($_SERVER['SERVER_SOFTWARE'], "Development Server") != false  ){	
-				define("zsub", "");
-				print 1;
-				return false;
-			}
-
-			$uri = explode("/", $_SERVER["REQUEST_URI"]);
-
-			$base = trim($uri[1], "/");
-			$base = trim($base);
-
-			if(empty($base) || $base == "" || strlen($base) == 0){
-				$subdir = "";
-			} else {
-				$sub = explode($base, __file__);
-				$sub = @str_replace("zettings", "", $sub[1]);	
-				$subdir[] = $base;
-				$subdir[] = trim($sub, "/");
-				foreach($subdir as $i=>$v){
-					if(empty($v)) unset($subdir[$i]);
-				}
-				$subdir = join("/", $subdir);
-				$subdir =  "/".$subdir."/";	
-				print $subdir;
-			}
-			define("zsub", $subdir);		
+		$path = $path == null ? str_replace($_SERVER["DOCUMENT_ROOT"], "", zweb) : $path;
+		define("zsub", $path);
 	}
 }
