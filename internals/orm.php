@@ -27,12 +27,43 @@ if(phpversion() >= "5.4"){
 			self::$config = new ORMConfig($file);
 		}
 
+		/**
+		* counts number of records returned
+		* @return int;
+		*/
 		static function count(){
 			return count(self::read());
 		}
 
+		/**
+		* alias for ORM::count
+		*/
 		static function length(){
 			return self::count();
+		}
+
+		/**
+		* PDO beginTransaction
+		* @return PDO::beginTransaction()
+		*/
+		static function beginTransaction(){
+			return self::cxn()->beginTransaction();
+		}
+
+		/**
+		* PDO commit transaction
+		* @return PDO::commit()
+		*/
+		static function commitTransaction(){
+			return self::cxn()->commit();
+		}
+
+		/**
+		* PDO rollback transaction
+		* @return PDO::rollback()
+		*/
+		static function rollbackTransaction(){
+			return self::cxn()->commit();
 		}
 
 		static public function cxn(){
@@ -48,23 +79,43 @@ if(phpversion() >= "5.4"){
 			return $cxn;
 		}
 
+		/**
+		* Sets cursor to point to a DB table
+		*/
 		static function table($table){
 			self::$table = $table;
 		}
 
+		/**
+		* basic SQL intection attack prevention
+		* @param mixed $val
+		* @return string
+		*/
 		static function prepare($val){
 			return addslashes($val);
 		}
 
+		/**
+		* Executes SQL statement
+		* @param string $sql
+		* @return PDO::query() object
+		*/
 		static function execute($sql){
 			return self::cxn()->query($sql);
 		}
 
+		/****/
 		static function singleRecord($sql){
 			$id = self::execute($sql)->fetchObject()->id;
 			return self::row($id); 
 		}
 
+		/**
+		* Creates new table if the table doesnt already exist
+		* @param string $table table name
+		* @param array $description description of table to be created
+		* $description ['email'=>"varchar(30)", 'dob'=>"date", 'address'=>"text"... ]
+		*/
 		static function create($table, $description=[]){
 			$adapter = self::$config->setting("adapter");
 			$mthd = "create_".$adapter;
@@ -72,6 +123,9 @@ if(phpversion() >= "5.4"){
 			self::execute($sql);
 		}
 
+		/**
+		* MySQL table generator
+		*/
 		private function create_mysql($table, $description){
 			$id["id"] = !isset($description["id"]) ?  
 				"INT PRIMARY KEY AUTO_INCREMENT NOT  NULL" : $description["id"];
@@ -98,6 +152,9 @@ if(phpversion() >= "5.4"){
 			return $sql;
 		}
 
+		/**
+		* SQLite3 table generator
+		*/
 		private function create_sqlite($table, $description){
 			$id["id"] = !isset($description["id"]) ?  
 				"INTEGER PRIMARY KEY " : $description["id"];
@@ -124,6 +181,10 @@ if(phpversion() >= "5.4"){
 			return $sql;		
 		}
 
+		/**
+		* @param string $sql
+		* @return array of stdObj of record 
+		*/
 		static function rows($sql="*"){
 			$sql = $sql == "*" ? "SELECT * FROM `".self::$table."`" : $sql;
 			$records = self::execute($sql);
@@ -142,6 +203,10 @@ if(phpversion() >= "5.4"){
 			return self::rows($sql);
 		}
 
+		/**
+		* @param string $arg1 may be column name or value for id column
+		* @param string $arg2 value
+		*/
 		static function row($arg1=false, $arg2=false){
 			return $arg2 == false ? 
 				new ORMRecord($arg1, "id", self::$table) 	: 
@@ -155,6 +220,10 @@ if(phpversion() >= "5.4"){
 			return self::row($arg1, $arg2);
 		}
 
+		/**
+		* Adds new db record 
+		* @param array 
+		*/
 		static function add($values=[]){
 
 			$values["created_at"] = strftime("%Y-%m-%d %H:%M:%S", time());
@@ -184,10 +253,29 @@ if(phpversion() >= "5.4"){
 			self::add($values);
 		}
 
-		static function truncate(){
-			self::execute("TRUNCATE TABLE `".self::$table."`");
+		/**
+		* Truncates existing table(s)
+		* @param array or string 
+		*/
+		static function truncate($tables=[]){
+			if(is_array($table)){
+				foreach($tables as $table){
+					self::execute("TRUNCATE TABLE `".self::$table."`");		
+				}
+			} else {
+				$table = (string)$tables;
+				self::execute("TRUNCATE TABLE `".self::$table."`");
+			}
+			
 		}
 
+		/**
+		* Updates table with cursor pointing
+		* @param $col [integer | string] may be id or column name
+		* @param $val [string | array] may column name or array of records to be set 
+		* @param $vals array of records to be set 
+		* @return boolean
+		*/
 		static function update($col=false, $val=false, $values=false){
 			$args = func_get_args();
 
@@ -215,15 +303,16 @@ if(phpversion() >= "5.4"){
 			return true;
 		}
 
+		/**
+		* @return string timestamp
+		*/
 		private function updated_at(){
-			if(self::$config->setting("adapter") != "mysql"){
-				return strftime("%Y-%m-%d %H:%M:%S", time());
-			} else {
-				return null;
-			}
-
+			return strftime("%Y-%m-%d %H:%M:%S", time());
 		}
 
+		/**
+		* Updates table with cursor by id
+		*/
 		private function updateById($id, $record){
 			$pair = [];
 			foreach($record as $c=>$v){
@@ -238,6 +327,9 @@ if(phpversion() >= "5.4"){
 			return $sql;		
 		}
 
+		/**
+		* Updates table rows with cursor by column name and value
+		*/
 		private function updateByColumnAndValue($col, $val, $record){
 			$pair = [];
 			foreach($record as $c=>$v){
@@ -263,6 +355,9 @@ if(phpversion() >= "5.4"){
 			self::execute($sql);
 		}
 
+		/**
+		* @return ORMRecord object matching first params
+		*/
 		static function firstRecord($col=false, $val=false){
 			$sql = $val == false ? 
 					"	SELECT id 
@@ -277,10 +372,16 @@ if(phpversion() >= "5.4"){
 			return self::singleRecord($sql);
 		}
 
+		/**
+		* Alias for firstRecord
+		*/
 		static function first($col=false, $val=false){
 			return self::firstRecord($col, $val);
 		}
 
+		/**
+		* @return ORMRecord object last record matching params
+		*/		
 		static function lastRecord($col=false, $val=false){
 			$sql = $val == false ? 
 					"	SELECT id
@@ -294,31 +395,49 @@ if(phpversion() >= "5.4"){
 			return self::singleRecord($sql);		
 		}
 
+		/**
+		* Alias for lastRecord
+		*/
 		static function last($col=false, $val=false){
 			return self::lastRecord($col, $val);
 		}
 
+		/**
+		* 
+		*/
 		static function find($col, $val){
 			$sql = "SELECT * FROM `".self::$table."` WHERE `{$col}` LIKE '%{$val}%' ";
 			$records = self::rows($sql);
 			return count($records) == 0 ? [] : $records;
 		}
 
+		/**
+		* 
+		*/
 		static function findFirst($col, $val){
 			$sql = "SELECT id FROM `".self::$table."` WHERE `{$col}` LIKE '%{$val}%' ORDER BY id ASC LIMIT 1";
 			return self::singleRecord($sql);
 		}
 
+		/**
+		* 
+		*/
 		static function findLast($col, $val){
 			$sql = "SELECT id FROM `".self::$table."` WHERE `{$col}` LIKE '%{$val}%' ORDER BY id DESC LIMIT 1";
 			return self::singleRecord($sql);		
 		}
 
+		/**
+		* 
+		*/		
 		static function previous($id){
 			$sql = "SELECT id FROM `".self::$table."` WHERE `id`<'{$id}' ORDER BY id ASC LIMIT 1";
 			return self::singleRecord($sql);		
 		}
 
+		/**
+		* 
+		*/		
 		static function next($id){
 			$sql = "SELECT id FROM `".self::$table."` WHERE `id`>'{$id}' ORDER BY id ASC LIMIT 1";
 			return self::singleRecord($sql);	
