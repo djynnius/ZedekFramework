@@ -10,13 +10,17 @@
 
 namespace __zf__;
 class CController extends ZController{
-
+	
 	/**
 	* uri maps to controller/method/id 
 	* the respective strings may be matched by $this->uri->controller, $this->uri->method and $this->uri->id
 	* 
 	* RENDERING VIEWS
 	* The views may be accessed by self::render(), self::display() or self::dynamiic()
+	*
+	* self::render() renders view with themeing information
+	* self::display() returns view with no themeing information
+	* self::dynamic() renders a dynamic php view with themeing information
 	*
 	* rendering methods take arguments of view, templating array and theme, the view may also be view@controller
 	* Example 1: self::render("index", ['foo'=>"bar"]);
@@ -36,7 +40,7 @@ class CController extends ZController{
 	* similarly the self::redirect("controller", "?key=val");  redirects to the the route /controller/?key=val
 	* similarly the self::redirect("controller", "method", "?key=val");  redirects to the the route /controller/method/?key=val
 	* similarly the self::redirect("controller", "method", "id/?key=val");  redirects to the the route /controller/method/id/?key=val
-	*/	
+	*/
 
 	function index(){
 		self::display("index@ztheme");
