@@ -3,7 +3,7 @@
 /**
 * @package Zedek Framework
 * @subpackage Interals zedek internal class
-* @version 3
+* @version 4
 * @author djynnius <djynnius@gmail.com> Ikakke Ikpe
 */
 

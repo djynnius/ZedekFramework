@@ -2,7 +2,7 @@
 /**
 * @package Zedek Framework
 * @subpackage ZSites Zedek Multisite Class
-* @version 3
+* @version 4
 * @author djyninus <psilent@gmail.com> Ikakke Ikpe
 * @link https://github.com/djynnius/zedek
 * @link https://github.com/djynnius/zedek.git

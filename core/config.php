@@ -1,7 +1,7 @@
 <?php
 /**
 * @package Zedek Framework
-* @version 3
+* @version 4
 * @subpackage ZConfig zedek configuration class
 * @author djyninus <psilent@gmail.com> Ikakke Ikpe
 * @link https://github.com/djynnius/zedek

@@ -2,7 +2,7 @@
 /**
 * @package Zedek Framework
 * @subpackage ZController zedek super controller class
-* @version 3
+* @version 4
 * @author djyninus <psilent@gmail.com> Ikakke Ikpe
 * @link https://github.com/djynnius/zedek
 * @link https://github.com/djynnius/zedek.git
@@ -12,11 +12,9 @@ namespace __zf__;
 use \Exception as Exception;
 abstract class ZController extends Zedek{
 	
-	public $orm;
 	public $uri;
 
 	function __construct(){
-		$this->orm = new ZORM;
 		$this->uri = new ZURI;
 		$this->app = new App;
 

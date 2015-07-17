@@ -2,7 +2,7 @@
 /**
 * @package Zedek Framework
 * @subpackage ZController zedek super controller class
-* @version 3.0
+* @version 4.0
 * @author djyninus <psilent@gmail.com> Ikakke Ikpe
 * @link https://github.com/djynnius/zedek
 * @link https://github.com/djynnius/zedek.git

@@ -2,7 +2,7 @@
 /**
 * @package Zedek Framework
 * @subpackage ZModel zedek super model class
-* @version 3
+* @version 4
 * @author djyninus <psilent@gmail.com> Ikakke Ikpe
 * @link https://github.com/djynnius/zedek
 * @link https://github.com/djynnius/zedek.git
@@ -13,7 +13,6 @@ abstract class ZModel{
 	public $table;
 
 	function __construct(){
-		$this->orm = new ZORM;
 		$this->uri = new ZURI;
 	}
 
@@ -43,61 +42,6 @@ abstract class ZModel{
 		}
 		return true;
 	}	
-
-	/**
-	* @return array multidimentional array of all the rows in the table
-	*/
-	final function fetchAll(){
-		return $this->orm->table($this->table)->fetch();
-	}
-
-	/**
-	* @param sting $q custom query
-	* for managing custom queries
-	*/
-	final function fetch($q){
-		return $this->orm->fetch($q);
-	}
-
-	/**
-	* @param mixed $id value to check for
-	* @param string $col strign name for where the value is to be checked
-	* @return array of records that match search criteria
-	*/
-	final function find($id, $col="id"){
-		$q = "SELECT * FROM `{$this->table}` WHERE `$col`='{$id}'";
-		$row = $this->orm->fetch($q);
-		$row = $row[0];
-		return $this->toObject($row);
-	}
-
-	/**
-	* @return object being the first record in the table
-	*/
-	final function findFirst(){
-		$q = "SELECT * FROM `{$this->table}` WHERE `$col`='{$id}' ORDER BY id ASC LIMIT 1";		
-		$record = $this->orm->fetch($q);
-		$single = $record[0];
-		return $this->orm->arrayToObject($single);		
-	}
-
-	/**
-	* @return object being the last record in the table
-	*/
-	final function findLast(){
-		$q = "SELECT * FROM `{$this->table}` WHERE `$col`='{$id}' ORDER BY id DESC LIMIT 1";		
-		$record = $this->orm->fetch($q);
-		$single = $record[0];
-		return $this->orm->arrayToObject($single);
-	}
-
-	/**
-	* @param object $object ZORMRow or fetchObject
-	* @return array 
-	*/
-	final function toArray($object){
-		return (array)$object->_row;
-	}
 
 	/**
 	* @param array $array or fetchObject

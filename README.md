@@ -1,7 +1,7 @@
-Zedek 3
+Zedek 4
 ========
 
-Zedek Web Development Framework version 3
+Zedek Web Development Framework version 4
 
 This is a PHP web development framework. 
 
@@ -53,9 +53,9 @@ You can now view your application on localhost:8585
 Hello World!
 ============
 
-Zedek 3 is built to map urls to engine directories and methods of the class CController (for current controller) in a style:
+Zedek 4 is built to map urls to engine directories and methods of the class CController (for current controller) in a style:
 
-    http://localhost:8080/controller/method/id/?arg1=val1&arg2=val2...$argn=valn
+    http://localhost:8585/controller/method/id/?arg1=val1&arg2=val2...$argn=valn
 
 (this mapping is handled primarily by a class named URLMaper) 
 
@@ -77,7 +77,7 @@ next within the controller file enter the following code inside your php tags
     }
     
 
-3. Browse to http://localhost:8080/foo/bar
+3. Browse to http://localhost:8585/foo/bar
 
 and you should see your hello world message!
 

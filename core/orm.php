@@ -1,569 +1,629 @@
 <?php
 /**
-* @package Zedek Framework
-* @subpackage ZORM zedek ORM class
-* @version 3
+* @package Sokoro Object Relational Mapper (ORM)
+* @version 1
 * @author djyninus <psilent@gmail.com> Ikakke Ikpe
-* @link https://github.com/djynnius/zedek
-* @link https://github.com/djynnius/zedek.git
+* @link https://github.com/djynnius/Sokoro
+* @link https://github.com/djynnius/Sokoro.git
 */
-
 namespace __zf__;
-use \PDO as PDO, \PDOException as PDOException, \Exception as Exception;
-class ZORM extends Zedek{
-	
-	public $dbo;
-	protected $host;
-	protected $user;
-	protected $pass;
-	protected $name;
-	protected $adapter;
-	protected $db;
-	const scaffold = 1;
+use \PDO as PDO;
 
-	/**
-	* @param PDO $dbo optionally takes a PDO object as argument or a boolean
-	*/
-	function __construct($dbo=false){
-		if($dbo == false){
-			$this->_dbConfig();
-			$this->_adapterSelect();			
-		} else {
-			$this->dbo = $dbo;
+if(phpversion() >= "5.4"){
+
+	/*Class definition begins*/
+	Class ZORM{
+
+		static public $table;
+		static public $config;
+
+		/**
+		* @param [string] $file full path to config file
+		*/
+		static public function config($file=false){
+			if($file == false){
+				$file = zroot."config/db.conf";
+			}
+			self::$config = new ORMConfig($file);
 		}
-	}
 
-	/**
-	* database configuration settings from /config/db.conf
-	*/
-	private function _dbConfig(){
-		$db_config_file = file_get_contents(zroot."config/db.conf");
-		$db_config = json_decode($db_config_file);
-		$this->adapter = $db_config->{'adapter'};
-		$this->db = isset($_SESSION['__z__']['db']) ? $_SESSION['__z__']['db'] : $db_config->{'db'};
-		$this->host = $db_config->{'host'};
-		$this->user = $db_config->{'user'};
-		$this->pass = $db_config->{'pass'};		
-	}
+		/**
+		* counts number of records returned
+		* @return int;
+		*/
+		static function count(){
+			return count(self::read());
+		}
 
-	private function _adapterSelect(){
-		switch($this->adapter){
-			case "mysql":
-				try{
-					$this->dbo = new PDO(
-						"mysql:host={$this->host};dbname={$this->db}", 
-						$this->user, 
-						$this->pass, 
-						array(
-							PDO::ATTR_ERRMODE, 
-							PDO::ERRMODE_EXCEPTION
-						)
-					);
-				} catch(PDOException $e){
-					print "There was a problem connecting to the database";
+		/**
+		* alias for ORM::count
+		*/
+		static function length(){
+			return self::count();
+		}
+
+		/**
+		* PDO beginTransaction
+		* @return PDO::beginTransaction()
+		*/
+		static function beginTransaction(){
+			return self::cxn()->beginTransaction();
+		}
+
+		/**
+		* PDO commit transaction
+		* @return PDO::commit()
+		*/
+		static function commitTransaction(){
+			return self::cxn()->commit();
+		}
+
+		/**
+		* PDO rollback transaction
+		* @return PDO::rollback()
+		*/
+		static function rollbackTransaction(){
+			return self::cxn()->commit();
+		}
+
+		static public function cxn(){
+			if(is_null(self::$config)) self::config();
+			$config = self::$config;
+			$adapter = $config->setting("adapter");
+			$db = $config->setting("db");
+			$user = $config->setting("user");
+			$pass = $config->setting("pass");
+			$host = $config->setting("host");
+
+			$cxn = new ORMCxn($adapter, $db, $user, $pass, $host);
+			return $cxn;
+		}
+
+		/**
+		* Sets cursor to point to a DB table
+		*/
+		static function table($table){
+			self::$table = $table;
+		}
+
+		/**
+		* basic SQL intection attack prevention
+		* @param mixed $val
+		* @return string
+		*/
+		static function prepare($val){
+			return addslashes($val);
+		}
+
+		/**
+		* Executes SQL statement
+		* @param string $sql
+		* @return PDO::query() object
+		*/
+		static function execute($sql){
+			return self::cxn()->query($sql);
+		}
+
+		/****/
+		static function singleRecord($sql){
+			$id = self::execute($sql)->fetchObject()->id;
+			return self::row($id); 
+		}
+
+		/**
+		* Creates new table if the table doesnt already exist
+		* @param string $table table name
+		* @param array $description description of table to be created
+		* $description ['email'=>"varchar(30)", 'dob'=>"date", 'address'=>"text"... ]
+		*/
+		static function create($table, $description=[]){
+			$adapter = self::$config->setting("adapter");
+			$mthd = "create_".$adapter;
+			$sql = self::$mthd($table, $description);
+			self::execute($sql);
+		}
+
+		/**
+		* MySQL table generator
+		*/
+		private function create_mysql($table, $description){
+			$id["id"] = !isset($description["id"]) ?  
+				"INT PRIMARY KEY AUTO_INCREMENT NOT  NULL" : $description["id"];
+			$description = array_merge($id, $description); /*ensures ID is first column in DB*/
+			$description["created_by"] = !isset($description["created_by"]) ? 
+				"INT" : $description["created_by"];
+			$description["created_at"] = !isset($description["created_at"]) ? 
+				"DATETIME" : $description["created_at"];
+			$description["updated_by"] = !isset($description["updated_by"]) ? 
+				"INT" : $description["updated_by"];
+			$description["updated_at"] = !isset($description["updated_at"]) ? 
+				"TIMESTAMP DEFAULT NOW() ON UPDATE NOW()" : $description["updated_at"];
+
+			$sql = "CREATE TABLE IF NOT EXISTS `{$table}` (";
+			
+			$pair = [];
+			foreach($description as $col=>$val){
+				$pair[] = "{$col} {$val}";
+			}
+
+			$sql .= join(", ", $pair);
+			$sql .= ")";		
+
+			return $sql;
+		}
+
+		/**
+		* SQLite3 table generator
+		*/
+		private function create_sqlite($table, $description){
+			$id["id"] = !isset($description["id"]) ?  
+				"INTEGER PRIMARY KEY " : $description["id"];
+			$description = array_merge($id, $description); /*ensures ID is first column in DB*/
+			$description["created_by"] = !isset($description["created_by"]) ? 
+				"INT" : $description["created_by"];
+			$description["created_at"] = !isset($description["created_at"]) ? 
+				"TEXT" : $description["created_at"];
+			$description["updated_by"] = !isset($description["updated_by"]) ? 
+				"INT" : $description["updated_by"];
+			$description["updated_at"] = !isset($description["updated_at"]) ? 
+				"TEXT" : $description["updated_at"];
+
+			$sql = "CREATE TABLE IF NOT EXISTS `{$table}` (";
+			
+			$pair = [];
+			foreach($description as $col=>$val){
+				$pair[] = "{$col} {$val}";
+			}
+
+			$sql .= join(", ", $pair);
+			$sql .= ")";		
+
+			return $sql;		
+		}
+
+		/**
+		* @param string $sql
+		* @return array of stdObj of record 
+		*/
+		static function rows($sql="*"){
+			$sql = $sql == "*" ? "SELECT * FROM `".self::$table."`" : $sql;
+			$records = self::execute($sql);
+
+			$r = [];
+			while($a = $records->fetch(PDO::FETCH_ASSOC)){
+				$r[] = (object)$a;
+			}
+			return $r;
+		}
+
+		/**
+		* Alias for rows
+		*/
+		static function read($sql="*"){
+			return self::rows($sql);
+		}
+
+		/**
+		* @param string $arg1 may be column name or value for id column
+		* @param string $arg2 value
+		*/
+		static function row($arg1=false, $arg2=false){
+			return $arg2 == false ? 
+				new ORMRecord($arg1, "id", self::$table) 	: 
+				new ORMRecord($arg2, $arg1, self::$table);
+		}
+
+		/**
+		* Alias for row
+		*/
+		static function record($arg1=false, $arg2=false){
+			return self::row($arg1, $arg2);
+		}
+
+		/**
+		* Adds new db record 
+		* @param array 
+		*/
+		static function add($values=[]){
+
+			$values["created_at"] = strftime("%Y-%m-%d %H:%M:%S", time());
+
+			$cols = array_keys($values);
+			$vals = array_values($values);
+			foreach($cols as $i=>$col){
+				$cols[$i] = "`{$col}`";
+			}
+			foreach($vals as $i=>$val){
+				$val = self::prepare($val);
+				$vals[$i] = "'{$val}'";
+			}
+
+			$sql = "INSERT INTO `".self::$table."` ( ";	
+			$sql .= join(", ", $cols);
+			$sql .= " ) VALUES ( ";
+			$sql .= join(", ", $vals);
+			$sql .= " )";
+			self::execute($sql);
+		}
+
+		/**
+		* Alias for add
+		*/
+		static function insert($values=[]){
+			self::add($values);
+		}
+
+		/**
+		* Truncates existing table(s)
+		* @param array or string 
+		*/
+		static function truncate($tables=[]){
+			if(is_array($table)){
+				foreach($tables as $table){
+					self::execute("TRUNCATE TABLE `".self::$table."`");		
 				}
-				break;
-			default:
-				$this->db = $this->db == "default" ? zroot."databases/zedek.db" : $this->db;
-				try{
-					$this->dbo = new PDO(
-						"sqlite:{$this->db}", PDO::ERRMODE_EXCEPTION);	
-				} catch(PDOException $e){
-					print "There was a problem connecting to the database";
-				}
-		}		
-	}
-
-	/**
-	* @return array of table column names
-	*/
-
-	protected function secureSelect($q){
-		$q = addslashes($q);
-		return $q;
-	}
-
-	public function getColumnNames(){
-		$q = "SELECT * FROM {$this->table} LIMIT 1";
-		//$q = self::secureSelect($q);
-		$q = $this->dbo->query($q);
-		$puts = array();
-		while($r = $q->fetch(PDO::FETCH_ASSOC)){
-			$puts = array_keys($r);
-		}
-		return $puts;
-	}
-
-	/**
-	* @return int number of columns in table
-	*/
-	public function getColumnCount(){
-		return count($this->getColumnNames());
-	}
-
-	/**
-	* @param string $table database table name
-	* @param array $attrs database definition
-	* @return ZORMTable
-	*/
-	public function table($table=false, $attrs=false){
-		return $table == false || gettype($table) == 'array' ? 
-			false : new ZORMTable($table, $attrs, $this->dbo);
-	}
-
-	/**
-	* @param string $view database view name
-	* @param string $q string defining view
-	* @return ZORMView
-	*/
-	public function view($view=false, $q=false){
-		return $view == false || gettype($view) == 'array' ? 
-			false : new ZORMView($view, $q, $this->dbo);
-	}
-
-	/**
-	* @param string $q query
-	* @return array multidimensional
-	*/
-	public function fetch($q){
-		$q = strtolower($q);
-		$q = str_replace("delete", "****", $q);
-		$q = str_replace("insert", "****", $q);
-		$q = str_replace("update", "****", $q);
-		try{
-			if($q = $this->dbo->query($q)){
-				$a = array();
-				while($r = $q->fetch(PDO::FETCH_ASSOC)){
-					$a[] = $r;
-				}
-				return $a;
 			} else {
-				throw new PDOException("Invalid query.");
-				return false;
-			}
-
-		} catch(PDOException $e){
-			print $e->getMessage();
-		}
-	}
-
-	/**
-	* This sets a serial number column to db array
-	* @param array $array to serialize
-	* @return array serialized
-	*/
-	public function serialize($array, $k='sn'){
-		if(gettype($array) != 'array') $array = array();
-		foreach($array as $i=>$item){
-			$array[$i]['sn'] = $i+1;
-		}
-		return $array;
-	}
-
-	/**
-	* @param string $q query
-	* @todo introspect and convert to prepare safe queries
-	*/
-	public function write($q){
-		$q = strtolower($q);
-		$q = str_replace("delete", "****", $q);
-		$q = str_replace("select", "****", $q);
-		$this->dbo->query($q);
-	}
-
-	/**
-	* @param string $q query
-	* @todo introspect and convert to prepare safe queries
-	*/
-	public function execute($q){
-
-		$this->dbo->query($q);
-	}
-
-	/**
-	* @param string $q query
-	* @todo introspect and convert to prepare safe queries
-	*/
-	public function delete($q, $table=false){
-		$q = strtolower($q);
-		$q = str_replace("select", "****", $q);
-		$q = str_replace("insert", "****", $q);
-		$q = str_replace("update", "****", $q);
-		$this->dbo->query($q);
-	}
-
-	/**
-	* @param array $array array to convert
-	* @return object 
-	*/
-	public function arrayToObject($array){
-		$array = (object)$array;
-		return $array;
-	}	
-
-}
-
-/**
-* @subpackage ZORM Table class
-*/
-class ZORMTable extends ZORM{
-	public $dbo;
-	public $table;
-
-	/**
-	* @param string $table table name
-	* @param array $attrs table definition
-	*/
-	function __construct($table=false, $attrs=false, $dbo){
-		$this->dbo = $dbo;
-		$this->table = $table;
-
-		if(is_array($attrs)) $this->create($table, $attrs);
-
-	}
-
-	/**
-	* @param string $table table name
-	* @param array $attrs table definition
-	*/
-	public function create($table, $attrs){
-		$q = "CREATE TABLE IF NOT EXISTS `{$table}` (";
-		$count = count($attrs);
-		$i = 1;
-		foreach($attrs as $k=>$v){
-			if($k == 'primary key'){
-				$q .= $i == $count ? "{$k} ({$v}) " : "{$k} ({$v}), ";
-			} else {
-				$q .= $i == $count ? "{$k} {$v} " : "{$k} {$v}, ";	
-			}
-				
-			$i++;
-		}
-		$q .= ")";		
-		$this->dbo->query($q);
-		return $q;
-	}
-
-	/**
-	* @return array
-	*/
-	public function fetch($x=false){
-		$q = "SELECT * FROM `{$this->table}`";
-		$q = self::secureSelect($q);
-		try{
-			if($q = $this->dbo->query($q)){
-				$a = array();
-				while($r = $q->fetch(PDO::FETCH_ASSOC)){
-					$a[] = $r;
-				}
-				return $a;				
-			} else {
-				throw new ZException("The table ({$this->table}) does not exist. \r\n");
-			}
-		} catch(ZException $e){
-			print $e->getMessage();
-			return false;
-		}
-	}
-
-	/**
-	* @param array $a input array
-	* @return array without empty value fields
-	*/
-	private function removeEmptyArrayInput($a){
-		foreach($a as $k=>$v){
-			if(empty($v)){
-				unset($a[$k]);
-			} elseif(strtolower(trim($k)) == "submit"){
-				unset($a[$k]);
-			} else {
-				$a[$k] = trim($v);
-				continue;
-			}
-		}		
-		return $a;
-	}
-
-	/**
-	* @param array $a array to be inserted in table
-	* @return string query
-	*/
-	public function add($a){
-		$a = $this->removeEmptyArrayInput($a);
-		$count = count($a);
-		if($count == 0){
-			return false;
-		} else {
-			$keys = array_keys($a);
-			$values = array_values($a);
-			$q = "INSERT INTO {$this->table} (";
-			for($i=1; $i<=$count; $i++){
-				$q .= $i == $count ? "{$keys[($i-1)]} " : "{$keys[($i-1)]}, ";
-			}
-			$q .= ") VALUES (";
-			for($i=1; $i<=$count; $i++){
-				$q .= $i == $count ? "? " : "?, ";
-			}
-			$q .= ")";
-			$insert = $this->dbo->prepare($q);
-			$insert->execute($values);
-		}
-		return $q;
-	}
-
-	/**
-	* May delete many rows
-	* @param mixed $val value to remove
-	* @param string $col column
-	* @return string query
-	*/
-	public function remove($val, $col="id"){
-		$q = "DELETE FROM {$this->table} WHERE {$col}=?";
-		$stmt = $this->dbo->prepare($q);
-		$stmt->execute(array($val,));
-	}
-
-	/**
-	* @param mixed $val value
-	* @param array $a array to insert
-	* @param string $col column
-	* @return string query
-	*/
-	public function update($val='*', $a=array(), $col="id"){
-		$a = $this->removeEmptyArrayInput($a);
-		$count = count($a);
-		$q = "UPDATE {$this->table} SET ";
-		$i = 1;
-		foreach($a as $k=>$v){
-			$q .= ($i == $count) ? "{$k}=? " : "{$k}=?, ";	
-			$i++;
-		}
-		$q .= $val == "*" ? "" : " WHERE {$col}=?";
-		$a = array_values($a);
-		if($val == "*"){null;} else {array_push($a, $val);}
-		$stmt = $this->dbo->prepare($q);
-		$stmt->execute($a);
-		return $q;
-	}
-
-	/**
-	* @param mixed $val value to target
-	* @param string $col column
-	* @return ZORMRow
-	*/
-	public function row($val, $col='id'){
-		try{
-			$row = new ZORMRow($val, $col, $this->table, $this->dbo);
-		} catch(PDOException $e){
-			$row = false;
-		}
-		return $row;
-	}
-
-	public function rows($val, $col='id'){
-		$sql = "SELECT * FROM `{$this->table}` WHERE `$col`='$row'";
-		return $this->fetch($sql);
-	}
-
-	public function lastRow($val, $col='id'){
-		$id = $this->dbo->query("SELECT id FROM `{$this->table}` WHERE `$col`='$val' ORDER BY id DESC LIMIT 1")->fetchObject()->id;
-		try{
-			$row = $this->row($id);
-		} catch(PDOException $e){
-			$row = false;
-		}
-		return $row;
-	}
-
-	public function firstRow($val, $col='id'){
-		$id = $this->dbo->query("SELECT id FROM `{$this->table}` WHERE `$col`='$val' ORDER BY id ASC LIMIT 1")->fetchObject()->id;
-		try{
-			$row = $this->row($id);
-		} catch(PDOException $e){
-			$row = false;
-		}
-		return $row;
-	}	
-
-	/**
-	* @return string query
-	*/
-	public function drop(){
-		$q = "DROP TABLE {$this->table}";
-		$this->dbo->query($q);
-		return $q;
-	}
-
-	/**
-	* @param string $col column 
-	* @param int row count 
-	*/
-	public function size($col='id'){
-		$q = "SELECT COUNT(`{$col}`) AS `count` FROM {$this->table}";
-		$q = self::secureSelect($q);
-		return (integer)$this->dbo->query($q)->fetchObject()->count;
-	}
-
-	/**
-	* many to many relatipnship check ensures 
-	* no duplicates are entered in many to many tables
-	* @param mixed $arg1 value 1
-	* @param string $col1 column 1
-	* @param mixed $arg2 value 2
-	* @param string $col2 column 2
-	* @return boolean
-	*/
-	public function m2mExists($arg1, $col1, $arg2, $col2="id"){
-		$sql = "SELECT COUNT(*) AS `count` 
-				FROM {$this->table} 
-				WHERE `{$col1}`= :arg1 
-					AND `{$col2}`= :arg2"; 
-
-		$stmt = $this->dbo->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-		$stmt->execute(array(':arg1'=>$arg1, ':arg2'=>$arg2));
-		return $stmt->fetchObject()->count > 0 ? true : false;
-	}
-
-	/**
-	*Alias for m2mExists
-	*/
-	public function pairExists($arg1, $col1, $arg2, $col2="id"){
-		return $this->m2mExists($arg1, $col1, $arg2, $col2);
-	}
-
-	/**
-	* prevents duplicating of records
-	* @param mixed $val value
-	* @param string $col column 
-	* @return object
-	*/
-	public function exists($val, $col="id"){
-		$q = "SELECT COUNT({$col}) AS `count` 
-				FROM {$this->table} 
-			WHERE {$col}='{$val}'";
-		//$q = self::secureSelect($q);
-		return $this->dbo->query($q)->fetchObject()->count > 0 ? true : false;
-	}
-}
-
-/**
-* @subpackage ZORMView
-*/
-class ZORMView extends ZORMTable{
-	function __construct($view=false, $q=false, $dbo){
-		$this->dbo = $dbo;
-		$this->table = $table;
-
-		if(is_string($q)) $this->create($view, $q);
-	}
-
-	public function create($view, $q){
-		$q = "CREATE VIEW `{$view}` AS {$q}";		
-		$this->dbo->query($q);
-	}
-
-	public function drop(){
-		$q = "DROP VIEW {$this->view}";
-		$this->dbo->query($q);
-	}	
-
-	public function add($a=false){return false;}
-
-	public function remove($a=false, $b=false){return false;}
-
-	public function update($a=false, $b=false, $c=false){return false;}	
-} 
-
-/**
-* @subpackage ZORMRow
-*/
-class ZORMRow extends ZORM{
-	public $dbo;
-	public $table;
-	public $column;
-	public $value;
-	public $_row;
-
-	/**
-	* @param mixed $value
-	* @param string $column column
-	* @param string $table table
-	* @param PDO object
-	*/
-	function __construct($value, $column, $table, $dbo){
-		$this->column = $column;
-		$this->value = $value;
-		$this->table = $table;
-		$this->dbo = $dbo;
-		$q = "SELECT * FROM `{$table}` WHERE `{$column}`='{$value}' LIMIT 1";
-		$this->_row = $this->dbo->query($q)->fetchObject();
-	}
-
-	/**
-	* @return object
-	*/
-	function currentRow(){
-		return $this->_row;
-	}
-
-	/**
-	* @param mixed $val 
-	* @param string $col column
-	* @todo make prepare clean
-	* @return string query
-	*/
-	function commit($val=false, $col=false){	
-		
-		$val = $val == false ? $this->currentRow()->id : $val;	
-		$col = $col == false ? "id" : $col;
-
-		foreach($this->currentRow() as $k=>$v){
-			if($v == $this->$k){
-				//continue;
-			} else {
-				$q = "	UPDATE `{$this->table}` 
-						SET `{$k}`='{$this->$k}' 
-						WHERE {$col}='{$val}'";
-				$this->dbo->query($q);
-			}
-		}
-		return $q;
-	}
-
-	function __get($attr){
-		if(!property_exists($this, $attr) && in_array($attr, $this->getColumnNames())){
-			return @$this->currentRow()->$attr;
-		}
-	}
-
-	/**
-	* @return int row count
-	*/
-	function size(){
-		$i = 0;
-		try{
-			if($this->currentRow()){
-				foreach((array)$this->currentRow() as $v){
-					if(!empty($v)) $i++;
-				}
-				return $i;				
-			} else {
-				throw new PDOException;
+				$table = (string)$tables;
+				self::execute("TRUNCATE TABLE `".self::$table."`");
 			}
 			
-		} catch(PDOException $e){
-			return $e->getMessage();
 		}
-	
+
+		/**
+		* Updates table with cursor pointing
+		* @param $col [integer | string] may be id or column name
+		* @param $val [string | array] may column name or array of records to be set 
+		* @param $vals array of records to be set 
+		* @return boolean
+		*/
+		static function update($col=false, $val=false, $values=false){
+			$args = func_get_args();
+
+			switch (count($args)) {
+				case 2:
+					if(!is_array($args[0]) && is_array($args[1])){
+						$args[1]["updated_at"] = self::updated_at();
+						$sql = self::updateById($args[0], $args[1]);
+					} else {
+						return false;
+					}
+					break;
+				case 3:
+					if(is_string($args[0]) && !is_array($args[1]) && is_array($args[2])){
+						$args[2]["updated_at"] = self::updated_at();
+						$sql = self::updateByColumnAndValue($args[0], $args[1], $args[2]);
+					} else {
+						return false;
+					}
+					break;
+				default:
+					return false;
+			}
+			self::execute($sql);
+			return true;
+		}
+
+		/**
+		* @return string timestamp
+		*/
+		private function updated_at(){
+			return strftime("%Y-%m-%d %H:%M:%S", time());
+		}
+
+		/**
+		* Updates table with cursor by id
+		*/
+		private function updateById($id, $record){
+			$pair = [];
+			foreach($record as $c=>$v){
+				$v = self::prepare($v);
+				$pair[] = "`{$c}`='{$v}'";
+			}
+
+			$sql = "UPDATE `".self::$table."` SET ";
+			$sql .= join(", ", $pair);
+			$sql .= " WHERE `id`='{$id}'";
+
+			return $sql;		
+		}
+
+		/**
+		* Updates table rows with cursor by column name and value
+		*/
+		private function updateByColumnAndValue($col, $val, $record){
+			$pair = [];
+			foreach($record as $c=>$v){
+				$v = self::prepare($v);
+				$pair[] = "`{$c}`='{$v}'";
+			}
+
+			$sql = "UPDATE `".self::$table."` SET ";
+			$sql .= join(", ", $pair);
+			$sql .= " WHERE `{$col}`='{$val}'";
+
+			return $sql;
+		}
+
+		/**
+		* @param $col;
+		* @param $val;
+		*/
+		static function remove($col=false, $val=false){
+			$sql = $col != false && $val == false ? 
+				"DELETE FROM `".self::$table."` WHERE `id`='{$col}'" : 
+				"DELETE FROM `".self::$table."` WHERE `{$col}`='{$val}'";
+			self::execute($sql);
+		}
+
+		/**
+		* @return ORMRecord object matching first params
+		*/
+		static function firstRecord($col=false, $val=false){
+			$sql = $val == false ? 
+					"	SELECT id 
+						FROM `".self::$table."`  
+						ORDER BY id ASC LIMIT 1" 
+						:
+					"	SELECT id 
+						FROM `".self::$table."` 
+						WHERE `{$col}`='{$val}' 
+						ORDER BY id ASC LIMIT 1";
+
+			return self::singleRecord($sql);
+		}
+
+		/**
+		* Alias for firstRecord
+		*/
+		static function first($col=false, $val=false){
+			return self::firstRecord($col, $val);
+		}
+
+		/**
+		* @return ORMRecord object last record matching params
+		*/		
+		static function lastRecord($col=false, $val=false){
+			$sql = $val == false ? 
+					"	SELECT id
+						FROM `".self::$table."`  
+						ORDER BY id DESC LIMIT 1" 
+						:
+					"	SELECT id
+						FROM `".self::$table."` 
+						WHERE `{$col}`='{$val}' 
+						ORDER BY id DESC LIMIT 1";
+			return self::singleRecord($sql);		
+		}
+
+		/**
+		* Alias for lastRecord
+		*/
+		static function last($col=false, $val=false){
+			return self::lastRecord($col, $val);
+		}
+
+		/**
+		* 
+		*/
+		static function find($col, $val){
+			$sql = "SELECT * FROM `".self::$table."` WHERE `{$col}` LIKE '%{$val}%' ";
+			$records = self::rows($sql);
+			return count($records) == 0 ? [] : $records;
+		}
+
+		/**
+		* 
+		*/
+		static function findFirst($col, $val){
+			$sql = "SELECT id FROM `".self::$table."` WHERE `{$col}` LIKE '%{$val}%' ORDER BY id ASC LIMIT 1";
+			return self::singleRecord($sql);
+		}
+
+		/**
+		* 
+		*/
+		static function findLast($col, $val){
+			$sql = "SELECT id FROM `".self::$table."` WHERE `{$col}` LIKE '%{$val}%' ORDER BY id DESC LIMIT 1";
+			return self::singleRecord($sql);		
+		}
+
+		/**
+		* 
+		*/		
+		static function previous($id){
+			$sql = "SELECT id FROM `".self::$table."` WHERE `id`<'{$id}' ORDER BY id ASC LIMIT 1";
+			return self::singleRecord($sql);		
+		}
+
+		/**
+		* 
+		*/		
+		static function next($id){
+			$sql = "SELECT id FROM `".self::$table."` WHERE `id`>'{$id}' ORDER BY id ASC LIMIT 1";
+			return self::singleRecord($sql);	
+		}
+
+		static function exists(){
+			/**/
+			$args = func_get_args();
+
+			if(count($args) == 1 && !is_array($args[0])) 
+				$sql = "SELECT COUNT(id) AS count FROM `".self::$table."` WHERE id='{$args[0]}'";
+
+			if(count($args) == 2 && !is_array($args[1])) 
+				$sql = "SELECT COUNT(id) AS count FROM `".self::$table."` WHERE `{$args[0]}`='{$args[1]}'";
+
+			if(count($args) == 1 && is_array($args[0])){
+				$sql = "SELECT COUNT(id) AS count FROM ".self::$table." WHERE ";
+				$pairs = [];
+				foreach($args[0] as $col=>$val){
+					$pairs[] = "`{$col}`='{$val}'";
+				}
+				$pairs = join(" AND ", $pairs);
+				$sql .= $pairs;
+			} 
+				
+			if(isset($sql)){
+				$count = self::execute($sql)->fetchObject()->count;
+				$bool = $count == 0 ? false : true;
+
+			}
+			return !isset($sql) ? false : $bool;
+		}
+	}
+
+
+	/**
+	* ORMRecord returns a PDO query fetchObject for a single row
+	*/
+	class ORMRecord extends ZORM{
+
+		public $record;
+
+		function __construct($val=false, $col, $table){
+			$sql = "SELECT * FROM `{$table}` WHERE `{$col}`='{$val}' ORDER BY id DESC LIMIT 1";
+			$this->record = self::execute($sql)->fetchObject();
+		}
+
+		function __destruct(){
+			return false;
+		}
+
+		function __get($attr){
+			if(!property_exists($this, $attr) && @property_exists($this->record, $attr)){
+				return $this->record->$attr;
+			}
+		}
+
+		function commit(){
+			$obj = (array)$this;
+			$db = (array)$this->record;
+
+			$ok = array_keys($obj);
+			$dk = array_keys($db);
+
+			$pair = [];
+			foreach($obj as $k=>$v){
+				if(in_array($k, $dk) && $db[$k] != $obj[$k]){
+					$pair[$k] = $v;			
+				}
+			}
+
+			$return = isset($this->record->id) ? self::update($this->record->id, $pair) : false;
+
+		}
+
+		function destroy(){
+			/*remove record*/
+			self::remove($this->record->id);
+		}
+
+		/**
+		* Alias for destroy
+		*/
+		function delete(){
+			self::destroy();
+		}
+
 	}
 
 	/**
-	* Does not delete where the table does not have an id column
-	* @return string query
+	* ORM connection abstracts PDO
 	*/
-	function remove(){
-		$q = "DELETE FROM `{$this->table}` WHERE `id`='{$this->currentRow()->id}'";
-		$this->dbo->query($q);
-		return $q;
+	class ORMCxn {
+		public $adapter;
+		public $db;
+		public $user;
+		public $pass;
+		public $host;
+
+		public function __construct($adapter=false, $db=false, $user=false, $pass=false, $host=false){
+			$this->adapter = strtolower(trim($adapter));
+			$this->host = $host;
+			$this->user = $user;
+			$this->pass = $pass;
+			$this->db = $db;
+			$this->pdo = self::$adapter($db, $user, $pass, $host);
+		}
+
+		public function mysql($db, $user, $pass, $host){
+			return new PDO("mysql:host={$this->host};dbname={$this->db}", $this->user, $this->pass);
+		}
+
+		public function sqlite($db){
+			return new PDO("sqlite:" . $db);
+		}
+
+		public function oracle($db, $user, $pass, $host){}
+
+		public function postgre($db, $user, $pass, $host){}
+
+		public function mssql($db, $user, $pass, $host){}
+
+		public function query($sql){
+			return $this->pdo->query($sql);
+		}
 	}
+
+
+	/**
+	* Default config file
+	*/
+	class ORMConfig{
+
+		public $file; /*config file*/
+		public $conf; /*config file contents*/
+		public $data; /*JSON */
+
+		/**
+		* @param string $conf the full path to the config file
+		*/
+		function __construct($file=false){	
+			$this->file = $file == false ? "cxn.cnf" : $file;
+			$this->conf = file_get_contents($this->file);
+			$this->data = json_decode($this->conf);
+			
+		}
+
+		/**
+		* The getter setter method for config file
+		* @param string $item
+		* @param mixed $value
+		* @return boolean only returns boolen false if arguments are not 1 or 2
+		*/
+		public function setting($item=false, $value=false){
+			switch(count(func_get_args())){
+				case 1:
+					return self::get($item);
+					break;
+				case 2:
+					self::set($item, $value);
+					break;
+				default:
+					return false;
+			}
+		}
+
+		/**
+		* The getter method for config file
+		* @param string $item
+		* @return boolean only returns boolen false if the setting is not set
+		*/	
+		private function get($item){
+			return isset($this->data->$item) ? $this->data->$item : false;
+		}
+
+		/**
+		* The setter method for config file
+		* @param string $item
+		* @param mixed $value
+		*/
+		private function set($item, $value){
+			$this->data->$item = $value;
+			file_put_contents($this->file, json_encode($this->data, JSON_PRETTY_PRINT));
+		}
+	}
+	/*class definition ends*/
+	ZORM::config();
 }
+
