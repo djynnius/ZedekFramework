@@ -23,9 +23,8 @@ class ZURI extends Zedek{
 	public $dir;
 
 	function __construct(){
-		$sub = zsub;
-
-		$dir = zsub;
+		$sub = zsub == "/" ? "" : zsub;
+		$dir = $sub;
 		$this->dir = rtrim($dir, "/");
 		$subpath = empty($sub) || is_null($sub) ? null : true;	
 		$url  = @$_SERVER['REQUEST_URI'];
@@ -53,6 +52,7 @@ class ZURI extends Zedek{
 		if(empty($mvc[0]) || is_null($mvc[0])) array_shift($mvc);
 		$this->controller = array_shift($mvc);
 		$this->method = array_shift($mvc);
+
 		$next = $mvc;
 		$this->id = array_shift($next);
 		$this->arguments = join("/", $mvc);
