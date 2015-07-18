@@ -42,13 +42,13 @@ abstract class Zedek{
 		$dir = ltrim(zsub, "/");
 		switch($args){
 			case 1:
-				if($controller == '-1'){
+				if($controller == '-1' || strtolower($controller) == 'back'){
 					if(isset($_SERVER['HTTP_REFERER'])) {
 						header("Location: " . $_SERVER['HTTP_REFERER']);	
 					} else {
 						header("Location: /" . $dir);		
 					}
-				} elseif($controller == '0'){
+				} elseif($controller == '0' || strtolower($controller) == 'self'){
 					header("Location: " . $_SERVER['REQUEST_URI']);
 				} else {
 					header("Location: /". $dir .$controller);	

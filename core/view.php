@@ -122,15 +122,14 @@ class ZView extends Zedek{
 		$view = $view == false ? $this->getValidView() : $view;
 
 		$view = self::zvEOL($view);
+		$view = self::zvtemplate($view);
 
+		$view = self::zvif($view);
 		$view = self::zvfor($view);
 		$view = self::zvforeach($view);
-		$view = self::zvif($view);
-		$view = self::zvtemplate($view);
-		
+				
 		return $view;		
 	}
-
 
 	/**
 	* @return string html to output on page: themed
@@ -156,13 +155,13 @@ class ZView extends Zedek{
 
 		$__zf__header = self::display($header);
 		$__zf__footer = self::display($footer);
-
-
 		
 		print $__zf__header;
 
+		/*Allows for calling of templating information using the $self->key to return value*/
+		$self = new \stdClass();
 		foreach($this->template as $i=>$var){
-			$$i = $var;
+			$self->$i = $var; 
 		}
 
 		$complex_view = explode("@", $view);
@@ -266,7 +265,7 @@ class ZView extends Zedek{
 	function zvif($view){
 		global $__zf__core__view__template;
 		$__zf__core__view__template = $tmp = $this->template;
-		$re = "/{%if\s+\[([a-zA-Z0-9_-]+)\]\s+\=\=\s+([a-zA-Z0-9._-]+)\s+\?\s+([a-zA-Z0-9_.-]+)\s+\:\s+([a-zA-Z0-9_.-\s!*%]+)\s+%}/";
+		$re = "/{%if\s+\[([a-zA-Z0-9_-]+)\]\s+\=\=\s+([a-zA-Z0-9._-]+)\s+\?\s+([a-zA-Z0-9#_.-\s!*%><\/=\"]+)\s+\:\s+([a-zA-Z0-9#_.-\s!*%><\/=\"]+)\s+%}/";
 		preg_match_all($re, $view, $a);
 
 		$out = "";
