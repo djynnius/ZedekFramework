@@ -23,7 +23,9 @@ class Router{
 			$zedek_path = __dir__;
 			$zedek_path = trim($zedek_path, "public");	
 		}
-		$anchor = $zedek_path."anchor.php";	
+		$zedek_path = trim($zedek_path);
+		$zedek_path = rtrim($zedek_path, "/");
+		$anchor = $zedek_path."/anchor.php";	
 
 		if(file_exists($anchor)){
 			require_once $anchor;	
