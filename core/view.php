@@ -83,10 +83,11 @@ class ZView extends Zedek{
 		$config = new ZConfig;
 		$uri = new ZURI;
 
+		$global = new ZConfig("global");
 		$version = new ZConfig("version");
 
 		$a = array(
-			'app'=>"Zedek Framework", 
+			'app'=>$global->get("app"), 
 			'controller'=>is_null($uri->controller) ? "" : $uri->controller, 
 			'method'=>is_null($uri->method) ? "" : $uri->method, 
 			'footer'=>"Zedek Framework. Version".$config->get("version"), 

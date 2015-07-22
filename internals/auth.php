@@ -24,15 +24,15 @@ class _Auth {
 		$cols = self::$tableColumns;
 		$cols["password"] = "text";
 
-		_ORM::create(_ORM::table(self::$table), $cols);
-		_ORM::create("roles", ['role'=>"varchar(30)", 'description'=>"text"]);
-		_ORM::create("users_roles", ['role_id'=>"int", 'user_id'=>"int"]);
+		ZORM::create(ZORM::table(self::$table), $cols);
+		ZORM::create("roles", ['role'=>"varchar(30)", 'description'=>"text"]);
+		ZORM::create("users_roles", ['role_id'=>"int", 'user_id'=>"int"]);
 
-		_ORM::table("roles");
-		_ORM::insert(['role'=>"Admin", 'description'=>"App manager"]);
+		ZORM::table("roles");
+		ZORM::insert(['role'=>"Admin", 'description'=>"App manager"]);
 
-		_ORM::table("users_roles");
-		_ORM::insert(['role_id'=>1, 'user_id'=>1]);
+		ZORM::table("users_roles");
+		ZORM::insert(['role_id'=>1, 'user_id'=>1]);
 
 	}
 
@@ -43,23 +43,23 @@ class _Auth {
 	static function getUserRoles(){}
 
 	static function addUser($rec=[]){
-		_ORM::table(self::$table);
-		_ORM::insert($rec);
+		ZORM::table(self::$table);
+		ZORM::insert($rec);
 	}
 
 	static function delUser($id){
-		_ORM::table(self::$table);
-		_ORM::remove($id);
+		ZORM::table(self::$table);
+		ZORM::remove($id);
 	}
 
 	static function updateUser($id, $rec){
-		_ORM::table(self::$table);
-		_ORM::remove($id, $rec);
+		ZORM::table(self::$table);
+		ZORM::remove($id, $rec);
 	}
 
 	static function updateUsers($val, $col, $rec){
-		_ORM::table(self::$table);
-		_ORM::remove($val, $col, $rec);
+		ZORM::table(self::$table);
+		ZORM::remove($val, $col, $rec);
 	}
 
 	static function changePassword($oldPwd, $newPwd, $confirmPwd, $id=false){
@@ -70,9 +70,9 @@ class _Auth {
 		$id = $id == false ? $_SESSION["__zf__"]["user"]["id"] : $id;
 		if(!_Form::same($newPwd, $confirmPwd)){return false;}
 
-		_ORM::table(self::$table);
-		if(_ORM::exists(['id'=>$id, 'password'=>_Form::encrypt($oldPwd)])){
-			$user = _ORM::record($id);
+		ZORM::table(self::$table);
+		if(ZORM::exists(['id'=>$id, 'password'=>_Form::encrypt($oldPwd)])){
+			$user = ZORM::record($id);
 			$user->password = _Form::encrypt($newPwd);
 			$user->commit();
 		} else {
@@ -85,9 +85,9 @@ class _Auth {
 		$password = trim($password);
 		$password = _Form::encrypt($password);
 
-		_ORM::table(self::$table);
-		if(_ORM::exists([self::$handle=>$handle, 'password'=>$password])){
-			$user = _ORM::row(self::$handle, $handle);
+		ZORM::table(self::$table);
+		if(ZORM::exists([self::$handle=>$handle, 'password'=>$password])){
+			$user = ZORM::row(self::$handle, $handle);
 			return $user;
 		} else {
 			return false;

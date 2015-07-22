@@ -56,7 +56,13 @@ class _Form extends Zedek{
 	}
 
 	static function submitted($submit = "submit", $remove_submit=1){ 
+		if(isset($_POST["submit"])) unset($_POST["submit"]);
 		return isset($_POST[$submit]) ? true : false; 
+	} 
+
+	static function posted(){ 
+		if(isset($_POST["submit"])) unset($_POST["submit"]);
+		return count($_POST) > 0 ? true : false; 
 	} 
 
 	static public function compare($field1=false, $field2=false){
