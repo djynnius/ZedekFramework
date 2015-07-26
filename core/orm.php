@@ -66,6 +66,15 @@ if(phpversion() >= "5.4"){
 			return self::cxn()->commit();
 		}
 
+
+		/**
+		*
+		*/
+		static function tableData($table){
+			self::table($table);
+			return self::rows();
+		}
+
 		static public function cxn(){
 			if(is_null(self::$config)) self::config();
 			$config = self::$config;
