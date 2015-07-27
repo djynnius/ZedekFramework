@@ -78,7 +78,7 @@ abstract class ZController extends Zedek{
 		print self::template($arg1, $arg2, $theme)->render();
 	}
 
-	final protected function display($arg1=null, $arg2=null, $theme=false){
+	final protected function display($arg1=null, $arg2=null){
 		print self::template($arg1, $arg2, $theme)->display();
 	}
 

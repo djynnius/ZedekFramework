@@ -26,11 +26,12 @@ class ZView extends Zedek{
 	* @param string $theme theme to render
 	*/
 	function __construct($arg1=null, $arg2=null, $theme=false){
+		$this->theme = $this->getTheme($theme) != false && $this->getTheme($theme) != null ? $this->getTheme($theme) : "default";
+
 		$fix = $this->fixArgs($arg1, $arg2);
 		$this->template = $fix['template'];
 		$this->view = $fix['view'];
 
-		$this->theme = $this->getTheme($theme) != false && $this->getTheme($theme) != null ? $this->getTheme($theme) : "default";
 
 		$this->folder = zweb."themes/{$this->theme}/";
 		$this->setThemeFiles();
@@ -94,7 +95,7 @@ class ZView extends Zedek{
 			'version'=> $version->get("version"), 
 			'sub_version'=> "Zedek Framework " . $version->get("sub_version"), 
 			'dir'=> $uri->dir, 
-			'theme'=> $uri->dir."/themes/".$this->getTheme(), 
+			'theme'=> $uri->dir."/themes/".$this->theme, 
 			'common'=> $uri->dir."/themes/common", 
 			'this_year'=> strftime("%Y", time()), 
 			'this_month'=> strftime("%B", time()), 
