@@ -191,7 +191,7 @@ class ZView extends Zedek{
 			$controller = trim($split[1]);
 			$view = trim($split[0]);
 		} else {
-			$view = $this->view;
+			$view = empty($this->view) ? $method : $this->view;
 		}
 
 		$s = new ZSites;
@@ -213,7 +213,6 @@ class ZView extends Zedek{
 		} else {
 			$view = "";
 		}
-		
 		return $view;
 	}
 
