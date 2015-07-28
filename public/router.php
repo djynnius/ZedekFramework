@@ -14,7 +14,7 @@ require_once("zettings");
 Router::webRoot();
 Router::webSubFolder();
 /**
-* you may override default by entering to core ending with trailing slash
-* eg /path/to/my/zedek/ or on windows c:\\path\\to\\my\\zedek\\
+* you may override default by entering path to core
+* eg /path/to/my/zedek or on windows c:\\path\\to\\my\\zedek
 */
 Router::anchor(); 
