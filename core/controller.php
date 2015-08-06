@@ -21,12 +21,12 @@ abstract class ZController extends Zedek{
 	}
 
 	function __call($method, $args){
-		if(!method_exists($this, $this->uri->method)) $this->index();
+		if(!method_exists($this, $method) || empty($this->uri->method)) $this->index();
 	}
 
 	#sets default to render index
 	public function index(){
-		self::display("404@ztheme");
+		self::display("404@ztheme", [], "default");
 	} 
 
 	public function _error(){
