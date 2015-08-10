@@ -18,6 +18,16 @@ class Router{
 	*on unix and unix like including mac the path will have the structure /path/to/anchor.php
 	*relative paths are also accepted
 	*/
+
+	static private $os;
+	static private $isWindows;
+
+	static public function setOS(){
+		$os = strtolower(@$_SERVER['SERVER_SOFTWARE']);
+		self::$os = strpos($os, "win") != false ? "windows" : "unix";
+		self::$isWindows = strpos($os, "win") != false ? true : false;
+	}
+
 	static public function anchor($zedek_path = null){
 		if($zedek_path == null){
 			$zedek_path = __dir__;
@@ -46,7 +56,11 @@ class Router{
 	*This is OS specific windows will be "C:\\path\\to\\root\\"
 	*/ 
 	static public function webRoot(){
-		define("zweb", __dir__."/");
+		self::setOs();
+		$webRoot = __dir__;
+		$webRoot = rtrim($webRoot, "/");
+		$webRoot = self::$isWindows ? rtrim($webRoot, "\\") : $webRoot;
+		define("zweb", $webRoot."/");
 	}
 
 
@@ -59,7 +73,23 @@ class Router{
 	*/
 
 	static public function webSubFolder($path = null){
-		$path = $path == null ? str_replace($_SERVER["DOCUMENT_ROOT"], "", zweb) : $path;
-		define("zsub", $path);
+		self::setOs();
+		if(self::$isWindows){
+			$serverRoot = str_replace("/", "\\", $_SERVER["DOCUMENT_ROOT"]);
+		} else {
+			$serverRoot = $_SERVER["DOCUMENT_ROOT"];
+		}
+		
+		$path = $path == null ? str_replace($serverRoot, "", zweb) : $path;
+		$path = trim($path, "/");
+		$path = trim($path, "\\");
+
+		if(empty($path)){
+			define("zsub", "");	
+		} else {
+			define("zsub", "/".$path."/");
+		}
+
+		
 	}
 }

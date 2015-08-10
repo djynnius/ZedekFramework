@@ -7,6 +7,7 @@ class _Auth {
 	static public $handle = "email";
 	static public $table = "users";
 	static public $tableColumns = [];
+	static public $user_id;
 
 	static function handle($handle){
 		self::$handle = $handle;
@@ -67,13 +68,26 @@ class _Auth {
 		$newPwd = trim($newPwd);
 		$confirmPwd = trim($confirmPwd);
 
-		$id = $id == false ? $_SESSION["__zf__"]["user"]["id"] : $id;
+		$id = $id == false ? 0 : $id;
 		if(!_Form::same($newPwd, $confirmPwd)){return false;}
 
 		ZORM::table(self::$table);
 		if(ZORM::exists(['id'=>$id, 'password'=>_Form::encrypt($oldPwd)])){
 			$user = ZORM::record($id);
 			$user->password = _Form::encrypt($newPwd);
+			$user->commit();
+		} else {
+			return false;
+		}
+	}	
+
+	static function resetPassword($id, $password){
+		$id = (integer)$id;
+		ZORM::table(self::$table);
+
+		if(ZORM::exists(['id'=>$id, 'password'=>_Form::encrypt($oldPwd)])){
+			$user = ZORM::record($id);
+			$user->password = _Form::encrypt($password);
 			$user->commit();
 		} else {
 			return false;
@@ -88,11 +102,18 @@ class _Auth {
 		ZORM::table(self::$table);
 		if(ZORM::exists([self::$handle=>$handle, 'password'=>$password])){
 			$user = ZORM::row(self::$handle, $handle);
+			self::$user_id = $user->id;
 			return $user;
 		} else {
 			return false;
 		}
 	}
+
+	static function setLastLogin(){
+		$user = ZORM::record(self::$user_id);
+		$user->last_login = _Form::now();
+		$user->commit();
+	}	
 
 	static function logout(){
 		session_unset();

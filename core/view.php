@@ -266,7 +266,7 @@ class ZView extends Zedek{
 	function zvif($view){
 		global $__zf__core__view__template;
 		$__zf__core__view__template = $tmp = $this->template;
-		$re = "/{%if\s+\[([a-zA-Z0-9_-]+)\]\s+\=\=\s+([a-zA-Z0-9._-]+)\s+\?\s+([a-zA-Z0-9#_.-\s!*%><\/=\"]+)\s+\:\s+([a-zA-Z0-9#_.-\s!*%><\/=\"]+)\s+%}/";
+		$re = "/{%if\s+\[([a-zA-Z0-9_-]+)\]\s+\=\=\s+([a-zA-Z0-9._-]+)\s+\?\s+([a-zA-Z0-9#_.\s!*%><\/=\"-]+)\s+\:\s+([a-zA-Z0-9#_.\s!*%><\/=\"-]+)\s+%}/";
 		preg_match_all($re, $view, $a);
 
 		$out = "";
