@@ -78,6 +78,11 @@ abstract class ZController extends Zedek{
 		print self::template($arg1, $arg2, $theme)->render();
 	}
 
+	#alias for render
+	final protected function materialize($arg1=null, $arg2=null, $theme=false){
+		return self::render($arg1, $arg2, $theme);
+	}
+
 	final protected function display($arg1=null, $arg2=null, $theme=false){
 		print self::template($arg1, $arg2, $theme)->display();
 	}
