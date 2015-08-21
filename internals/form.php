@@ -6,6 +6,11 @@ class _Form extends Zedek{
 
 	const cryptic = "RevealerOfSecrets";
 
+	public static function crypt(){
+		$global = new ZConfig;
+		return empty($global->get("encryptionKey")) || $global->get("encryptionKey") == "your_encryption"  ? self::cryptic :  $global->get("encryptionKey");
+	}
+
 	public static function captcha($request=false, $session=false){
 		$request = $request == false ? @$_POST['captcha'] : $request;
 		$session = $session == false ? @$_SESSION['captcha'] : $session;
@@ -98,6 +103,7 @@ class _Form extends Zedek{
 	}
 
 	static public function encrypt($text, $type="long", $cryptic=false){
+
 		switch($type){
 			case "long":
 				return self::longEncryption($text, $cryptic);
@@ -112,7 +118,7 @@ class _Form extends Zedek{
 
 	private function longEncryption($txt, $cryptic=false){
 		if(empty($txt)) self::redirect("?msg=empty_field");
-		$cryptic = trim(self::cryptic);
+		$cryptic = trim(self::crypt());
 		$txt = trim($txt);
 		$len = strlen($txt);
 		$md5 = (strlen($cryptic)/$len) == 0 ? $txt.$cryptic : $cryptic.$txt;
@@ -122,7 +128,7 @@ class _Form extends Zedek{
 	}
 
 	private function shortEncryption($txt, $cryptic=false){
-		return crypt(self::longEncryption($txt, $cryptic), self::cryptic);
+		return crypt(self::longEncryption($txt, $cryptic), self::crypt());
 	}
 
 	static function fixDate($date){
