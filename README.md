@@ -45,7 +45,7 @@ on windows replace php with the path to the php binary - example:
 	c:\xampp\php\php.exe zedek start
 
 
-You are done!
+You are done! view your app on localhost:8585
 
 You can now view your application on localhost:8585
 
