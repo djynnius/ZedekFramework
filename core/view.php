@@ -314,7 +314,7 @@ class ZView extends Zedek{
 		global $__zf__core__view__template;
 		$__zf__core__view__template = $tmp = $this->template;
 
-		$re = "/{%foreach\s+([a-z]+)\s+as\s+([a-z]+)\s+\:\s+([^%]+)\s+%}/";
+		$re = "/{%foreach\s+([a-zA-Z0-9_-]+)\s+as\s+([a-z]+)\s+\:\s+([^%]+)\s+%}/";
 		preg_match_all($re, $view, $all);
 
 		$tkeys = array_keys($tmp);
