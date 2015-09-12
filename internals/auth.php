@@ -15,7 +15,7 @@ class _Auth {
 
 	static function table($table){
 		self::$table = $table;
-	}
+	}	
 
 	static function tableColumns($c=[]){
 		self::$tableColumns = $c;
@@ -36,6 +36,14 @@ class _Auth {
 		ZORM::insert(['role_id'=>1, 'user_id'=>1]);
 
 	}
+
+	static function restricted($sess_var){
+		if(!isset($sess_var)){
+			Z::redirect();
+			return false;
+		}		
+	}
+
 
 	static function getRoles(){}
 
