@@ -37,6 +37,10 @@ class _Auth {
 
 	}
 
+	static function authorized($sess_var){
+		return isset($sess_var) ? true : false;
+	}
+
 	static function restricted($sess_var){
 		if(!isset($sess_var)){
 			Z::redirect();
