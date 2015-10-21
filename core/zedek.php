@@ -73,6 +73,14 @@ abstract class Zedek{
 class Z extends Zedek{
 	
 	/**
+	* includes files
+	*/
+	static public function required($file, $folder=false){
+		$folder = $folder == false ? "core" : $folder;
+		require_once zroot.$folder."/".$file.".php";
+	}
+
+	/**
 	* internal classes are pulled in to make a few things simpler
 	*/
 	static function importInternals(){

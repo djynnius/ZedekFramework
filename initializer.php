@@ -22,19 +22,18 @@ session_start();
 
 #set include path
 define("zroot", __dir__."/");
-$os = strtolower(@$_SERVER['SERVER_SOFTWARE']);
-$zedek_core_path = strpos($os, "win") ? ".;".zroot."core" : ":.:".zroot."core";
-ini_set('include_path', $zedek_core_path);
+set_include_path(get_include_path() . PATH_SEPARATOR . zroot);
 
 #Error reporting - On for development and production
 
 #main zedek classes
 require_once zroot."core/zedek.php";
-require_once zroot."core/uri.php";
-require_once zroot."core/controller.php";
-require_once zroot."core/orm.php";
-require_once zroot."core/config.php";
-require_once zroot."core/sites.php";
+
+Z::required("uri");
+Z::required("controller");
+Z::required("orm");
+Z::required("config");
+Z::required("sites");
 
 Z::importInternals();
 Z::importModels();
