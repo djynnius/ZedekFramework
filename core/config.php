@@ -23,8 +23,9 @@ class ZConfig extends Zedek{
 	}
 
 	/**
-	* @param string $config configuration file without extension from config folder
-	*/
+	 * Allows for setting which of the .conf files to use defaults to global
+	 * @param string $config configuration file name without extension from config folder
+	 */
 	public function setConfig($config){
 		$this->configFile = zroot."config/{$config}.conf";;
 		$config = file_get_contents($this->configFile);
@@ -32,8 +33,10 @@ class ZConfig extends Zedek{
 	}
 
 	/**
-	* @param string $key 
-	*/
+	 * gets configuration value
+	 * @param  string $key the json key on the config file
+	 * @return string the corresponding json value
+	 */
 	public function get($key){
 		try{
 			if(isset($this->config->{$key})){
@@ -49,17 +52,19 @@ class ZConfig extends Zedek{
 
 
 	/**
-	* @param string $key simple string as key
-	* @param string $value may be a json string or plain string
-	*/
+	 * Creates new JSON pair in config file
+	 * @param string $key sets json key
+	 * @param string $value sets json value
+	 */
 	public function set($key, $value){
 		$this->config->{$key} = $value;
 		$this->cast();
 	}
 
 	/**
-	* @param string $key 
-	*/
+	 * Deletes a json key value pair from the config file
+	 * @param  string $key [description]
+	 */
 	public function remove($key){
 		try{
 			if(isset($this->config->{$key})){
@@ -73,6 +78,10 @@ class ZConfig extends Zedek{
 		}
 	}
 
+
+	/**
+	 * private method that writes to file changes from self::set()
+	 */
 	private function cast(){
 		$config = json_encode($this->config);
 		file_put_contents($this->configFile, $config);		

@@ -17,7 +17,6 @@ abstract class ZController extends Zedek{
 	function __construct(){
 		$this->uri = new ZURI;
 		$this->app = new App;
-
 	}
 
 	function __call($method, $args){
