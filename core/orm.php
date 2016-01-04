@@ -83,8 +83,9 @@ if(phpversion() >= "5.4"){
 			$user = $config->setting("user");
 			$pass = $config->setting("pass");
 			$host = $config->setting("host");
+			$port = $config->setting("port");
 
-			$cxn = new ORMCxn($adapter, $db, $user, $pass, $host);
+			$cxn = new ORMCxn($adapter, $db, $user, $pass, $host, $port);
 			return $cxn;
 		}
 
@@ -545,29 +546,31 @@ if(phpversion() >= "5.4"){
 		public $user;
 		public $pass;
 		public $host;
+		public $port;
 
-		public function __construct($adapter=false, $db=false, $user=false, $pass=false, $host=false){
+		public function __construct($adapter=false, $db=false, $user=false, $pass=false, $host=false, $port=false){
 			$this->adapter = strtolower(trim($adapter));
 			$this->host = $host;
 			$this->user = $user;
 			$this->pass = $pass;
 			$this->db = $db;
-			$this->pdo = self::$adapter($db, $user, $pass, $host);
+			$this->port = $port;
+			$this->pdo = self::$adapter($db, $user, $pass, $host, $port);
 		}
 
 		public function mysql($db, $user, $pass, $host){
-			return new PDO("mysql:host={$this->host};dbname={$this->db}", $this->user, $this->pass);
+			return new PDO("mysql:host={$this->host};port={$this->port};dbname={$this->db}", $this->user, $this->pass);
 		}
 
 		public function sqlite($db){
 			return new PDO("sqlite:" . $db);
 		}
 
-		public function oracle($db, $user, $pass, $host){}
+		public function oracle($db, $user, $pass, $host, $port){}
 
-		public function postgre($db, $user, $pass, $host){}
+		public function postgre($db, $user, $pass, $host, $port){}
 
-		public function mssql($db, $user, $pass, $host){}
+		public function mssql($db, $user, $pass, $host, $port){}
 
 		public function query($sql){
 			return $this->pdo->query($sql);
