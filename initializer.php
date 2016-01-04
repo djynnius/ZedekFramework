@@ -20,6 +20,8 @@ namespace __zf__;
 #explicitly start session
 session_start();
 
+#ini settings
+
 #set include path
 define("zroot", __dir__."/");
 set_include_path(get_include_path() . PATH_SEPARATOR . zroot);
@@ -39,4 +41,6 @@ Z::importInternals();
 Z::importModels();
 
 $config = new ZConfig;
-ini_set('display_errors', $config->get("error"));
+ini_set('display_errors', $config->get("error")); //off out the box - preferred for production
+ini_set('log_errors', $config->get("log_errors")); //on out the box - may be turned on in development
+ini_set('error_log', zroot."errors/errors.log"); //You may wish to specify another path
