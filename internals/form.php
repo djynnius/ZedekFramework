@@ -145,4 +145,79 @@ class _Form extends Zedek{
 		}
 		return $date;		
 	}	
+
+	/**
+	 * Checks the length of the input
+	 * @param  mixed $a the input
+	 * @param  array  $options options for min, max and exact match
+	 * @return input as validated or null
+	 */
+	static public function length($a, $options=[]){
+	}
+
+	/**
+	 * checks if the input is a match
+	 * @param mixed $a input
+	 * @param  string $regex regular expression to match againt
+	 * @return [type] 
+	 */
+	static public function matching($a, $regex='//'){
+		return preg_match($regex, $a);
+	}
+
+	/**
+	 * [asURL description]
+	 * @param  [type] $a [description]
+	 * @return [type]    [description]
+	 */
+	static function asURL($a){
+		return filter_var($a, FILTER_SANITIZE_ENCODED);
+	}
+
+	/**
+	 * [asURL description]
+	 * @param  [type] $a [description]
+	 * @return [type]    [description]
+	 */
+	static function asString($a){
+		return filter_var($a, FILTER_SANITIZE_STRING);
+	}
+	
+	/**
+	 * Filter method to return valid email characters
+	 * @param string $a email
+	 * @return string validated email
+	 */
+	static function asEmail($a){
+		return filter_var($a, FILTER_SANITIZE_EMAIL);
+	}
+	
+	/**
+	 * URL filter
+	 * @param  string $a URL
+	 * @return string validated URL encoded for the browser
+	 */
+	static function safeSQL($a){
+		return filter_var($a, FILTER_SANITIZE_MAGIC_QUOTES);
+	}
+
+	/**
+	 * Integer validation including digits + and -
+	 * @param  mixed $a integer
+	 * @return integer
+	 */
+	static function asInt($a){
+		return filter_var($a, FILTER_SANITIZE_NUMBER_INT);
+	}
+
+	/**
+	 * strip Tags
+	 * @param  string $a html with tags
+	 * @return string html without tags
+	 */
+	static function noTags($a){
+		return filter_var($a, FILTER_SANITIZE_SPECIAL_CHARS);
+	}
+
+
 }
