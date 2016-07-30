@@ -122,7 +122,7 @@ class ZView extends Zedek{
 	*/
 	public function display($view = false){
 		$view = $view == false ? $this->getValidView() : $view;
-
+		
 		$view = self::zvEOL($view);
 		$view = self::zvtemplate($view);
 
