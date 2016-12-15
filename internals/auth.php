@@ -5,12 +5,17 @@ namespace __zf__;
 class _Auth {
 	
 	static public $handle = "email";
+	static public $pwd = "password";
 	static public $table = "users";
 	static public $tableColumns = [];
 	static public $user_id;
 
 	static function handle($handle){
 		self::$handle = $handle;
+	}
+
+	static function pwd($pwd){
+		self::$pwd = $pwd;
 	}
 
 	static function table($table){
@@ -23,7 +28,7 @@ class _Auth {
 
 	static function createDB(){
 		$cols = self::$tableColumns;
-		$cols["password"] = "text";
+		$cols[self::$pwd] = "text";
 
 		ZORM::create(ZORM::table(self::$table), $cols);
 		ZORM::create("roles", ['role'=>"varchar(30)", 'description'=>"text"]);
@@ -84,9 +89,10 @@ class _Auth {
 		if(!_Form::same($newPwd, $confirmPwd)){return false;}
 
 		ZORM::table(self::$table);
-		if(ZORM::exists(['id'=>$id, 'password'=>_Form::encrypt($oldPwd)])){
+		if(ZORM::exists(['id'=>$id, self::$pwd=>_Form::encrypt($oldPwd)])){
+			$pwd = self::$pwd;
 			$user = ZORM::record($id);
-			$user->password = _Form::encrypt($newPwd);
+			$user->$pwd = _Form::encrypt($newPwd);
 			$user->commit();
 		} else {
 			return false;
@@ -97,9 +103,10 @@ class _Auth {
 		$id = (integer)$id;
 		ZORM::table(self::$table);
 
-		if(ZORM::exists(['id'=>$id, 'password'=>_Form::encrypt($oldPwd)])){
+		if(ZORM::exists(['id'=>$id, self::$pwd=>_Form::encrypt($oldPwd)])){
+			$pwd = self::$pwd;
 			$user = ZORM::record($id);
-			$user->password = _Form::encrypt($password);
+			$user->$pwd = _Form::encrypt($password);
 			$user->commit();
 		} else {
 			return false;
@@ -112,7 +119,7 @@ class _Auth {
 		$password = _Form::encrypt($password);
 
 		ZORM::table(self::$table);
-		if(ZORM::exists([self::$handle=>$handle, 'password'=>$password])){
+		if(ZORM::exists([self::$handle=>$handle, self::$pwd=>$password])){
 			$user = ZORM::row(self::$handle, $handle);
 			self::$user_id = $user->id;
 			return $user;
