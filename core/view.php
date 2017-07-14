@@ -1,8 +1,9 @@
 <?php
 /**
 * @package Zedek Framework
-* @subpackage ZView zedek themeing engine
-* @version 4
+* @version 5
+* @subpackage ZConfig zedek configuration class
+* @author defestdude <defestdude@gmail.com> Donald Mkpanam
 * @author djyninus <psilent@gmail.com> Ikakke Ikpe
 * @link https://github.com/djynnius/zedek
 * @link https://github.com/djynnius/zedek.git
@@ -80,7 +81,7 @@ class ZView extends Zedek{
 	/**
 	* @return array basic templating which may be overwritten
 	*/
-	private function template(){
+	public function template(){
 		$config = new ZConfig;
 		$uri = new ZURI;
 

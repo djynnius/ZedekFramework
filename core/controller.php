@@ -1,8 +1,9 @@
 <?php
 /**
 * @package Zedek Framework
-* @subpackage ZController zedek super controller class
-* @version 4
+* @version 5
+* @subpackage ZConfig zedek configuration class
+* @author defestdude <defestdude@gmail.com> Donald Mkpanam
 * @author djyninus <psilent@gmail.com> Ikakke Ikpe
 * @link https://github.com/djynnius/zedek
 * @link https://github.com/djynnius/zedek.git
@@ -17,6 +18,7 @@ abstract class ZController extends Zedek{
 	function __construct(){
 		$this->uri = new ZURI;
 		$this->app = new App;
+		$this->config = new ZConfig;
 	}
 
 	function __call($method, $args){
@@ -74,6 +76,16 @@ abstract class ZController extends Zedek{
 
 	#shorter method for rendering
 	final protected function render($arg1=null, $arg2=null, $theme=false){
+		if($this->config->get('templating')->engine == "twig"){
+			$jinja = ZTwig::render($arg1, $arg2);
+			print $jinja == false ? self::template($arg1, $arg2, $theme)->render() : $jinja;
+		} else {
+			print self::template($arg1, $arg2, $theme)->render();
+		}
+	}
+
+	#shorter method for rendering
+	final protected function zrender($arg1=null, $arg2=null, $theme=false){
 		print self::template($arg1, $arg2, $theme)->render();
 	}
 

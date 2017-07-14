@@ -1,10 +1,12 @@
 <?php
 /**
-* @package Sokoro Object Relational Mapper (ORM)
-* @version 1
+* @package Zedek Framework
+* @version 5
+* @subpackage ZConfig zedek configuration class
+* @author defestdude <defestdude@gmail.com> Donald Mkpanam
 * @author djyninus <psilent@gmail.com> Ikakke Ikpe
-* @link https://github.com/djynnius/Sokoro
-* @link https://github.com/djynnius/Sokoro.git
+* @link https://github.com/djynnius/zedek
+* @link https://github.com/djynnius/zedek.git
 */
 namespace __zf__;
 use \PDO as PDO;
@@ -558,7 +560,7 @@ if(phpversion() >= "5.4"){
 			$this->pdo = self::$adapter($db, $user, $pass, $host, $port);
 		}
 
-		public function mysql($db, $user, $pass, $host){
+		public function mysql($db, $user, $pass, $host, $port=3306){
 			return new PDO("mysql:host={$this->host};port={$this->port};dbname={$this->db}", $this->user, $this->pass);
 		}
 
@@ -568,9 +570,15 @@ if(phpversion() >= "5.4"){
 
 		public function oracle($db, $user, $pass, $host, $port){}
 
-		public function postgre($db, $user, $pass, $host, $port){}
+		public function postgre($db, $user, $pass, $host, $port=5432){
+			return $port == 5432 ? new PDO("pgsql:dbname={$this->db};host={$this->host};user={$this->user};password={$this->pass}") : new PDO("pgsql:dbname={$this->db};host={$this->host};port={$this->port};user={$this->user};password={$this->pass}");
+		}
 
-		public function mssql($db, $user, $pass, $host, $port){}
+		public function mssql($db, $user, $pass, $host, $port=1433){
+			$pdo = new PDO("dblib:host={$this->host}:{$this->port};dbname={$this->db}", $this->user, $this->pas);
+			$pdo->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
+			return $pdo;
+		}
 
 		public function query($sql){
 			return $this->pdo->query($sql);

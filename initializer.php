@@ -1,13 +1,13 @@
 <?php
 /**
 * @package Zedek Framework
-* @subpackage ZController zedek super controller class
-* @version 4
+* @version 5
+* @subpackage ZConfig zedek configuration class
+* @author defestdude <defestdude@gmail.com> Donald Mkpanam
 * @author djyninus <psilent@gmail.com> Ikakke Ikpe
 * @link https://github.com/djynnius/zedek
 * @link https://github.com/djynnius/zedek.git
 */
-
 namespace __zf__;
 
 //Session management
@@ -36,6 +36,7 @@ Z::required("controller");
 Z::required("orm");
 Z::required("config");
 Z::required("sites");
+Z::required("alias");
 
 Z::importInternals();
 Z::importModels();
@@ -44,3 +45,7 @@ $config = new ZConfig;
 ini_set('display_errors', $config->get("error")); //off out the box - preferred for production
 ini_set('log_errors', $config->get("log_errors")); //on out the box - may be turned on in development
 ini_set('error_log', zroot."errors/errors.log"); //You may wish to specify another path
+
+if($config->get("templating")->engine == "twig"){
+	Z::required("twig");
+}

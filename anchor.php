@@ -1,13 +1,13 @@
 <?php
 /**
 * @package Zedek Framework
-* @subpackage ZController zedek super controller class
-* @version 4
+* @version 5
+* @subpackage ZConfig zedek configuration class
+* @author defestdude <defestdude@gmail.com> Donald Mkpanam
 * @author djyninus <psilent@gmail.com> Ikakke Ikpe
 * @link https://github.com/djynnius/zedek
 * @link https://github.com/djynnius/zedek.git
 */
-
 namespace __zf__;
 date_default_timezone_set("Africa/Lagos");
 
@@ -18,6 +18,9 @@ $uri = new ZURI;
 
 $s = new ZSites;
 $engine = $s->getEngine();
+
+ZAlias::aliasRoute(ZAlias::getRoutes());
+
 
 if(file_exists($engine."{$uri->controller}/controller.php")){
 	Z::import($uri->controller);
@@ -31,6 +34,8 @@ $method = $uri->method;
 
 #using class as method for default in cases where there is no method url mapping
 $class_method = $uri->controller; 
+
+
 
 if(method_exists($controller, $method)){
 	$controller->$method();

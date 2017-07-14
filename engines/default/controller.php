@@ -1,8 +1,9 @@
 <?php
 /**
 * @package Zedek Framework
+* @version 5
 * @subpackage ZConfig zedek configuration class
-* @version 4
+* @author defestdude <defestdude@gmail.com> Donald Mkpanam
 * @author djyninus <psilent@gmail.com> Ikakke Ikpe
 * @link https://github.com/djynnius/zedek
 * @link https://github.com/djynnius/zedek.git
@@ -43,6 +44,10 @@ class CController extends ZController{
 	*/
 
 	function index(){
-		self::display("index@ztheme");
+		self::render("zedek.html", []);
+	}
+
+	function foo($args){
+		self::render('test.html', ['name'=>$args['bar']]);
 	}
 }

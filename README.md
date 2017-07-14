@@ -1,7 +1,7 @@
 Zedek 4
 ========
 
-Zedek Web Development Framework version 4
+Zedek Web Development Framework version 5
 
 This is a PHP web development framework. 
 
@@ -11,17 +11,16 @@ The features include:
 2. Object Orientation
 3. Encourages Agile development
 4. Has an Object Relational Mapper (ORM) built in called ZORM
-5. Has a templating engine accessed through a class called ZView
+5. Has a templating engine accessed through a class called ZView and more recently implements Jinja like templating with PHP twig
 6. Templating engines allows some logic in the html view file such as looping through an array with the option of including raw php in the markup 
-7. URL rewriting allowing for clean urls, and sub folder installation
-8. Tested with apache, and currently being tested on lighttpd
-9. Works on Unix, unix-like and Windows Operating Systems
+7. URL rewriting allowing for clean urls, and sub folder installation with the inclusion now of Routes through the ZRoute class
+8. Works on Unix, unix-like and Windows Operating Systems
 
 Requirements
 =============
 1. Apache
-2. PHP5.4+
-3. Some knowledge of PHP (expert knowledge isnt required)
+2. PHP5.4+ preferrably PHP7
+3. Some knowledge of PHP and MVC framework development (expert knowledge isnt required)
 
 Creating your first application follow these steps (Simple as 1-2-3):
 ======================================================================

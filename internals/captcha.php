@@ -1,10 +1,12 @@
 <?php
-
 /**
 * @package Zedek Framework
-* @subpackage Interals zedek internal class
-* @version 4
-* @author djynnius <djynnius@gmail.com> Ikakke Ikpe
+* @version 5
+* @subpackage ZConfig zedek configuration class
+* @author defestdude <defestdude@gmail.com> Donald Mkpanam
+* @author djyninus <psilent@gmail.com> Ikakke Ikpe
+* @link https://github.com/djynnius/zedek
+* @link https://github.com/djynnius/zedek.git
 */
 
 namespace __zf__;
