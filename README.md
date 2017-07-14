@@ -1,4 +1,4 @@
-Zedek 4
+Zedek 5
 ========
 
 Zedek Web Development Framework version 5
