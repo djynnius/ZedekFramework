@@ -19,7 +19,7 @@ The features include:
 Requirements
 =============
 1. Apache
-2. PHP5.4+ preferrably PHP7
+2. PHP5.6+ preferrably PHP7
 3. Some knowledge of PHP and MVC framework development (expert knowledge isnt required)
 
 Creating your first application follow these steps (Simple as 1-2-3):
@@ -28,10 +28,6 @@ Creating your first application follow these steps (Simple as 1-2-3):
 Download this repo and extract so you have a folder named "zedek" or what ever else you want to call it in a non web accessible folder (one of the security features of Zedek Framework). You can either download the zip file or easier clone 
 
 	git clone https://github.com/djynnius/ZedekFramework.git
-
-For those comfortable with composer you can install with the command:
-
-    composer create-project openimo/zedekframework
 
 set persmissions to allow reading and writing to zedekframework folder
 
@@ -52,18 +48,18 @@ You can now view your application on localhost:8585
 Hello World!
 ============
 
-Zedek 4 is built to map urls to engine directories and methods of the class CController (for current controller) in a style:
+Zedek 5 is built to map urls to engine directories and methods of the class CController (for current controller) in a style:
 
     http://localhost:8585/controller/method/id/?arg1=val1&arg2=val2...$argn=valn
 
 (this mapping is handled primarily by a class named URLMaper) 
 
-No routing files are required.
+No routing files are required, you can however ovveride this using the new ZAlias class in routing files
 
-The MVC is made literal within the engine folder. 
+The MVC is made literal within the engine folder.
 
 1. To create a new app named foo create a folder with the name foo within the engines folder.
-2. within this create a class file "controller.php".
+2. Within this create a class file "controller.php".
 
 next within the controller file enter the following code inside your php tags
 

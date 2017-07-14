@@ -44,7 +44,12 @@ class CController extends ZController{
 	*/
 
 	function index(){
-		self::render("zedek.html", []);
+		if(phpversion() < 5.6){
+			self::display("index@ztheme");
+		} else{
+			self::render("zedek.html", []);	
+		}
+		
 	}
 
 	function foo($args){

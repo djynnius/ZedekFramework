@@ -33,7 +33,7 @@ class ZURI extends Zedek{
 		//check if using a sub folder
 		if(!is_null($subpath)){
 			$url = explode(zsub, $url);
-			$url = $url[1];
+			$url = @$url[1];
 		}
 		$this->url = $url;
 		$this->mvc($url);
