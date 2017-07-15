@@ -31,7 +31,7 @@ class ZAlias{
 
 	public static function aliasRoute($routes){
 		foreach($routes as $i=>$uri){
-			preg_match("#".$i."#", $_SERVER['REQUEST_URI'], $parts);
+			preg_match("`".$i."`", $_SERVER['REQUEST_URI'], $parts);
 			if(count($parts) > 0){
 				$uri = explode('/', $uri);
 				$controller = $uri[0];

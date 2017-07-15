@@ -1,8 +1,9 @@
 <?php
 
-//print_r($_SERVER['argv']);
+$app = $_SERVER['argv'][0];
+$port = isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : false;
 
-switch($_SERVER['argv']['1']){
-	default:
-		shell_exec("php -S localhost:8585 -t ./public ./public/zedek");
-}
+$io = 
+	$port == false ? 
+		shell_exec("php -S localhost:8585 -t ./public ./public/zedek") : 
+		shell_exec("php -S localhost:{$port} -t ./public ./public/zedek");
