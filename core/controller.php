@@ -76,7 +76,7 @@ abstract class ZController extends Zedek{
 
 	#shorter method for rendering
 	final protected function render($arg1=null, $arg2=null, $theme=false){
-		if(phpversion() < 7){
+		if(phpversion() < 5.6){
 			self::zrender($arg1, $arg2, $theme);
 		}elseif($this->config->get('templating')->engine == "twig"){
 			$jinja = ZTwig::render($arg1, $arg2);

@@ -11,6 +11,8 @@
 
 namespace __zf__;
 
-$route['^/@(?P<bar>[a-z]+)$'] = "default/foo/";
-$route['^/search/flights/(?P<origin>[a-z]+)/(?P<destination>[a-z]+)$'] = "default/foo/";
+#$route['^/search/flights/(?P<origin>[a-z]+)/(?P<destination>[a-z]+)$'] = "default/foo/";
+
+$route['^.*/@(?P<bar>[a-z]+)$'] = "default/foo/";
+
 
