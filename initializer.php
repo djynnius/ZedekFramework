@@ -15,7 +15,13 @@ namespace __zf__;
 //for sub domain session management
 #ini_set('session.cookie_domain', '.zedekframework.com'); 
 //set path to save session
-#ini_set('session.save_path', __dir__."/sessions"); 
+$wsgi = strtolower($_SERVER['SERVER_SOFTWARE']);
+if(strpos($wsgi, "php") === false){
+	ini_set('session.save_path', __dir__."/sessions"); 	
+} else {
+	ini_set('session.save_path', __dir__."/sessions/wsgi"); 
+}
+
 
 #explicitly start session
 session_start();
