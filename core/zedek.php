@@ -19,8 +19,7 @@ abstract class Zedek{
 	* @param string $controller
 	*/
 	static function import($controller = "default"){
-		$s = new ZSites;
-		$engine = $s->getEngine($_SERVER["SERVER_NAME"]);
+		$engine = zroot."engines/";
 		try{
 			if(file_exists($engine."/{$controller}/controller.php")){
 				require_once $engine."{$controller}/controller.php";

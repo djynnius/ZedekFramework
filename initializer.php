@@ -35,7 +35,6 @@ Z::required("uri");
 Z::required("controller");
 Z::required("orm");
 Z::required("config");
-Z::required("sites");
 Z::required("alias");
 
 Z::importInternals();

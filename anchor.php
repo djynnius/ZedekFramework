@@ -16,8 +16,7 @@ require_once "initializer.php";
 #instantiate uri maper 
 $uri = new ZURI;
 
-$s = new ZSites;
-$engine = $s->getEngine();
+$engine = zroot."engines/";
 
 ZAlias::aliasRoute(ZAlias::getRoutes());
 

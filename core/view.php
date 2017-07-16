@@ -195,8 +195,7 @@ class ZView extends Zedek{
 			$view = empty($this->view) ? $method : $this->view;
 		}
 
-		$s = new ZSites;
-		$engine = $s->getEngine();
+		$engine = zroot."engines/";;
 		$viewFile = $controller == "ztheme" ? 
 			zweb."themes/{$this->theme}/{$view}.html" : 
 			$engine."{$controller}/views/{$view}.html";
@@ -226,8 +225,7 @@ class ZView extends Zedek{
 			return $theme;
 		};
 		$conf = new ZConfig;
-		$sites = new ZSites;
-		$theme = isset($sites->get($_SERVER["SERVER_NAME"])->theme) ? $sites->get($_SERVER["SERVER_NAME"])->theme : $conf->get("theme");
+		$theme =  $conf->get("theme");
 		return (file_exists(zweb."themes/".$theme."/")) ? $theme : "default";
 	}
 
