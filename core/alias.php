@@ -22,8 +22,10 @@ class ZAlias{
 		$routes = [];
 
 		foreach($engines as $engine){
-			require_once zroot."engines/".$engine."/routes.php";
-			$routes = array_merge($routes, $route);
+			if(is_file(zroot."engines/".$engine."/routes.php")){
+				require_once zroot."engines/".$engine."/routes.php";
+				$routes = array_merge($routes, $route);	
+			}
 		}
 
 		return $routes;	
