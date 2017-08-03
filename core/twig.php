@@ -31,7 +31,7 @@ class ZTwig extends Zedek{
 		$jinjaTemplates = self::setTemplatePath();
 		$twig = new JinjaCache($jinjaTemplates, [
 		    'cache' => zroot.'cache',
-		    'auto_reload' => true, 
+		    'auto_reload' => true,
 		]);
 		return $twig;
 	}
@@ -42,10 +42,21 @@ class ZTwig extends Zedek{
 		$dict = array_merge($in, $dict);
 		$uri = new ZURI;
 		$split = explode(".", $view);
-		if(is_file($view)){$view  = $view; }
-		if(is_file(zroot."engines/{$uri->controller}/views/{$view}.html")){$view = "{$uri->controller}/views/{$view}.html";}
-		if(count($split) == 2 && is_file(zroot."engines/{$split[0]}/views/{$split[1]}.html")){$view = "{$split[0]}/views/{$split[1]}.html";}
-		return self::jinja()->render($view, $dict);
+
+		switch($view){
+			case is_file(zroot."engines/{$view}"):
+				break;
+			case is_file(zroot."engines/{$uri->controller}/views/{$view}.html"):
+				$view = "{$uri->controller}/views/{$view}.html";
+				break;
+			case count($split) == 2 && is_file(zroot."engines/{$split[0]}/views/{$split[1]}.html"):
+				$view = "{$split[0]}/views/{$split[1]}.html";
+				break;
+			default:
+				return self::jinja()->render('404.html', $dict);
+		}
+
+			return self::jinja()->render($view, $dict);
 	}
 
 	static private function checkValidJinia($arg1, $arg2){
@@ -75,8 +86,7 @@ class ZTwig extends Zedek{
 		} else {
 			return is_file(zroot.$path."/".$html) ? $html : "404.html";
 		}
-		
-		
+
+
 	}
 }
-
