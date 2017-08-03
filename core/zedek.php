@@ -120,6 +120,31 @@ class Z extends Zedek{
 		}
 		
 	}
+
+	static public function template(){
+		$config = new ZConfig;
+		$uri = new ZURI;
+
+		$global = new ZConfig("global");
+		$version = new ZConfig("version");
+
+		$a = array(
+			'app'=>$global->get("app"), 
+			'controller'=>is_null($uri->controller) ? "" : $uri->controller, 
+			'method'=>is_null($uri->method) ? "" : $uri->method, 
+			'footer'=>"Zedek Framework. Version".$config->get("version"), 
+			'version'=> $version->get("version"), 
+			'sub_version'=> "Zedek Framework " . $version->get("sub_version"), 
+			'dir'=> $uri->dir, 
+			'common'=> $uri->dir."/themes/common", 
+			'this_year'=> strftime("%Y", time()), 
+			'this_month'=> strftime("%B", time()), 
+			'today'=> strftime("%A, %B %d, %Y", time()), 
+			'now'=> strftime("%Y-%m-%d %H:%M:%S", time()), 
+		);
+		return $a;
+	}
+
 }
 
 

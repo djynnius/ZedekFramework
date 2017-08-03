@@ -36,21 +36,16 @@ class ZTwig extends Zedek{
 		return $twig;
 	}
 
-	static function render($arg1=false, $arg2=[]){
-		$args = self::checkValidJinia($arg1, $arg2);
-
-		$html = isset($args[0]) ? $args[0] : "404.html";
-		$html = self::replace404($html);
-		
-		$dict = isset($args[1]) ? $args[1] : [];
-		$tmp = new ZView();
-		$dict = array_merge($dict, $tmp->template());
-		
-		$tmp = new ZConfig("tpl");
-		$tmp = (array)$tmp->config;
-		$dict = array_merge($dict, $tmp);
-
-		return count($args) == 0 ? false : self::jinja()->render($html, $dict);
+	static function render($view=false, $dict){
+		$dict = (array)$dict;
+		$in = Z::template();
+		$dict = array_merge($in, $dict);
+		$uri = new ZURI;
+		$split = explode(".", $view);
+		if(is_file($view)){$view  = $view; }
+		if(is_file(zroot."engines/{$uri->controller}/views/{$view}.html")){$view = "{$uri->controller}/views/{$view}.html";}
+		if(count($split) == 2 && is_file(zroot."engines/{$split[0]}/views/{$split[1]}.html")){$view = "{$split[0]}/views/{$split[1]}.html";}
+		return self::jinja()->render($view, $dict);
 	}
 
 	static private function checkValidJinia($arg1, $arg2){
@@ -71,7 +66,17 @@ class ZTwig extends Zedek{
 		$config = new ZConfig;
 		$path = $config->get("templating")->path;
 		$path = rtrim($path, "/");
-		return is_file(zroot.$path."/".$html) ? $html : "404.html";
+		if($path == "engines"){
+			$html = explode(".", $html);
+			$html[0] = $html[0]."/views";
+			$html = join($html, "/");
+			$html = $html.".html";
+			return is_file(zroot.$path."/".$html) ? $html : "404.html";
+		} else {
+			return is_file(zroot.$path."/".$html) ? $html : "404.html";
+		}
+		
+		
 	}
 }
 

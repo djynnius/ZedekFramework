@@ -146,21 +146,13 @@ class ZView extends Zedek{
 	}
 
 	/**
-	* @return string html from php to output on page: themed
+	* @return string html from php to output on page
 	*/	
 	public function dynamic($controller=false){
 		$controller = empty($this->uri->controller) || is_null($this->uri->controller) ? "default" : $this->uri->controller;		
 		$view = empty($this->uri->method) || is_null($this->uri->method) ? "index" : $this->uri->method;
 		$view = is_string($this->view) ? $this->view : $view;
-
-		$header = $this->header;
-		$footer = $this->footer;		
-
-		$__zf__header = self::display($header);
-		$__zf__footer = self::display($footer);
 		
-		print $__zf__header;
-
 		/*Allows for calling of templating information using the $self->key to return value*/
 		$self = new \stdClass();
 		foreach($this->template as $i=>$var){
@@ -175,9 +167,6 @@ class ZView extends Zedek{
 		} else {
 
 		}
-
-
-		print $__zf__footer;		
 	}
 
 	/**

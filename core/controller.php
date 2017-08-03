@@ -80,7 +80,8 @@ abstract class ZController extends Zedek{
 			self::zrender($arg1, $arg2, $theme);
 		}elseif($this->config->get('templating')->engine == "twig"){
 			$jinja = ZTwig::render($arg1, $arg2);
-			print $jinja == false ? self::template($arg1, $arg2, $theme)->render() : $jinja;
+			print  $jinja;
+			//print $jinja == false ? self::template($arg1, $arg2, $theme)->render() : $jinja;
 		} else {
 			print self::template($arg1, $arg2, $theme)->render();
 		}

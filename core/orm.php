@@ -565,6 +565,7 @@ if(phpversion() >= "5.4"){
 		}
 
 		public function sqlite($db){
+			$db = $db == "default" || $db == "app" || $db == "zedek" ? zroot."databases/app.db" : $db;
 			return new PDO("sqlite:" . $db);
 		}
 
