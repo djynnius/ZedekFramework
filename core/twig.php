@@ -43,6 +43,10 @@ class ZTwig extends Zedek{
 		$uri = new ZURI;
 		$split = explode(".", $view);
 
+		if(empty($view)){
+				return self::jinja()->render('404.html', $dict);
+		}
+
 		switch($view){
 			case is_file(zroot."engines/{$view}"):
 				break;
