@@ -1,9 +1,8 @@
 <?php
 /**
 * @package Zedek Framework
-* @version 5
-* @subpackage ZConfig zedek configuration class
-* @author defestdude <defestdude@gmail.com> Donald Mkpanam
+* @subpackage ZView zedek themeing engine
+* @version 4
 * @author djyninus <psilent@gmail.com> Ikakke Ikpe
 * @link https://github.com/djynnius/zedek
 * @link https://github.com/djynnius/zedek.git
@@ -81,7 +80,7 @@ class ZView extends Zedek{
 	/**
 	* @return array basic templating which may be overwritten
 	*/
-	public function template(){
+	private function template(){
 		$config = new ZConfig;
 		$uri = new ZURI;
 
@@ -146,13 +145,21 @@ class ZView extends Zedek{
 	}
 
 	/**
-	* @return string html from php to output on page
+	* @return string html from php to output on page: themed
 	*/	
 	public function dynamic($controller=false){
 		$controller = empty($this->uri->controller) || is_null($this->uri->controller) ? "default" : $this->uri->controller;		
 		$view = empty($this->uri->method) || is_null($this->uri->method) ? "index" : $this->uri->method;
 		$view = is_string($this->view) ? $this->view : $view;
+
+		$header = $this->header;
+		$footer = $this->footer;		
+
+		$__zf__header = self::display($header);
+		$__zf__footer = self::display($footer);
 		
+		print $__zf__header;
+
 		/*Allows for calling of templating information using the $self->key to return value*/
 		$self = new \stdClass();
 		foreach($this->template as $i=>$var){
@@ -167,6 +174,9 @@ class ZView extends Zedek{
 		} else {
 
 		}
+
+
+		print $__zf__footer;		
 	}
 
 	/**
@@ -184,7 +194,8 @@ class ZView extends Zedek{
 			$view = empty($this->view) ? $method : $this->view;
 		}
 
-		$engine = zroot."engines/";;
+		$s = new ZSites;
+		$engine = $s->getEngine();
 		$viewFile = $controller == "ztheme" ? 
 			zweb."themes/{$this->theme}/{$view}.html" : 
 			$engine."{$controller}/views/{$view}.html";
@@ -214,7 +225,8 @@ class ZView extends Zedek{
 			return $theme;
 		};
 		$conf = new ZConfig;
-		$theme =  $conf->get("theme");
+		$sites = new ZSites;
+		$theme = isset($sites->get($_SERVER["SERVER_NAME"])->theme) ? $sites->get($_SERVER["SERVER_NAME"])->theme : $conf->get("theme");
 		return (file_exists(zweb."themes/".$theme."/")) ? $theme : "default";
 	}
 

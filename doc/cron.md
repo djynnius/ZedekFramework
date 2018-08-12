@@ -1,0 +1,1 @@
+(crontab -l ; echo "#Cron Title"; echo "0 9 * * 1-5 echo hello") | crontab

@@ -1,7 +1,7 @@
-Zedek 5
+Zedek 6
 ========
 
-Zedek Web Development Framework version 5
+Zedek Web Development Framework version 6
 
 This is a PHP web development framework. 
 
@@ -11,16 +11,16 @@ The features include:
 2. Object Orientation
 3. Encourages Agile development
 4. Has an Object Relational Mapper (ORM) built in called ZORM
-5. Has jinja like templating with twig
+5. Has a templating engine accessed through a class called ZView
 6. Templating engines allows some logic in the html view file such as looping through an array with the option of including raw php in the markup 
 7. URL rewriting allowing for clean urls, and sub folder installation
-8. Routing implementation
+8. Tested with apache, and currently being tested on lighttpd
 9. Works on Unix, unix-like and Windows Operating Systems
 
 Requirements
 =============
 1. Apache
-2. PHP5.6+
+2. PHP5.4+
 3. Some knowledge of PHP (expert knowledge isnt required)
 
 Creating your first application follow these steps (Simple as 1-2-3):
@@ -45,7 +45,7 @@ on windows replace php with the path to the php binary - example:
 	c:\xampp\php\php.exe zedek start
 
 
-You are done!
+You are done! view your app on localhost:8585
 
 You can now view your application on localhost:8585
 
@@ -53,9 +53,9 @@ You can now view your application on localhost:8585
 Hello World!
 ============
 
-Zedek 3 is built to map urls to engine directories and methods of the class CController (for current controller) in a style:
+Zedek 6 is built to map urls to engine directories and methods of the class CController (for current controller) in a style:
 
-    http://localhost:8080/controller/method/id/?arg1=val1&arg2=val2...$argn=valn
+    http://localhost:8585/controller/method/id/?arg1=val1&arg2=val2...$argn=valn
 
 (this mapping is handled primarily by a class named URLMaper) 
 
@@ -77,7 +77,7 @@ next within the controller file enter the following code inside your php tags
     }
     
 
-3. Browse to http://localhost:8080/foo/bar
+3. Browse to http://localhost:8585/foo/bar
 
 and you should see your hello world message!
 

@@ -87,11 +87,8 @@ class Router{
 		if(empty($path)){
 			define("zsub", "");	
 		} else {
-			$path = "/".$path."/";
-			$path = self::$isWindows ? str_replace("\\", "/", $path) : $path;
-			define("zsub", $path);
+			define("zsub", "/".$path."/");
 		}
-
-		
+	
 	}
 }

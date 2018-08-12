@@ -1,30 +1,16 @@
 <?php 
-/**
-* @package Zedek Framework
-* @version 5
-* @subpackage ZConfig zedek configuration class
-* @author defestdude <defestdude@gmail.com> Donald Mkpanam
-* @author djyninus <psilent@gmail.com> Ikakke Ikpe
-* @link https://github.com/djynnius/zedek
-* @link https://github.com/djynnius/zedek.git
-*/
 
 namespace __zf__;
 
 class _Auth {
 	
 	static public $handle = "email";
-	static public $pwd = "password";
 	static public $table = "users";
 	static public $tableColumns = [];
 	static public $user_id;
 
 	static function handle($handle){
 		self::$handle = $handle;
-	}
-
-	static function pwd($pwd){
-		self::$pwd = $pwd;
 	}
 
 	static function table($table){
@@ -35,13 +21,29 @@ class _Auth {
 		self::$tableColumns = $c;
 	}
 
-	static function authorized($sess_var=null){
+	static function createDB(){
+		$cols = self::$tableColumns;
+		$cols["password"] = "text";
+
+		ZORM::create(ZORM::table(self::$table), $cols);
+		ZORM::create("roles", ['role'=>"varchar(30)", 'description'=>"text"]);
+		ZORM::create("users_roles", ['role_id'=>"int", 'user_id'=>"int"]);
+
+		ZORM::table("roles");
+		ZORM::insert(['role'=>"Admin", 'description'=>"App manager"]);
+
+		ZORM::table("users_roles");
+		ZORM::insert(['role_id'=>1, 'user_id'=>1]);
+
+	}
+
+	static function authorized($sess_var){
 		return isset($sess_var) ? true : false;
 	}
 
-	static function restricted($sess_var=null, $redirect=-1){
+	static function restricted($sess_var){
 		if(!isset($sess_var)){
-			Z::redirect($redirect);
+			Z::redirect();
 			return false;
 		}		
 	}
@@ -82,25 +84,22 @@ class _Auth {
 		if(!_Form::same($newPwd, $confirmPwd)){return false;}
 
 		ZORM::table(self::$table);
-		if(ZORM::exists($id)){
+		if(ZORM::exists(['id'=>$id, 'password'=>_Form::encrypt($oldPwd)])){
 			$user = ZORM::record($id);
-			$pwd = self::$pwd;
-			if(_Bcrypt::compare($oldPwd, $user->$pwd)){
-				$user->$pwd = _Bcrypt::hash($newPwd);
-				$user->commit();			
-			}
+			$user->password = _Form::encrypt($newPwd);
+			$user->commit();
+		} else {
+			return false;
 		}
-		return false;
 	}	
 
 	static function resetPassword($id, $password){
 		$id = (integer)$id;
 		ZORM::table(self::$table);
 
-		if(ZORM::exists($id)){
-			$pwd = self::$pwd;
+		if(ZORM::exists(['id'=>$id, 'password'=>_Form::encrypt($oldPwd)])){
 			$user = ZORM::record($id);
-			$user->$pwd = _Bcrypt::hash($password);
+			$user->password = _Form::encrypt($password);
 			$user->commit();
 		} else {
 			return false;
@@ -110,17 +109,16 @@ class _Auth {
 	static function login($handle, $password){
 		$handle = _Form::prepare($handle);
 		$password = trim($password);
+		$password = _Form::encrypt($password);
 
 		ZORM::table(self::$table);
-		if(ZORM::exists(self::$handle, $handle)){
-			$user = ZORM::record(self::$handle, $handle);
-			$pwd = self::$pwd;
-			if(_Bcrypt::compare($password, $user->$pwd)){
-				self::$user_id = $user->id;
-				return $user;				
-			}
+		if(ZORM::exists([self::$handle=>$handle, 'password'=>$password])){
+			$user = ZORM::row(self::$handle, $handle);
+			self::$user_id = $user->id;
+			return $user;
+		} else {
+			return false;
 		}
-		return false;
 	}
 
 	static function setLastLogin(){
@@ -134,28 +132,4 @@ class _Auth {
 		session_destroy();
 		session_start();
 	}
-
-	function __init__($username="admin", $password="zedek", $email='admin@app.io', $mobile='+1234567890'){
-		ZORM::create("zf_users", [
-			'username'=>"varchar(30)",
-			'email'=>"varchar(30)",
-			'mobile'=>"varchar(30)",
-			'password'=>"text",
-			'role'=>"int",
-			'last_login'=>"datetime",
-		]);
-		ZORM::table("zf_users");
-		if(ZORM::count() == 0){
-			ZORM::add([
-				'username'=>_Form::prepare($username),
-				'password'=>_Bcrypt::hash($password),
-				'email'=>_Form::prepare($email),
-				'mobile'=>_Form::prepare($mobile),
-				'role'=>1,
-				'created_by'=>0
-			]);			
-		}
-
-	}
-
 }

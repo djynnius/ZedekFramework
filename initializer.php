@@ -1,13 +1,13 @@
 <?php
 /**
 * @package Zedek Framework
-* @version 5
-* @subpackage ZConfig zedek configuration class
-* @author defestdude <defestdude@gmail.com> Donald Mkpanam
+* @subpackage ZController zedek super controller class
+* @version 4
 * @author djyninus <psilent@gmail.com> Ikakke Ikpe
 * @link https://github.com/djynnius/zedek
 * @link https://github.com/djynnius/zedek.git
 */
+
 namespace __zf__;
 
 //Session management
@@ -15,13 +15,7 @@ namespace __zf__;
 //for sub domain session management
 #ini_set('session.cookie_domain', '.zedekframework.com'); 
 //set path to save session
-$wsgi = strtolower($_SERVER['SERVER_SOFTWARE']);
-if(strpos($wsgi, "php") === false){
-	ini_set('session.save_path', __dir__."/sessions"); 	
-} else {
-	ini_set('session.save_path', __dir__."/sessions/wsgi"); 
-}
-
+#ini_set('session.save_path', __dir__."/sessions"); 
 
 #explicitly start session
 session_start();
@@ -41,7 +35,7 @@ Z::required("uri");
 Z::required("controller");
 Z::required("orm");
 Z::required("config");
-Z::required("alias");
+Z::required("sites");
 
 Z::importInternals();
 Z::importModels();
@@ -50,7 +44,3 @@ $config = new ZConfig;
 ini_set('display_errors', $config->get("error")); //off out the box - preferred for production
 ini_set('log_errors', $config->get("log_errors")); //on out the box - may be turned on in development
 ini_set('error_log', zroot."errors/errors.log"); //You may wish to specify another path
-
-if($config->get("templating")->engine == "twig"){
-	Z::required("twig");
-}

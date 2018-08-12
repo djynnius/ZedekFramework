@@ -1,9 +1,8 @@
 <?php
 /**
 * @package Zedek Framework
-* @version 5
-* @subpackage ZConfig zedek configuration class
-* @author defestdude <defestdude@gmail.com> Donald Mkpanam
+* @subpackage ZURI Zedek URI Mapping class
+* @version 4
 * @author djyninus <psilent@gmail.com> Ikakke Ikpe
 * @link https://github.com/djynnius/zedek
 * @link https://github.com/djynnius/zedek.git
@@ -33,7 +32,7 @@ class ZURI extends Zedek{
 		//check if using a sub folder
 		if(!is_null($subpath)){
 			$url = explode(zsub, $url);
-			$url = @$url[1];
+			$url = $url[1];
 		}
 		$this->url = $url;
 		$this->mvc($url);
@@ -43,7 +42,7 @@ class ZURI extends Zedek{
 
 	private function serverInfo(){
 		$this->server = @$_SERVER['SERVER_NAME'];
-		$this->port = @	$_SERVER['SERVER_PORT'];
+		$this->port = @$_SERVER['SERVER_PORT'];
 		$this->http = "http://{$this->server}:{$this->port}";
 		$this->https = "https://{$this->server}:{$this->port}";		
 	}

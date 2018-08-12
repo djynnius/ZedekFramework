@@ -1,12 +1,10 @@
 <?php
 /**
-* @package Zedek Framework
-* @version 5
-* @subpackage ZConfig zedek configuration class
-* @author defestdude <defestdude@gmail.com> Donald Mkpanam
+* @package Sokoro Object Relational Mapper (ORM)
+* @version 1
 * @author djyninus <psilent@gmail.com> Ikakke Ikpe
-* @link https://github.com/djynnius/zedek
-* @link https://github.com/djynnius/zedek.git
+* @link https://github.com/djynnius/Sokoro
+* @link https://github.com/djynnius/Sokoro.git
 */
 namespace __zf__;
 use \PDO as PDO;
@@ -113,6 +111,8 @@ if(phpversion() >= "5.4"){
 		* @return PDO::query() object
 		*/
 		static function execute($sql){
+			//var_dump(self::cxn());
+			//print $sql;
 			return self::cxn()->query($sql);
 		}
 
@@ -236,7 +236,7 @@ if(phpversion() >= "5.4"){
 		* Adds new db record 
 		* @param array 
 		*/
-		static function add($values=[]){
+		static function add($values=[], $echo=false){
 
 			$values["created_at"] = strftime("%Y-%m-%d %H:%M:%S", time());
 
@@ -255,6 +255,7 @@ if(phpversion() >= "5.4"){
 			$sql .= " ) VALUES ( ";
 			$sql .= join(", ", $vals);
 			$sql .= " )";
+			print $echo == false ? '' : $sql;
 			self::execute($sql);
 		}
 
@@ -560,25 +561,30 @@ if(phpversion() >= "5.4"){
 			$this->pdo = self::$adapter($db, $user, $pass, $host, $port);
 		}
 
-		public function mysql($db, $user, $pass, $host, $port=3306){
+		public function mysql($db, $user, $pass, $host='localhost', $port=3306){
 			return new PDO("mysql:host={$this->host};port={$this->port};dbname={$this->db}", $this->user, $this->pass);
 		}
 
 		public function sqlite($db){
-			$db = $db == "default" || $db == "app" || $db == "zedek" ? zroot."databases/app.db" : $db;
-			return new PDO("sqlite:" . $db);
+			if($this->db == "default"){
+				$this->db = zroot."databases/zedek.db";
+			} else {
+				$this->db = zroot."databases/{$this->db}";
+			}
+			return new PDO("sqlite:" . $this->db);
 		}
 
 		public function oracle($db, $user, $pass, $host, $port){}
 
-		public function postgre($db, $user, $pass, $host, $port=5432){
-			return $port == 5432 ? new PDO("pgsql:dbname={$this->db};host={$this->host};user={$this->user};password={$this->pass}") : new PDO("pgsql:dbname={$this->db};host={$this->host};port={$this->port};user={$this->user};password={$this->pass}");
-		}
+		public function postgre($db, $user, $pass, $host, $port){}
 
-		public function mssql($db, $user, $pass, $host, $port=1433){
-			$pdo = new PDO("dblib:host={$this->host}:{$this->port};dbname={$this->db}", $this->user, $this->pas);
-			$pdo->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
-			return $pdo;
+		/**
+		* uses dblib requiring sybase, freetds-common 
+		*/
+		public function mssql($db, $user, $pass, $host='127.0.0.1', $port=1433){
+			$mspdo = PDO("dblib:host={$this->host}:{$this->port};dbname={$this->db}", $this->user, $this->pass);
+			$mspdo->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
+			return $mspdo;
 		}
 
 		public function query($sql){
