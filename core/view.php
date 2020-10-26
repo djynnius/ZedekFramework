@@ -240,13 +240,12 @@ class ZView extends Zedek{
 		
 		$view = preg_replace_callback(
 			$re, 
-			create_function('$m', 
-				'
+			function($m){ 
 				global $__zf__core__view__template;
 				$tmp = $__zf__core__view__template;
 				$ak = array_keys($tmp);
 				return in_array("{$m[1]}", $ak) && gettype($tmp["{$m[1]}"]) == "string" ?  $tmp["{$m[1]}"] : $m[0]; 				
-			'), 
+			}, 
 			$view);	
 		return $view;
 	}
@@ -316,11 +315,11 @@ class ZView extends Zedek{
 					$_re = "/{{\s*".$all[2][$j]."\.([a-zA-Z0-9_-]+)\s*}}/";	
 					$rep = "$1";
 					//$o .= preg_replace($_re, $_tmp["$1"] , $all[3][$j]);
-					$o .= preg_replace_callback($_re, create_function('$m', '
+					$o .= preg_replace_callback($_re, function($m) {
 						global $__zf__zv__tmp;
 						$_tmp = $__zf__zv__tmp;
 						return isset($_tmp[$m[1]]) ? $_tmp[$m[1]] : "";
-					') , $all[3][$j]);
+					} , $all[3][$j]);
 				}
 				$view = str_replace($all[0][$j], $o, $view);
 			} else {
