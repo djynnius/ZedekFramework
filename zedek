@@ -5,7 +5,7 @@ $port = isset($_SERVER['argv']['1']) ? $_SERVER['argv']['1'] : 8585;
 $root = isset($_SERVER['argv']['2']) ? $_SERVER['argv']['1'] : "/public";
 
 if(is_dir(__dir__.$root) && is_file(__dir__.$root."/zedek")){
-	shell_exec("php -S localhost:{$port} -t " . __dir__.$root . " " . __dir__.$root . "/zedek");
+	shell_exec("php -S 0.0.0.0:{$port} -t " . __dir__.$root . " " . __dir__.$root . "/zedek");
 } else {
 	print "Could not start WSGI -- incorrect parameters set for starting zedek\r\n";
 }

@@ -77,7 +77,7 @@ next within the controller file enter the following code inside your php tags
     }
     
 
-3. Browse to http://localhost:8080/foo/bar
+3. Browse to http://localhost:8585/foo/bar
 
 and you should see your hello world message!
 
