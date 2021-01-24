@@ -36,7 +36,7 @@ class ZTwig extends Zedek{
 		return $twig;
 	}
 
-	static function render($view=false, $dict){
+	static function render($view, $dict){
 		$dict = (array)$dict;
 		$in = Z::template();
 		$dict = array_merge($in, $dict);

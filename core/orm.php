@@ -492,7 +492,7 @@ if(phpversion() >= "5.4"){
 
 		public $record;
 
-		function __construct($val=false, $col, $table){
+		function __construct($val, $col, $table){
 			$sql = "SELECT * FROM `{$table}` WHERE `{$col}`='{$val}' ORDER BY id DESC LIMIT 1";
 			$this->record = self::execute($sql)->fetchObject();
 		}
