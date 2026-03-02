@@ -10,12 +10,10 @@
 */
 
 namespace __zf__;
-use \Twig_Loader_Filesystem as JinijaTemplateLoader;
-use \Twig_Environment as JinjaCache;
+use \Twig\Loader\FilesystemLoader as JinijaTemplateLoader;
+use \Twig\Environment as JinjaCache;
 
-require_once phpversion() < 7 ? zroot."core/twig/v1.34.4/autoload.php" : zroot."core/twig/autoload.php";
 require_once zroot."core/view.php";
-$loader = new \Twig_Loader_Filesystem(zroot."templates");
 
 class ZTwig extends Zedek{
 

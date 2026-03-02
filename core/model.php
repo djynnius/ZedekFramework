@@ -24,7 +24,7 @@ abstract class ZModel{
 	function UTF8EncodeRecords($records){
 		foreach($records as $i=>$record){
 			foreach($record as $j=>$cell){
-				$records[$i][$j] = utf8_encode($cell);
+				$records[$i][$j] = mb_convert_encoding($cell, 'UTF-8', 'ISO-8859-1');
 			}
 		}
 		return $records;

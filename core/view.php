@@ -98,9 +98,9 @@ class ZView extends Zedek{
 			'dir'=> $uri->dir, 
 			'theme'=> $uri->dir."/themes/".$this->theme, 
 			'common'=> $uri->dir."/themes/common", 
-			'this_year'=> strftime("%Y", time()), 
-			'this_month'=> strftime("%B", time()), 
-			'today'=> strftime("%A, %B %d, %Y", time()), 
+			'this_year'=> date("Y"),
+			'this_month'=> date("F"),
+			'today'=> date("l, F d, Y"),
 		);
 		$b = $this->configTemplate();
 		$a = array_merge($a, $b);

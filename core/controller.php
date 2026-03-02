@@ -12,8 +12,10 @@
 namespace __zf__;
 use \Exception as Exception;
 abstract class ZController extends Zedek{
-	
+
 	public $uri;
+	public $app;
+	public $config;
 
 	function __construct(){
 		$this->uri = new ZURI;
@@ -41,7 +43,6 @@ abstract class ZController extends Zedek{
 	*/
 	final static public function create($name, $bool=0, $table=null){
 		$args = func_num_args();
-		$args = count($args);
 		switch($args){
 			case 1:
 				$code = file_get_contents(zroot."templates/controller.tmp");				
@@ -76,9 +77,7 @@ abstract class ZController extends Zedek{
 
 	#shorter method for rendering
 	final protected function render($arg1=null, $arg2=null, $theme=false){
-		if(phpversion() < 5.6){
-			self::zrender($arg1, $arg2, $theme);
-		}elseif($this->config->get('templating')->engine == "twig"){
+		if($this->config->get('templating')->engine == "twig"){
 			$jinja = ZTwig::render($arg1, $arg2);
 			print  $jinja;
 			//print $jinja == false ? self::template($arg1, $arg2, $theme)->render() : $jinja;

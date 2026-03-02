@@ -94,7 +94,7 @@ class _Auth {
 	}	
 
 	static function resetPassword($id, $password){
-		$id = (integer)$id;
+		$id = (int)$id;
 		ZORM::table(self::$table);
 
 		if(ZORM::exists($id)){

@@ -11,8 +11,6 @@
 namespace __zf__;
 use \PDO as PDO;
 
-if(phpversion() >= "5.4"){
-
 	/*Class definition begins*/
 	Class ZORM{
 
@@ -65,7 +63,7 @@ if(phpversion() >= "5.4"){
 		* @return PDO::rollback()
 		*/
 		static function rollbackTransaction(){
-			return self::cxn()->commit();
+			return self::cxn()->rollBack();
 		}
 
 
@@ -238,7 +236,7 @@ if(phpversion() >= "5.4"){
 		*/
 		static function add($values=[]){
 
-			$values["created_at"] = strftime("%Y-%m-%d %H:%M:%S", time());
+			$values["created_at"] = date("Y-m-d H:i:s");
 
 			$cols = array_keys($values);
 			$vals = array_values($values);
@@ -319,7 +317,7 @@ if(phpversion() >= "5.4"){
 		* @return string timestamp
 		*/
 		private function updated_at(){
-			return strftime("%Y-%m-%d %H:%M:%S", time());
+			return date("Y-m-d H:i:s");
 		}
 
 		/**
@@ -646,5 +644,4 @@ if(phpversion() >= "5.4"){
 	}
 	/*class definition ends*/
 	ZORM::config();
-}
 

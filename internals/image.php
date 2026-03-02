@@ -49,13 +49,13 @@ class _Image {
 		
 		switch($ext){
 			case "gif":
-				imagegif($canvas, $target, 100);
+				imagegif($canvas, $target);
 				break;
 			case "png":
-				imagepng($canvas, $target, 100);
+				imagepng($canvas, $target, 9);
 				break;
 			default:
-				imagejpeg($canvas, $target, 100);		
+				imagejpeg($canvas, $target, 100);
 		}
 	}
 
@@ -90,13 +90,13 @@ class _Image {
 		imagecopyresampled($canvas, $nuImg, 0, 0, 0, 0, $newWidth, $newHeight, $sourceWidth, $sourceHeight);
 		switch($mime){
 			case "gif":
-				imagegif($canvas, $target, 100);
+				imagegif($canvas, $target);
 				break;
 			case "png":
-				imagepng($canvas, $target, 100);
+				imagepng($canvas, $target, 9);
 				break;
 			default:
-				imagejpeg($canvas, $target, 100);		
+				imagejpeg($canvas, $target, 100);
 		}			
 	}
 		

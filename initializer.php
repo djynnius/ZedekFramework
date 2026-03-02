@@ -52,5 +52,6 @@ ini_set('log_errors', $config->get("log_errors")); //on out the box - may be tur
 ini_set('error_log', zroot."errors/errors.log"); //You may wish to specify another path
 
 if($config->get("templating")->engine == "twig"){
+	require_once zroot . "vendor/autoload.php";
 	Z::required("twig");
 }

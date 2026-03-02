@@ -61,11 +61,11 @@ class _Form extends Zedek{
 	}
 
 	static function today(){
-		return strftime("%Y-%m-%d", time());
+		return date("Y-m-d");
 	}
 
 	static function now(){
-		return strftime("%Y-%m-%d %H:%M:%S", time());
+		return date("Y-m-d H:i:s");
 	}
 
 	static function submitted($submit = "submit", $remove_submit=1){ 
@@ -149,7 +149,7 @@ class _Form extends Zedek{
 		} elseif(strpos($date, "-") != false) {
 			$date = $date;
 		} else {
-			$date = strftime("%Y-%m-%d", strtotime($date));
+			$date = date("Y-m-d", strtotime($date));
 		}
 		return $date;		
 	}	
@@ -188,7 +188,7 @@ class _Form extends Zedek{
 	 * @return [type]    [description]
 	 */
 	static function asString($a){
-		return filter_var($a, FILTER_SANITIZE_STRING);
+		return htmlspecialchars($a, ENT_QUOTES, 'UTF-8');
 	}
 	
 	/**
@@ -206,7 +206,7 @@ class _Form extends Zedek{
 	 * @return string validated URL encoded for the browser
 	 */
 	static function safeSQL($a){
-		return filter_var($a, FILTER_SANITIZE_MAGIC_QUOTES);
+		return addslashes($a);
 	}
 
 	/**
