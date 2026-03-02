@@ -2,7 +2,7 @@
 
 /**
 * @package Zedek Framework
-* @version 5
+* @version 6
 * @subpackage ZConfig zedek configuration class
 * @author defestdude <defestdude@gmail.com> Donald Mkpanam
 * @author djyninus <psilent@gmail.com> Ikakke Ikpe
